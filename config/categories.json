@@ -1,0 +1,129 @@
+[
+  {
+    "id": "pet-sheets",
+    "name": "ペットシーツ",
+    "emoji": "🐶",
+    "keyword": "ペットシーツ レギュラー",
+    "metric": "per_sheet",
+    "metric_label": "1枚",
+    "parser": "count",
+    "include_any": [
+      "ペットシーツ",
+      "ペットシート",
+      "トイレシーツ",
+      "トイレシート"
+    ],
+    "exclude_any": [
+      "システムトイレ",
+      "デオトイレ",
+      "ニャンとも",
+      "猫砂",
+      "マット",
+      "ホルダー"
+    ],
+    "group_by": "sheet_size",
+    "default_group": "regular",
+    "rank_all": false,
+    "groups": {
+      "regular": "レギュラー",
+      "wide": "ワイド",
+      "super_wide": "スーパーワイド",
+      "unknown": "サイズ不明"
+    },
+    "intro": "同じサイズのペットシーツを1枚あたりの価格に揃えて比較します。薄型・厚型など性能差は価格順位に含めず、商品名の表記をそのまま確認できるようにします。",
+    "keywords": [
+      "ペットシーツ レギュラー",
+      "ペットシーツ ワイド",
+      "ペットシーツ スーパーワイド"
+    ],
+    "pages_per_keyword": 1
+  },
+  {
+    "id": "cat-litter",
+    "name": "猫砂",
+    "emoji": "🐱",
+    "keyword": "猫砂 大容量",
+    "metric": "per_liter",
+    "metric_label": "1L",
+    "parser": "volume_liter",
+    "include_any": [
+      "猫砂",
+      "ねこ砂",
+      "ネコ砂",
+      "キャットリター",
+      "猫 トイレ砂"
+    ],
+    "exclude_any": [
+      "シート",
+      "トイレ本体",
+      "スコップ",
+      "マット",
+      "消臭剤"
+    ],
+    "group_by": "litter_material",
+    "default_group": "all",
+    "rank_all": true,
+    "groups": {
+      "all": "すべて",
+      "paper": "紙",
+      "okara": "おから",
+      "wood": "木・ひのき・パイン",
+      "mineral": "鉱物・ベントナイト",
+      "silica": "シリカ",
+      "system": "システムトイレ用",
+      "unknown": "素材不明"
+    },
+    "intro": "容量をL表記できる猫砂だけを1Lあたりに換算します。kg表記だけの商品は密度換算を推測せず、ランキング対象外にします。素材や処理方法は価格と別軸です。",
+    "keywords": [
+      "猫砂 紙 大容量",
+      "猫砂 おから 大容量",
+      "猫砂 木 大容量",
+      "猫砂 ベントナイト 大容量"
+    ],
+    "pages_per_keyword": 1
+  },
+  {
+    "id": "system-toilet-sheets",
+    "name": "猫用システムトイレシート",
+    "emoji": "🧻",
+    "keyword": "猫 システムトイレ シート",
+    "metric": "per_sheet",
+    "metric_label": "1枚",
+    "parser": "count",
+    "include_any": [
+      "デオトイレ",
+      "ニャンとも",
+      "にゃんとも",
+      "システムトイレ",
+      "ラクリーン",
+      "各社共通",
+      "各社共用",
+      "汎用"
+    ],
+    "exclude_any": [
+      "猫砂",
+      "サンド",
+      "チップ",
+      "トイレ本体",
+      "マット"
+    ],
+    "group_by": "compatibility",
+    "default_group": "deotoilet",
+    "rank_all": false,
+    "groups": {
+      "all": "すべて",
+      "deotoilet": "デオトイレ系",
+      "nyantomo": "ニャンとも系",
+      "iris": "アイリス系",
+      "universal": "各社共通・汎用",
+      "unknown": "対応不明"
+    },
+    "intro": "1枚あたりの価格を比較します。ただし本体との互換性が最優先なので、対応シリーズを分けて表示し、対応不明の商品は別扱いにします。",
+    "keywords": [
+      "猫 システムトイレ シート",
+      "デオトイレ シート",
+      "ニャンとも シート"
+    ],
+    "pages_per_keyword": 1
+  }
+]
