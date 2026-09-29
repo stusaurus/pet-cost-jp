@@ -1,3 +1,5 @@
+import re
+
 from .quantity import normalize_text
 
 
@@ -21,7 +23,6 @@ def sheet_size(title: str) -> str:
 def litter_material(title: str) -> str:
     text = normalize_text(title)
 
-    # Usage type takes priority for products explicitly made for a system toilet.
     if any(k in text for k in ("システムトイレ", "デオトイレ", "ニャンとも")):
         return "system"
 
@@ -30,12 +31,20 @@ def litter_material(title: str) -> str:
         signals.add("mineral")
     if any(k in text for k in ("おから", "豆腐", "とうふ")):
         signals.add("okara")
-    if any(k in text for k in ("ひのき", "ヒノキ", "木製", "木の", "木質", "パイン", "ウッド")):
+
+    has_standalone_wood = bool(re.search(r"(?:^|[\s/・])木(?:[\s/・]|$)", text))
+    if any(k in text for k in ("ひのき", "ヒノキ", "木製", "木の", "木質", "パイン", "ウッド")) or has_standalone_wood:
         signals.add("wood")
+
     if any(k in text for k in ("シリカ", "silica")):
         signals.add("silica")
-    if any(k in text for k in ("紙製", "紙の", "ペーパー")):
+    if any(k in text for k in ("紙製", "紙の", "ペーパー", "ペパーレット")):
         signals.add("paper")
+
+    # クニミネ工業の標準「猫砂1番 7L」はベントナイト。
+    # 「ひのき」「ペーパー」等の材質名がある派生商品は上のシグナルを優先する。
+    if "猫砂1番" in text and not signals:
+        signals.add("mineral")
 
     if len(signals) > 1:
         return "mixed"
@@ -47,8 +56,6 @@ def litter_material(title: str) -> str:
 def compatibility(title: str) -> str:
     text = normalize_text(title)
 
-    # Current Raclean sheets are sold as "各社共通"; classify compatibility,
-    # not the manufacturer name.
     if any(k in text for k in ("各社共通", "各社共用", "汎用", "共通タイプ", "ラクリーン", "raclean")):
         return "universal"
     if "デオトイレ" in text:
