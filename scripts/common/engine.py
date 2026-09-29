@@ -1,8 +1,15 @@
 import hashlib
+import re
+import urllib.parse
+
 from .quantity import normalize_text, parse_count, parse_liters, parse_100g
 from .classify import classify
 
-GLOBAL_EXCLUDE = ("ふるさと納税", "定期便")
+GLOBAL_EXCLUDE = (
+    "ふるさと納税", "定期便",
+    "中古", "訳あり", "訳アリ", "アウトレット",
+    "展示品", "開封品", "箱潰れ", "箱つぶれ", "b品"
+)
 
 
 def category_matches(title, category):
@@ -31,6 +38,91 @@ def parse_quantity(title, parser):
 def product_id(name, shop):
     key = normalize_text(name) + "|" + normalize_text(shop)
     return hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+
+
+def _source_slug(affiliate_url):
+    try:
+        query = urllib.parse.parse_qs(urllib.parse.urlparse(affiliate_url).query)
+        direct = query.get("pc", [""])[0]
+        path = urllib.parse.urlparse(direct).path.strip("/").split("/")
+        return path[-1].lower() if path else ""
+    except Exception:
+        return ""
+
+
+def _variant_marker(text):
+    markers = (
+        ("ナチュラルガーデン", "garden"),
+        ("ナチュラルソープ", "soap"),
+        ("複数ねこ", "multi"),
+        ("厚型炭入り", "thick-carbon"),
+        ("カーボン", "carbon"),
+        ("超薄型", "ultrathin"),
+        ("中厚", "medium"),
+        ("厚型", "thick"),
+        ("薄型", "thin"),
+        ("無香", "unscented"),
+    )
+    for needle, value in markers:
+        if needle in text:
+            return value
+    return "base"
+
+
+def _model_token(text):
+    tokens = re.findall(
+        r"(?<![a-z0-9])([a-z][a-z0-9_-]{3,}[0-9][a-z0-9_-]*)(?![a-z0-9])",
+        text,
+    )
+    if not tokens:
+        return ""
+    return sorted(tokens, key=len, reverse=True)[0]
+
+
+def _family_key(item, category):
+    """Conservative product-family key used only to prevent ranking domination."""
+    text = normalize_text(item.get("name", ""))
+    category_id = category.get("id", "")
+    group = item.get("group", "")
+
+    if category_id == "system-toilet-sheets":
+        if "デオトイレ" in text:
+            if "複数ねこ" in text:
+                return "deotoilet:multi"
+            if "ナチュラルガーデン" in text:
+                return "deotoilet:garden"
+            if "ナチュラルソープ" in text:
+                return "deotoilet:soap"
+            return "deotoilet:standard"
+        if "ニャンとも清潔トイレ" in text or "ニャンとも" in text:
+            return "nyantomo:sheet"
+        if "ラクリーン" in text or "raclean" in text:
+            return "raclean:sheet"
+
+    if category_id == "cat-litter":
+        if "常陸化工" in text and "ファインブルー" in text:
+            return "hitachi:fine-blue"
+        if "常陸化工" in text and "ファインホワイト" in text:
+            return "hitachi:fine-white"
+        if "岩国再生エネルギー" in text and "木質ペレット" in text:
+            return "iwakuni:wood-pellet"
+        if "お茶の猫砂" in text and ("アイリスオーヤマ" in text or "ocn-" in text):
+            return "iris:ocha-litter"
+
+    if category_id == "pet-sheets" and "lifelex" in text:
+        for code in ("knps_sw", "knps_w", "knps_r"):
+            if code in text:
+                return f"lifelex:{code}:{_variant_marker(text)}"
+
+    # Same long numeric source slug across stores is usually the same manufacturer item/JAN.
+    slug = _source_slug(item.get("url", ""))
+    if re.fullmatch(r"\d{7,}", slug):
+        return f"source:{category_id}:{group}:{slug}"
+
+    model = _model_token(text)
+    if model:
+        return f"model:{category_id}:{group}:{model}:{_variant_marker(text)}"
+    return ""
 
 
 def normalize_item(raw, category):
@@ -62,18 +154,40 @@ def normalize_item(raw, category):
     }
 
 
+def _family_keep_ids(items, category):
+    """Keep max two useful representatives: best unit price and lowest total price."""
+    families = {}
+    for item in items:
+        key = _family_key(item, category)
+        if key:
+            families.setdefault(key, []).append(item)
+
+    keep = set()
+    for members in families.values():
+        best_unit = min(members, key=lambda x: (x["unit_price"], x["price"]))
+        best_total = min(members, key=lambda x: (x["price"], x["unit_price"]))
+        keep.add(best_unit["product_id"])
+        keep.add(best_total["product_id"])
+    return keep
+
+
 def choose_ranked(raw_items, category, limit=30):
     normalized = [normalize_item(x, category) for x in raw_items]
     normalized = [x for x in normalized if x]
     normalized.sort(key=lambda x: (x["unit_price"], -x.get("review_count", 0), -x.get("review_average", 0)))
 
-    seen = set()
+    family_keep = _family_keep_ids(normalized, category)
+    seen_names = set()
     ranked = []
     for item in normalized:
-        key = normalize_text(item["name"])
-        if key in seen:
+        family = _family_key(item, category)
+        if family and item["product_id"] not in family_keep:
             continue
-        seen.add(key)
+
+        name_key = normalize_text(item["name"])
+        if name_key in seen_names:
+            continue
+        seen_names.add(name_key)
         ranked.append(item)
         if len(ranked) >= limit:
             break
