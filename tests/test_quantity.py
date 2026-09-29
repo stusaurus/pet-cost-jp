@@ -34,6 +34,10 @@ class QuantityTests(unittest.TestCase):
 
     def test_liter_multiple_pack_options_rejected(self):
         self.assertIsNone(parse_liters("猫砂 5L×4袋 5L×8袋"))
+        self.assertIsNone(parse_liters("猫砂 5L 4袋 8袋"))
+
+    def test_liter_free_choice_rejected(self):
+        self.assertIsNone(parse_liters("自由に選べ 猫砂 おから 7L×6袋"))
 
     def test_liter_range_rejected(self):
         self.assertIsNone(parse_liters("猫砂 1袋 6袋 12袋 2.5〜63L"))
