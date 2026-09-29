@@ -70,6 +70,55 @@ CSS = r'''
 @media(max-width:719px){.brand{display:none}.section{padding:15px;border-radius:17px}.table-wrap{overflow:visible}.compare{min-width:0;display:block}.compare thead{display:none}.compare tbody{display:grid;gap:11px}.compare tr{display:grid;grid-template-columns:66px minmax(0,1fr);gap:5px 11px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 5px 18px rgba(28,68,49,.04)}.compare td{display:block;border:0;padding:0}.compare .rank{grid-column:1;grid-row:1;text-align:left!important}.rank-badge{display:inline-flex;background:var(--accent-soft);color:var(--accent-dark);border-radius:999px;padding:4px 8px;font-size:11px}.rank-number{display:none}.compare .image-cell{grid-column:1;grid-row:2/5}.product-image{width:66px;height:66px}.compare .product{grid-column:2;grid-row:1/3;min-width:0}.compare .total{grid-column:2;grid-row:3;font-size:12px;color:var(--muted)}.compare .unit{grid-column:2;grid-row:4}.compare .action{grid-column:1/-1;grid-row:5;margin-top:5px}.compare .action .btn{width:100%;padding:12px}.shipping{text-align:center}.featured{grid-template-columns:74px 1fr}.featured-img{width:74px;height:74px}.featured .featured-action{grid-column:1/-1}.featured .btn{width:100%}.calc-inputs{grid-template-columns:1fr}.category-card{grid-template-columns:62px 1fr}.category-thumb,.category-icon{width:62px;height:62px}.category-icon{font-size:29px}}
 '''
 
+CSS += r'''
+/* Visual identity v3 */
+body{background:#f4f7f2;background-image:radial-gradient(circle at 12% 8%,rgba(255,206,102,.10) 0 90px,transparent 91px),radial-gradient(circle at 88% 18%,rgba(82,174,145,.09) 0 120px,transparent 121px)}
+.hero{position:relative;overflow:hidden;padding:34px 0 30px;background:linear-gradient(135deg,#f7fff9 0%,#eef9f3 44%,#fff8e8 100%)}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none}.hero:before{width:260px;height:260px;right:-90px;top:-120px;background:rgba(255,211,110,.18)}.hero:after{width:180px;height:180px;left:-80px;bottom:-110px;background:rgba(61,160,125,.10)}
+.hero-inner{position:relative;z-index:1;display:grid;gap:22px;align-items:center}.hero-copy{min-width:0}.hero-art-shell{position:relative;min-height:250px;border-radius:28px;background:linear-gradient(145deg,#ffffff 0%,#f8fff9 52%,#fff5d9 100%);border:1px solid rgba(44,111,82,.13);box-shadow:0 20px 50px rgba(28,68,49,.10);overflow:hidden;padding:10px}.hero-art-shell:before{content:"";position:absolute;inset:auto -30px -50px auto;width:170px;height:170px;border-radius:50%;background:rgba(255,201,74,.16)}.hero-art{display:block;width:100%;height:100%;min-height:230px}
+.hero-copy h1{max-width:650px}.hero-kicker{display:inline-flex;gap:7px;align-items:center;background:#173126;color:#fff;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:850;letter-spacing:.02em}.hero-kicker .dot{width:7px;height:7px;border-radius:50%;background:#ffd66e;box-shadow:0 0 0 4px rgba(255,214,110,.16)}
+.visual-section{background:transparent;border:0;box-shadow:none;padding:4px 0 8px}.visual-section .section-head{padding:0 2px 2px}
+.home-grid{gap:14px}.category-card{position:relative;overflow:hidden;border:0;min-height:220px;padding:0;grid-template-columns:1fr;align-content:start;box-shadow:0 16px 36px rgba(31,65,49,.09);transition:transform .2s ease,box-shadow .2s ease}.category-card:hover{transform:translateY(-4px);box-shadow:0 20px 44px rgba(31,65,49,.14)}.category-card.theme-sheet{background:linear-gradient(145deg,#dff6e9,#f6fffa)}.category-card.theme-litter{background:linear-gradient(145deg,#fff0cc,#fffaf0)}.category-card.theme-system{background:linear-gradient(145deg,#dff4f7,#f3fbfd)}.category-card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-35px;top:-42px;background:rgba(255,255,255,.46)}.category-visual{height:126px;padding:11px 14px 0;position:relative;z-index:1}.category-visual svg{width:100%;height:100%;display:block}.category-card-copy{padding:4px 16px 17px;position:relative;z-index:1}.category-card strong{font-size:19px}.category-price{font-size:27px;letter-spacing:-.02em}.category-price small{font-size:12px;font-weight:750}.category-arrow{position:absolute;right:15px;bottom:15px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(23,49,38,.90);color:#fff;font-weight:900}
+.price-ribbon{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#fff;color:#b06a00;box-shadow:0 5px 14px rgba(128,88,10,.08)}
+.steps{gap:12px}.step{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);padding:14px;border-radius:18px;box-shadow:0 8px 24px rgba(28,68,49,.045)}.step-illu{width:72px;height:56px;margin:-3px 0 6px}.step-illu svg{width:100%;height:100%}.step-num{position:absolute;right:11px;top:11px;background:#173126}
+.featured{position:relative;overflow:hidden;background:linear-gradient(135deg,#f2fff6 0%,#ffffff 64%,#fff5cf 100%);border:1px solid #c9e5d5;box-shadow:0 16px 34px rgba(28,68,49,.07);padding-top:18px}.featured:before{content:"BEST";position:absolute;right:-23px;top:13px;transform:rotate(38deg);background:#ffd76f;color:#745100;font-size:10px;font-weight:950;padding:5px 29px;letter-spacing:.08em}.featured-crown{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:10px;background:#ffd76f;margin-right:6px;vertical-align:middle;box-shadow:0 4px 12px rgba(160,112,0,.14)}.featured-badge{background:#173126}.featured-unit{font-size:30px}.featured-diff{display:inline-flex;margin-top:6px;border-radius:999px;padding:4px 8px;background:#e8f5ed;color:#126142}
+.category-hero .hero-art-shell{min-height:210px}.category-hero .hero-art{min-height:190px}.category-hero h1{font-size:clamp(30px,7vw,46px)}
+@media(min-width:760px){.hero-inner{grid-template-columns:minmax(0,1.05fr) minmax(330px,.75fr);gap:32px}.hero-art-shell{min-height:315px}.hero-art{min-height:295px}.category-hero .hero-art-shell{min-height:250px}.category-hero .hero-art{min-height:230px}.category-card{min-height:300px}.category-visual{height:165px}}
+@media(max-width:759px){.hero{padding-top:24px}.hero-inner{grid-template-columns:1fr}.hero-art-shell{min-height:220px;margin-top:3px}.hero-art{min-height:200px}.category-hero .hero-art-shell{min-height:185px}.category-hero .hero-art{min-height:165px}.category-card{min-height:206px}.category-visual{height:112px}.home-grid{grid-template-columns:1fr}.category-card-copy{padding-top:0}}
+'''
+
+
+def hero_illustration():
+    return '''<svg class="hero-art" viewBox="0 0 420 300" role="img" aria-label="犬と猫がペット用品の単価を比べているイラスト">
+      <defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#173126" flood-opacity=".12"/></filter><linearGradient id="board" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f4fbf6"/></linearGradient></defs>
+      <circle cx="335" cy="58" r="34" fill="#ffe39a"/><circle cx="65" cy="55" r="21" fill="#d8f1e3"/>
+      <path d="M42 246c38-43 83-60 136-52 38 6 64 25 92 35 38 13 73 7 108-12v54H42z" fill="#dff3e7"/>
+      <g filter="url(#softShadow)"><rect x="126" y="55" width="196" height="148" rx="22" fill="url(#board)" stroke="#d2e5d9"/><rect x="151" y="82" width="91" height="14" rx="7" fill="#173126" opacity=".9"/><rect x="151" y="109" width="125" height="8" rx="4" fill="#c7d9cf"/><rect x="151" y="127" width="101" height="8" rx="4" fill="#d9e7df"/><rect x="151" y="155" width="22" height="24" rx="5" fill="#94d8b8"/><rect x="181" y="142" width="22" height="37" rx="5" fill="#55b88f"/><rect x="211" y="126" width="22" height="53" rx="5" fill="#237a57"/><circle cx="277" cy="159" r="22" fill="#ffd66e"/><path d="M270 154h15M277.5 146v26" stroke="#6d5410" stroke-width="5" stroke-linecap="round"/></g>
+      <g transform="translate(38 127)" filter="url(#softShadow)"><ellipse cx="66" cy="111" rx="52" ry="34" fill="#d99b67"/><circle cx="64" cy="57" r="45" fill="#e8ae79"/><path d="M28 28 13 2l36 16M99 27l15-26-36 17" fill="#b87448"/><ellipse cx="64" cy="67" rx="24" ry="18" fill="#f7d0a4"/><circle cx="49" cy="51" r="4.6" fill="#173126"/><circle cx="80" cy="51" r="4.6" fill="#173126"/><ellipse cx="64" cy="63" rx="5" ry="4" fill="#173126"/><path d="M56 72q8 8 16 0" fill="none" stroke="#173126" stroke-width="3" stroke-linecap="round"/><path d="M31 104q-19 7-16 27" fill="none" stroke="#b87448" stroke-width="8" stroke-linecap="round"/></g>
+      <g transform="translate(292 137)" filter="url(#softShadow)"><ellipse cx="49" cy="103" rx="43" ry="30" fill="#8ba6ad"/><circle cx="48" cy="55" r="38" fill="#9cb6bc"/><path d="M18 30 21 1l23 20M78 29 76 0 54 21" fill="#6f8f98"/><circle cx="35" cy="52" r="4.2" fill="#173126"/><circle cx="61" cy="52" r="4.2" fill="#173126"/><path d="m48 61-5 5h10z" fill="#e79b96"/><path d="M36 72q12 8 24 0" fill="none" stroke="#173126" stroke-width="2.5" stroke-linecap="round"/><path d="M18 64H-4M19 72H0M78 64h22M77 72h18" stroke="#526f77" stroke-width="2" stroke-linecap="round"/><path d="M88 99q25-18 19 9" fill="none" stroke="#6f8f98" stroke-width="7" stroke-linecap="round"/></g>
+      <g transform="translate(181 210) rotate(-4)" filter="url(#softShadow)"><path d="M0 0h91l18 24-18 24H0z" fill="#ffca55"/><circle cx="91" cy="24" r="5" fill="#fff4cf"/><text x="16" y="31" font-family="sans-serif" font-size="18" font-weight="900" fill="#6b4c00">1枚 ¥5.8</text></g>
+    </svg>'''
+
+
+def category_illustration(category_id):
+    if category_id == "pet-sheets":
+        return '''<svg viewBox="0 0 300 150" role="img" aria-label="ペットシーツのイラスト"><ellipse cx="151" cy="131" rx="112" ry="10" fill="#bddfca" opacity=".45"/><rect x="66" y="72" width="170" height="58" rx="16" fill="#fff" stroke="#93c9ac" stroke-width="3"/><path d="M88 91h126M88 106h98" stroke="#d7ebe0" stroke-width="7" stroke-linecap="round"/><g transform="translate(104 16)"><circle cx="47" cy="42" r="35" fill="#e9b17f"/><path d="M18 22 6 2l31 13M76 22 89 2 59 14" fill="#b8754a"/><circle cx="35" cy="38" r="4" fill="#173126"/><circle cx="59" cy="38" r="4" fill="#173126"/><ellipse cx="47" cy="49" rx="5" ry="4" fill="#173126"/></g><circle cx="236" cy="54" r="27" fill="#ffcf62"/><path d="m236 35 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#fff5d6"/></svg>'''
+    if category_id == "cat-litter":
+        return '''<svg viewBox="0 0 300 150" role="img" aria-label="猫砂のイラスト"><ellipse cx="151" cy="132" rx="105" ry="10" fill="#e8d7ad" opacity=".55"/><path d="M68 79q0-22 22-22h123q22 0 22 22v38H68z" fill="#fff" stroke="#d8bd78" stroke-width="3"/><path d="M83 84h137l-10 31H93z" fill="#ead7aa"/><g fill="#c6a85d"><circle cx="107" cy="96" r="4"/><circle cx="128" cy="105" r="4"/><circle cx="153" cy="94" r="4"/><circle cx="180" cy="105" r="4"/><circle cx="201" cy="96" r="4"/></g><g transform="translate(112 12)"><circle cx="40" cy="40" r="34" fill="#9eb8be"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#708e97"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><rect x="218" y="37" width="48" height="28" rx="8" fill="#ffce62"/><text x="232" y="56" font-size="15" font-family="sans-serif" font-weight="900" fill="#6d5200">1L</text></svg>'''
+    return '''<svg viewBox="0 0 300 150" role="img" aria-label="システムトイレシートのイラスト"><ellipse cx="150" cy="132" rx="106" ry="10" fill="#bcdde3" opacity=".55"/><rect x="65" y="66" width="170" height="62" rx="18" fill="#fff" stroke="#8cc7d0" stroke-width="3"/><rect x="78" y="83" width="144" height="29" rx="9" fill="#dff3f6"/><path d="M93 97h113" stroke="#9ed5dc" stroke-width="5" stroke-linecap="round"/><g transform="translate(112 9)"><circle cx="40" cy="40" r="34" fill="#98b6bd"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#6e8e96"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><circle cx="238" cy="52" r="27" fill="#5db7c4"/><path d="m226 53 8 8 16-19" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'''
+
+
+def category_theme(category_id):
+    return {"pet-sheets": "theme-sheet", "cat-litter": "theme-litter", "system-toilet-sheets": "theme-system"}.get(category_id, "theme-sheet")
+
+
+def step_illustration(kind):
+    if kind == 1:
+        return '''<div class="step-illu"><svg viewBox="0 0 100 70"><rect x="9" y="11" width="30" height="45" rx="8" fill="#dff3e7"/><rect x="35" y="19" width="26" height="37" rx="7" fill="#ffe7ad"/><rect x="58" y="8" width="32" height="48" rx="8" fill="#dff2f5"/><circle cx="24" cy="34" r="7" fill="#237a57"/><circle cx="48" cy="37" r="6" fill="#d59b35"/><circle cx="74" cy="32" r="7" fill="#56aeb8"/></svg></div>'''
+    if kind == 2:
+        return '''<div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="15" width="76" height="42" rx="11" fill="#fff" stroke="#cfe2d7" stroke-width="3"/><path d="M28 27h45M28 37h34M28 47h51" stroke="#237a57" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="27" r="4" fill="#ffd064"/><circle cx="18" cy="37" r="4" fill="#ffd064"/><circle cx="18" cy="47" r="4" fill="#ffd064"/></svg></div>'''
+    return '''<div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="18" width="76" height="38" rx="10" fill="#173126"/><path d="M29 44V34M45 44V27M61 44V22M77 44V16" stroke="#74caa5" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="22" r="12" fill="#ffd064"/><path d="M16 22h8M20 18v8" stroke="#725400" stroke-width="3" stroke-linecap="round"/></svg></div>'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -195,7 +244,7 @@ def featured_box(category, item):
     return f'''<div class="featured" data-featured-box>
       <div>{image_html}</div>
       <div>
-        <span class="featured-badge" data-featured-badge>この条件の1位</span>
+        <span class="featured-crown" aria-hidden="true">♛</span><span class="featured-badge" data-featured-badge>この条件の1位</span>
         <div class="featured-title" data-featured-title>{esc(item['name'])}</div>
         <div class="featured-shop" data-featured-shop>{esc(item.get('shop', ''))}</div>
         <div class="featured-price"><span class="featured-unit" data-featured-unit>{yen(item['unit_price'])}</span><span class="featured-total" data-featured-total>総額 {yen(item['price'])}</span></div><div class="featured-diff" data-featured-diff></div>
@@ -263,12 +312,15 @@ def category_page(category, items, categories, updated):
         ],
     }
 
-    body = f'''<header class="hero"><div class="wrap">
-      <span class="eyebrow">✓ 条件が曖昧な商品は載せない</span>
-      <h1>{esc(category['emoji'])} {esc(category['name'])}<br>単価で比べる</h1>
-      <p class="lead">{esc(category['intro'])}</p>
-      <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠を表示</span><span class="trust-pill">誤分類は公開前に自動監査</span></div>
-      <p class="updated">最終更新 {esc(updated)}</p>
+    body = f'''<header class="hero category-hero"><div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
+        <h1>{esc(category['name'])}<br>いま安いのは？</h1>
+        <p class="lead">{esc(category['intro'])}</p>
+        <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
+        <p class="updated">最終更新 {esc(updated)}</p>
+      </div>
+      <div class="hero-art-shell"><div class="hero-art">{category_illustration(category['id'])}</div></div>
     </div></header>
     {nav(categories)}
     <main class="main"><div class="wrap">
@@ -339,20 +391,17 @@ def homepage(categories, summaries, updated):
         s = summaries[c["id"]]
         best = s.get("best")
         image = esc(best.get("image", "")) if best else ""
-        visual = (
-            f'<img class="category-thumb" src="{image}" alt="" loading="lazy" width="130" height="130">'
-            if image else
-            f'<div class="category-icon" aria-hidden="true">{esc(c["emoji"])}</div>'
-        )
+        visual = category_illustration(c["id"])
         cards.append(
-            f'''<a class="category-card" href="{BASE_URL}categories/{esc(c['id'])}/">
-              {visual}
-              <div>
-                <span class="card-kicker">{esc(s['default_label'])}の現在最安</span>
-                <strong>{esc(c['emoji'])} {esc(c['name'])}</strong>
+            f'''<a class="category-card {category_theme(c['id'])}" href="{BASE_URL}categories/{esc(c['id'])}/">
+              <div class="category-visual">{visual}</div>
+              <div class="category-card-copy">
+                <span class="price-ribbon">👑 {esc(s['default_label'])}の現在最安</span>
+                <strong>{esc(c['name'])}</strong>
                 <div class="category-price">{yen(s['min'])}<small> / {esc(c['metric_label'])}</small></div>
                 <div class="category-meta">掲載 {s['total_count']}件・条件別に比較</div>
               </div>
+              <span class="category-arrow" aria-hidden="true">→</span>
             </a>'''
         )
 
@@ -364,16 +413,19 @@ def homepage(categories, summaries, updated):
         "description": "ペット用品を1枚・1Lなど同じ単位に揃えて比較するサイト",
     }
 
-    body = f'''<header class="hero"><div class="wrap">
-      <span class="eyebrow">毎日更新・登録不要</span>
-      <h1>袋の値段ではなく、<br>「1枚・1L」で比べる。</h1>
-      <p class="lead">ペット用品は容量も枚数もバラバラ。だから同じ単位に揃えて、いま安い商品を分かりやすく並べます。数量が曖昧なら無理にランキングへ入れません。</p>
-      <div class="trust-row"><span class="trust-pill">✓ ペットシーツはサイズ別</span><span class="trust-pill">✓ 猫砂のkg→L推測なし</span><span class="trust-pill">✓ 互換性不明は除外</span></div>
-      <p class="updated">最終更新 {esc(updated)}</p>
+    body = f'''<header class="hero"><div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
+        <h1>ペット用品の<br>「ほんとの安さ」を、<br>ひと目で。</h1>
+        <p class="lead">袋の値段ではなく、1枚・1Lなど同じ単位にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
+        <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
+        <p class="updated">最終更新 {esc(updated)}</p>
+      </div>
+      <div class="hero-art-shell">{hero_illustration()}</div>
     </div></header>
     {nav(categories)}
     <main class="main"><div class="wrap">
-      <section class="section">
+      <section class="section visual-section">
         <div class="section-head"><div><h2>いま比較できるもの</h2><p class="section-sub">最初は消耗品に絞って、比較精度を優先しています。</p></div></div>
         <div class="home-grid">{''.join(cards)}</div>
       </section>
@@ -381,9 +433,9 @@ def homepage(categories, summaries, updated):
       <section class="section">
         <div class="section-head"><div><h2>使い方は3ステップ</h2></div></div>
         <div class="steps">
-          <div class="step"><div class="step-num">1</div><div><b>用品を選ぶ</b><span>ペットシーツ・猫砂・システムトイレシートから選択。</span></div></div>
-          <div class="step"><div class="step-num">2</div><div><b>条件をそろえる</b><span>サイズ・素材・互換性を選び、同じ条件だけを見る。</span></div></div>
-          <div class="step"><div class="step-num">3</div><div><b>単価と総額を見る</b><span>最安単価だけでなく、実際に払う総額も一緒に確認。</span></div></div>
+          <div class="step">{step_illustration(1)}<div class="step-num">1</div><div><b>用品を選ぶ</b><span>ペットシーツ・猫砂・システムトイレシートから選択。</span></div></div>
+          <div class="step">{step_illustration(2)}<div class="step-num">2</div><div><b>条件をそろえる</b><span>サイズ・素材・互換性を選び、同じ条件だけを見る。</span></div></div>
+          <div class="step">{step_illustration(3)}<div class="step-num">3</div><div><b>単価と総額を見る</b><span>最安単価だけでなく、実際に払う総額も一緒に確認。</span></div></div>
         </div>
       </section>
 

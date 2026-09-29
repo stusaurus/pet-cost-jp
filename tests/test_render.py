@@ -48,6 +48,8 @@ class RenderTests(unittest.TestCase):
             "2026-09-30 07:00 JST",
         )
         self.assertIn('data-featured-box', page)
+        self.assertIn('aria-label="ペットシーツのイラスト"', page)
+        self.assertIn('class="featured-crown"', page)
         self.assertIn('data-featured-diff', page)
         self.assertIn('data-price-diff', page)
         self.assertIn('data-group-button', page)
@@ -74,7 +76,10 @@ class RenderTests(unittest.TestCase):
         )
         self.assertIn("掲載 23件", page)
         self.assertIn("レギュラーの現在最安", page)
-        self.assertIn("https://example.com/item.jpg", page)
+        self.assertIn('class="category-card theme-sheet"', page)
+        self.assertIn('aria-label="ペットシーツのイラスト"', page)
+        self.assertIn("ペット用品の", page)
+        self.assertIn("ほんとの安さ", page)
         self.assertIn("使い方は3ステップ", page)
 
     def test_google_verification_file_is_copied_to_site(self):
