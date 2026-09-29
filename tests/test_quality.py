@@ -93,6 +93,22 @@ class QualityTests(unittest.TestCase):
         ranked = choose_ranked(rows, category)
         self.assertEqual(len(ranked), 1)
 
+    def test_unknown_compatibility_is_excluded_when_configured(self):
+        category = {
+            "id": "system-toilet-sheets",
+            "parser": "count",
+            "metric": "per_sheet",
+            "metric_label": "1枚",
+            "group_by": "compatibility",
+            "exclude_groups": ["unknown"],
+            "include_any": ["システムトイレ"],
+            "exclude_any": [],
+        }
+        rows = [
+            raw("猫の時間 システムトイレ用吸収シート 31枚", 600, "https://x/a")
+        ]
+        self.assertEqual(choose_ranked(rows, category), [])
+
     def test_deotoilet_family_does_not_dominate(self):
         category = {
             "id": "system-toilet-sheets",
