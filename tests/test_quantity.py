@@ -22,7 +22,6 @@ class QuantityTests(unittest.TestCase):
         self.assertIsNone(parse_count("シート 20枚 30枚 選べる"))
 
     def test_count_spaced_case_quantity_rejected(self):
-        # Live listing: title alone does not prove whether 100枚 is per bag or case total.
         self.assertIsNone(parse_count("ペットシーツ ワイド 薄型 100枚 国産 4袋 ペットシート"))
         self.assertIsNone(parse_count("ペットシーツ スーパーワイド 薄型 40枚 国産 4袋"))
 
@@ -64,6 +63,12 @@ class QuantityTests(unittest.TestCase):
             litter_material("猫砂 木の猫砂 木 ベントナイト 鉱物系 7L"),
             "mixed",
         )
+        self.assertEqual(
+            litter_material("猫砂 鉱物 木 ベントナイト ウッディフレッシュ 16L WF-160"),
+            "mixed",
+        )
+        self.assertEqual(litter_material("猫砂1番(7L×2セット)"), "mineral")
+        self.assertEqual(litter_material("猫砂 ペパーレット チャップ 12L"), "paper")
         self.assertEqual(compatibility("デオトイレ 消臭シート 20枚"), "deotoilet")
         self.assertEqual(
             compatibility("ラクリーン システムトイレ用消臭シート 30枚"),
