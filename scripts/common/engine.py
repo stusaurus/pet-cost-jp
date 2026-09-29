@@ -114,8 +114,18 @@ def _family_key(item, category):
             if code in text:
                 return f"lifelex:{code}:{_variant_marker(text)}"
 
-    # Same long numeric source slug across stores is usually the same manufacturer item/JAN.
     slug = _source_slug(item.get("url", ""))
+
+    # In system-sheet listings, a short numeric source ID is often carried unchanged
+    # across different Rakuten stores. Require the same group and parsed quantity so
+    # unrelated products are not collapsed merely because the store IDs are short.
+    if (
+        category_id == "system-toilet-sheets"
+        and re.fullmatch(r"\d{5,}", slug)
+    ):
+        return f"source:{category_id}:{group}:{slug}:{item.get('quantity', 0)}"
+
+    # Long numeric source slug across stores is usually the same manufacturer item/JAN.
     if re.fullmatch(r"\d{7,}", slug):
         return f"source:{category_id}:{group}:{slug}"
 
