@@ -190,7 +190,7 @@ def featured_box(category, item):
     image_html = (
         f'<img class="featured-img" data-featured-image src="{image}" alt="{esc(item["name"])}" width="120" height="120">'
         if image else
-        f'<div class="category-icon" data-featured-image aria-hidden="true">{esc(category["emoji"])}</div>'
+        f'<img class="featured-img" data-featured-image alt="" width="120" height="120" hidden>'
     )
     return f'''<div class="featured" data-featured-box>
       <div>{image_html}</div>
