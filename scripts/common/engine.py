@@ -116,16 +116,12 @@ def _family_key(item, category):
 
     slug = _source_slug(item.get("url", ""))
 
-    # In system-sheet listings, a short numeric source ID is often carried unchanged
-    # across different Rakuten stores. Require the same group and parsed quantity so
-    # unrelated products are not collapsed merely because the store IDs are short.
     if (
         category_id == "system-toilet-sheets"
         and re.fullmatch(r"\d{5,}", slug)
     ):
         return f"source:{category_id}:{group}:{slug}:{item.get('quantity', 0)}"
 
-    # Long numeric source slug across stores is usually the same manufacturer item/JAN.
     if re.fullmatch(r"\d{7,}", slug):
         return f"source:{category_id}:{group}:{slug}"
 
@@ -147,6 +143,10 @@ def normalize_item(raw, category):
 
     group = classify(category.get("group_by", ""), title)
     if group == "ambiguous":
+        return None
+
+    excluded_groups = set(category.get("exclude_groups", []))
+    if group in excluded_groups:
         return None
 
     unit_price = price / parsed["quantity"]
