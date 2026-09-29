@@ -3,12 +3,19 @@ from .quantity import normalize_text
 
 def sheet_size(title: str) -> str:
     text = normalize_text(title)
+    found = set()
     if "スーパーワイド" in text or "super wide" in text:
-        return "super_wide"
-    if "ワイド" in text or "wide" in text:
-        return "wide"
+        found.add("super_wide")
+    # Remove super-wide wording before testing generic "wide" so it is not double counted.
+    without_super = text.replace("スーパーワイド", "").replace("super wide", "")
+    if "ワイド" in without_super or "wide" in without_super:
+        found.add("wide")
     if "レギュラー" in text or "regular" in text:
-        return "regular"
+        found.add("regular")
+    if len(found) > 1:
+        return "ambiguous"
+    if found:
+        return next(iter(found))
     return "unknown"
 
 

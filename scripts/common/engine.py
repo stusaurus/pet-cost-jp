@@ -2,9 +2,13 @@ import hashlib
 from .quantity import normalize_text, parse_count, parse_liters, parse_100g
 from .classify import classify
 
+GLOBAL_EXCLUDE = ("ふるさと納税", "定期便")
+
 
 def category_matches(title, category):
     text = normalize_text(title)
+    if any(normalize_text(x) in text for x in GLOBAL_EXCLUDE):
+        return False
     includes = [normalize_text(x) for x in category.get("include_any", [])]
     excludes = [normalize_text(x) for x in category.get("exclude_any", [])]
     if includes and not any(x in text for x in includes):
@@ -40,6 +44,9 @@ def normalize_item(raw, category):
         return None
 
     group = classify(category.get("group_by", ""), title)
+    if group == "ambiguous":
+        return None
+
     unit_price = price / parsed["quantity"]
     return {
         **raw,
