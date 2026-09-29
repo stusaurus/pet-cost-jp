@@ -1,7 +1,7 @@
 import re
 import unicodedata
 
-VARIANT_WORDS = ("選べる", "選択", "各種", "よりどり", "アソート")
+VARIANT_WORDS = ("選べる", "選べ", "選択", "各種", "よりどり", "アソート")
 
 
 def normalize_text(value: str) -> str:
@@ -24,10 +24,19 @@ def _distinct_numbers(values):
     return sorted(set(round(float(v), 6) for v in values))
 
 
+def _has_multiple_pack_options(text: str) -> bool:
+    pack_counts = [
+        int(m.group(1))
+        for m in re.finditer(r"(?<!\d)(\d{1,3})\s*(?:袋|個|パック|箱|ケース)", text)
+        if 1 <= int(m.group(1)) <= 999
+    ]
+    return len(set(pack_counts)) > 1
+
+
 def parse_count(title: str):
     """Return total sheet/item count only when one defensible quantity can be identified."""
     text = normalize_text(title)
-    if _reject_variant(text):
+    if _reject_variant(text) or _has_multiple_pack_options(text):
         return None
 
     explicit_patterns = [
@@ -52,8 +61,6 @@ def parse_count(title: str):
 
     if explicit_matches:
         total = explicit_totals[0]
-        # "800枚（200枚×4袋）" is consistent. If another unrelated count is present,
-        # accept only when the derived total is also explicitly stated.
         if len(distinct_singles) > 1 and int(total) not in distinct_singles:
             return None
         evidence = next(e for value, e in explicit_matches if round(value, 6) == total)
@@ -67,10 +74,9 @@ def parse_count(title: str):
 def parse_liters(title: str):
     """Return total liters. kg-only and selectable/range capacities are intentionally unsupported."""
     text = normalize_text(title)
-    if _reject_variant(text):
+    if _reject_variant(text) or _has_multiple_pack_options(text):
         return None
 
-    # Examples like "2.5〜63L" are selectable capacities, not one purchasable quantity.
     if re.search(r"\d+(?:\.\d+)?\s*(?:~|〜|～|-|ー)\s*\d+(?:\.\d+)?\s*l", text):
         return None
 
@@ -109,7 +115,7 @@ def parse_liters(title: str):
 def parse_100g(title: str):
     """Reusable future parser for dry/wet food. Not used by MVP categories yet."""
     text = normalize_text(title)
-    if _reject_variant(text):
+    if _reject_variant(text) or _has_multiple_pack_options(text):
         return None
 
     explicit_matches = list(
