@@ -66,6 +66,33 @@ class QualityTests(unittest.TestCase):
         self.assertEqual(len(ranked), 1)
         self.assertEqual(ranked[0]["price"], 2000)
 
+    def test_short_system_sheet_source_slug_across_shops_dedupes(self):
+        category = {
+            "id": "system-toilet-sheets",
+            "parser": "count",
+            "metric": "per_sheet",
+            "metric_label": "1枚",
+            "group_by": "compatibility",
+            "include_any": ["システムトイレ"],
+            "exclude_any": [],
+        }
+        rows = [
+            raw(
+                "ねこシステムトイレ用シーツ 800枚 (200枚×4袋)",
+                5980,
+                "https://hb.afl.rakuten.co.jp/x/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdogandcat%2F31005%2F",
+                "a",
+            ),
+            raw(
+                "システムトイレ用 ペットシーツ 800枚 (200枚×4袋)",
+                5980,
+                "https://hb.afl.rakuten.co.jp/y/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpets%2F31005%2F",
+                "b",
+            ),
+        ]
+        ranked = choose_ranked(rows, category)
+        self.assertEqual(len(ranked), 1)
+
     def test_deotoilet_family_does_not_dominate(self):
         category = {
             "id": "system-toilet-sheets",
