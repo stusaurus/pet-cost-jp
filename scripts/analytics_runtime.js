@@ -30,9 +30,18 @@
     return '¥' + Math.round(value).toLocaleString('ja-JP');
   };
 
+  const relativeLabel = (value, median) => {
+    if (!(value > 0) || !(median > 0)) return '';
+    const diff = ((value - median) / median) * 100;
+    if (Math.abs(diff) < 2) return '中央値付近';
+    return diff < 0
+      ? '中央値より' + Math.abs(diff).toFixed(0) + '%安い'
+      : '中央値より' + diff.toFixed(0) + '%高い';
+  };
+
   const currentRows = () => [...document.querySelectorAll('[data-product-row]')];
 
-  function updateFeatured(row, rankText) {
+  function updateFeatured(row, rankText, median) {
     const box = document.querySelector('[data-featured-box]');
     if (!box) return;
     if (!row) {
@@ -46,6 +55,7 @@
     const unit = box.querySelector('[data-featured-unit]');
     const total = box.querySelector('[data-featured-total]');
     const badge = box.querySelector('[data-featured-badge]');
+    const diff = box.querySelector('[data-featured-diff]');
     const link = box.querySelector('[data-affiliate-link]');
 
     if (img) {
@@ -63,6 +73,7 @@
     if (unit) unit.textContent = formatYen(Number(row.dataset.rowUnitPrice || 0));
     if (total) total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
     if (badge) badge.textContent = rankText || '表示中の最安';
+    if (diff) diff.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), median);
 
     if (link) {
       link.href = row.dataset.url || '#';
@@ -87,12 +98,19 @@
     if (countNode) countNode.textContent = String(visibleRows.length) + '件';
     if (visibleNode) visibleNode.textContent = String(visibleRows.length) + '件';
     if (minNode) minNode.textContent = prices.length ? formatYen(prices[0]) : '-';
-    if (medianNode) {
-      const middle = prices.length ? prices[Math.floor(prices.length / 2)] : 0;
-      medianNode.textContent = prices.length ? formatYen(middle) : '-';
-    }
+    const middle = prices.length ? prices[Math.floor(prices.length / 2)] : 0;
+    if (medianNode) medianNode.textContent = prices.length ? formatYen(middle) : '-';
 
-    updateFeatured(visibleRows[0], rankAll ? '表示中の1位' : 'この条件の1位');
+    visibleRows.forEach((row) => {
+      const node = row.querySelector('[data-price-diff]');
+      if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
+    });
+
+    updateFeatured(
+      visibleRows[0],
+      rankAll ? '表示中の1位' : 'この条件の1位',
+      middle
+    );
   }
 
   function applyGroupFilter(group) {
