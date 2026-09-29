@@ -25,6 +25,8 @@ Settings → Secrets and variables → Actions で以下を登録します。
 - `RAKUTEN_ACCESS_KEY`
 - `RAKUTEN_AFFILIATE_ID`
 
+`RAKUTEN_APPLICATION_ID` と `RAKUTEN_ACCESS_KEY` はペットサイト用に登録した楽天Web Serviceアプリの値を使用し、`RAKUTEN_AFFILIATE_ID` は他サイトと共通で利用します。
+
 GA4は日用品版と同じMeasurement IDを使用し、全イベントに `site_id=pet-cost-jp` を付与して判別します。
 
 ## GA4イベント
