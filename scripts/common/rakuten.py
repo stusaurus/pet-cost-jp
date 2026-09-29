@@ -1,10 +1,14 @@
 import json
 import os
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
 API_URL = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
+MIN_REQUEST_INTERVAL = 1.35
+MAX_RETRIES = 4
+_last_request_at = 0.0
 
 
 def first_image(item):
@@ -15,6 +19,33 @@ def first_image(item):
     if isinstance(first, dict):
         first = first.get("imageUrl") or first.get("url") or ""
     return str(first or "").replace("http://", "https://")
+
+
+def _throttle():
+    global _last_request_at
+    now = time.monotonic()
+    wait = MIN_REQUEST_INTERVAL - (now - _last_request_at)
+    if wait > 0:
+        time.sleep(wait)
+    _last_request_at = time.monotonic()
+
+
+def _open_json(req):
+    for attempt in range(MAX_RETRIES):
+        _throttle()
+        try:
+            with urllib.request.urlopen(req, timeout=30) as res:
+                return json.loads(res.read().decode("utf-8"))
+        except urllib.error.HTTPError as error:
+            if error.code != 429 or attempt == MAX_RETRIES - 1:
+                raise
+            retry_after = error.headers.get("Retry-After") if error.headers else None
+            try:
+                delay = max(float(retry_after), 2.5)
+            except (TypeError, ValueError):
+                delay = 2.5 * (attempt + 1)
+            time.sleep(delay)
+    raise RuntimeError("Rakuten API retry loop exhausted")
 
 
 def fetch_items(keyword: str, pages: int = 2, hits: int = 30):
@@ -45,11 +76,10 @@ def fetch_items(keyword: str, pages: int = 2, hits: int = 30):
                 "accessKey": access_key,
                 "Origin": "https://stusaurus.github.io",
                 "Referer": "https://stusaurus.github.io/pet-cost-jp/",
-                "User-Agent": "pet-cost-jp/0.1",
+                "User-Agent": "pet-cost-jp/0.2",
             },
         )
-        with urllib.request.urlopen(req, timeout=30) as res:
-            payload = json.loads(res.read().decode("utf-8"))
+        payload = _open_json(req)
         rows = payload.get("items") or payload.get("Items") or []
         for row in rows:
             item = row.get("Item", row) if isinstance(row, dict) else {}
@@ -65,6 +95,4 @@ def fetch_items(keyword: str, pages: int = 2, hits: int = 30):
                 "review_count": int(float(item.get("reviewCount") or 0)),
                 "postage_flag": item.get("postageFlag"),
             })
-        if page < pages:
-            time.sleep(1.1)
     return out
