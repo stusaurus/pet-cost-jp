@@ -29,6 +29,8 @@ jobs:
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           GA_MEASUREMENT_ID: G-GFVSZ8YDQ5
         run: python scripts/build_site.py
+      - name: Product quality audit
+        run: python scripts/audit_products.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

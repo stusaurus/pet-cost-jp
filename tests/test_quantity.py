@@ -21,6 +21,14 @@ class QuantityTests(unittest.TestCase):
     def test_count_ambiguous_rejected(self):
         self.assertIsNone(parse_count("シート 20枚 30枚 選べる"))
 
+    def test_count_spaced_case_quantity_rejected(self):
+        # Live listing: title alone does not prove whether 100枚 is per bag or case total.
+        self.assertIsNone(parse_count("ペットシーツ ワイド 薄型 100枚 国産 4袋 ペットシート"))
+        self.assertIsNone(parse_count("ペットシーツ スーパーワイド 薄型 40枚 国産 4袋"))
+
+    def test_single_or_bundle_selector_rejected(self):
+        self.assertIsNone(parse_count("システムトイレ用 20枚 単品 4個セット ラクリーン"))
+
     def test_multiple_sheet_variants_rejected(self):
         title = "レギュラー1200枚（300枚×4袋） ワイド600枚（150枚×4袋） スーパーワイド300枚（75枚×4袋）"
         self.assertIsNone(parse_count(title))
@@ -51,12 +59,27 @@ class QuantityTests(unittest.TestCase):
     def test_classifiers(self):
         self.assertEqual(sheet_size("ペットシーツ スーパーワイド 100枚"), "super_wide")
         self.assertEqual(litter_material("猫砂 おから 7L"), "okara")
+        self.assertEqual(litter_material("猫砂 クリーンサンド 7L 鉱物系 ベントナイト"), "mineral")
+        self.assertEqual(
+            litter_material("猫砂 木の猫砂 木 ベントナイト 鉱物系 7L"),
+            "mixed",
+        )
         self.assertEqual(compatibility("デオトイレ 消臭シート 20枚"), "deotoilet")
+        self.assertEqual(
+            compatibility("ラクリーン システムトイレ用消臭シート 30枚"),
+            "universal",
+        )
 
     def test_non_retail_listing_excluded(self):
         category = {"include_any": ["ペットシーツ"], "exclude_any": []}
-        self.assertFalse(category_matches("【ふるさと納税】ペットシーツ 800枚", category))
-        self.assertFalse(category_matches("ペットシーツ 定期便 800枚", category))
+        for title in (
+            "【ふるさと納税】ペットシーツ 800枚",
+            "ペットシーツ 定期便 800枚",
+            "中古 ペットシーツ 800枚",
+            "訳あり ペットシーツ 800枚",
+            "アウトレット ペットシーツ 800枚",
+        ):
+            self.assertFalse(category_matches(title, category))
 
 
 if __name__ == "__main__":
