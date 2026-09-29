@@ -1,7 +1,10 @@
 import re
 import unicodedata
 
-VARIANT_WORDS = ("選べる", "選べ", "選択", "各種", "よりどり", "アソート")
+VARIANT_WORDS = (
+    "選べる", "選べ", "選択", "各種", "よりどり", "アソート",
+    "組み合わせ自由", "自由に選"
+)
 
 
 def normalize_text(value: str) -> str:
@@ -17,20 +20,28 @@ def normalize_text(value: str) -> str:
 
 
 def _reject_variant(text: str) -> bool:
-    return any(word in text for word in VARIANT_WORDS)
+    if any(word in text for word in VARIANT_WORDS):
+        return True
+    # A single page offering "単品 / 4個セット" is not one uniquely defined comparison item.
+    if "単品" in text and re.search(r"\d{1,3}\s*(?:袋|個|パック|箱|ケース)?\s*セット", text):
+        return True
+    return False
 
 
 def _distinct_numbers(values):
     return sorted(set(round(float(v), 6) for v in values))
 
 
-def _has_multiple_pack_options(text: str) -> bool:
-    pack_counts = [
+def _pack_counts(text: str):
+    return [
         int(m.group(1))
         for m in re.finditer(r"(?<!\d)(\d{1,3})\s*(?:袋|個|パック|箱|ケース)", text)
         if 1 <= int(m.group(1)) <= 999
     ]
-    return len(set(pack_counts)) > 1
+
+
+def _has_multiple_pack_options(text: str) -> bool:
+    return len(set(_pack_counts(text))) > 1
 
 
 def parse_count(title: str):
@@ -65,6 +76,11 @@ def parse_count(title: str):
             return None
         evidence = next(e for value, e in explicit_matches if round(value, 6) == total)
         return {"quantity": float(total), "confidence": 0.99, "evidence": evidence}
+
+    # "100枚 ... 4袋" does not prove whether 100 is per bag or the case total.
+    # Prefer exclusion to silently treating a case as one bag.
+    if _pack_counts(text):
+        return None
 
     if not distinct_singles or len(distinct_singles) > 1:
         return None
