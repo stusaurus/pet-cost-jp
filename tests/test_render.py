@@ -48,6 +48,8 @@ class RenderTests(unittest.TestCase):
             "2026-09-30 07:00 JST",
         )
         self.assertIn('data-featured-box', page)
+        self.assertIn('data-featured-diff', page)
+        self.assertIn('data-price-diff', page)
         self.assertIn('data-group-button', page)
         self.assertIn('class="product-image"', page)
         self.assertIn('楽天で価格を見る', page)
