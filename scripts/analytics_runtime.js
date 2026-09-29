@@ -23,34 +23,135 @@
 
   window.petCostTrack = send;
 
-  function applyGroupFilter(select, group) {
-    const rankAll = select.dataset.rankAll === '1';
+  const formatYen = (value) => {
+    if (!(value > 0)) return '-';
+    if (value < 10) return '¥' + value.toFixed(2);
+    if (value < 100) return '¥' + value.toFixed(1);
+    return '¥' + Math.round(value).toLocaleString('ja-JP');
+  };
+
+  const currentRows = () => [...document.querySelectorAll('[data-product-row]')];
+
+  function updateFeatured(row, rankText) {
+    const box = document.querySelector('[data-featured-box]');
+    if (!box) return;
+    if (!row) {
+      box.hidden = true;
+      return;
+    }
+    box.hidden = false;
+    const img = box.querySelector('[data-featured-image]');
+    const title = box.querySelector('[data-featured-title]');
+    const shop = box.querySelector('[data-featured-shop]');
+    const unit = box.querySelector('[data-featured-unit]');
+    const total = box.querySelector('[data-featured-total]');
+    const badge = box.querySelector('[data-featured-badge]');
+    const link = box.querySelector('[data-affiliate-link]');
+
+    if (img) {
+      if (row.dataset.image) {
+        img.src = row.dataset.image;
+        img.alt = row.dataset.itemName || '商品画像';
+        img.hidden = false;
+      } else {
+        img.removeAttribute('src');
+        img.hidden = true;
+      }
+    }
+    if (title) title.textContent = row.dataset.itemName || '';
+    if (shop) shop.textContent = row.dataset.shop || '';
+    if (unit) unit.textContent = formatYen(Number(row.dataset.rowUnitPrice || 0));
+    if (total) total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
+    if (badge) badge.textContent = rankText || '表示中の最安';
+
+    if (link) {
+      link.href = row.dataset.url || '#';
+      link.dataset.itemId = row.dataset.itemId || '';
+      link.dataset.itemName = row.dataset.itemName || '';
+      link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+      link.dataset.position = '1';
+    }
+  }
+
+  function updateSummary(visibleRows, rankAll) {
+    const prices = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0)
+      .sort((a, b) => a - b);
+
+    const countNode = document.querySelector('[data-stat-count]');
+    const minNode = document.querySelector('[data-stat-min]');
+    const medianNode = document.querySelector('[data-stat-median]');
+    const visibleNode = document.querySelector('[data-visible-count]');
+
+    if (countNode) countNode.textContent = String(visibleRows.length) + '件';
+    if (visibleNode) visibleNode.textContent = String(visibleRows.length) + '件';
+    if (minNode) minNode.textContent = prices.length ? formatYen(prices[0]) : '-';
+    if (medianNode) {
+      const middle = prices.length ? prices[Math.floor(prices.length / 2)] : 0;
+      medianNode.textContent = prices.length ? formatYen(middle) : '-';
+    }
+
+    updateFeatured(visibleRows[0], rankAll ? '表示中の1位' : 'この条件の1位');
+  }
+
+  function applyGroupFilter(group) {
+    const container = document.querySelector('[data-group-filter]');
+    if (!container) return;
+    const rankAll = container.dataset.rankAll === '1';
     let visibleRank = 0;
-    document.querySelectorAll('[data-product-row]').forEach((row) => {
+    const visibleRows = [];
+
+    currentRows().forEach((row) => {
       const visible = group === 'all' || row.dataset.group === group;
       row.hidden = !visible;
       const rank = row.querySelector('[data-rank-cell]');
-      if (!rank) return;
+      const rankBadge = row.querySelector('[data-rank-badge]');
       if (!visible) return;
-      if (group === 'all' && !rankAll) rank.textContent = '—';
-      else { visibleRank += 1; rank.textContent = String(visibleRank); }
+
+      visibleRows.push(row);
+      if (group === 'all' && !rankAll) {
+        if (rank) rank.textContent = '—';
+        if (rankBadge) rankBadge.textContent = '条件別';
+      } else {
+        visibleRank += 1;
+        if (rank) rank.textContent = String(visibleRank);
+        if (rankBadge) rankBadge.textContent = visibleRank === 1 ? '最安' : visibleRank + '位';
+      }
     });
+
+    updateSummary(visibleRows, rankAll || group !== 'all');
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     const category = document.body.dataset.categoryId || '';
-    document.querySelectorAll('[data-group-filter]').forEach((select) => applyGroupFilter(select, select.value));
+    const activeButton = document.querySelector('[data-group-button][aria-pressed="true"]');
+    if (activeButton) applyGroupFilter(activeButton.dataset.group || 'all');
+
     if (category) {
       send('comparison_view', { category_id: category });
       send('view_item_list', { item_list_id: category, item_list_name: category });
     }
 
-    document.addEventListener('change', (event) => {
-      const select = event.target.closest('[data-group-filter]');
-      if (!select) return;
-      const group = select.value;
-      applyGroupFilter(select, group);
-      send('comparison_filter', { category_id: category, filter_type: 'group', filter_value: group });
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-group-button]');
+      if (!button) return;
+      const container = button.closest('[data-group-filter]');
+      if (!container) return;
+
+      container.querySelectorAll('[data-group-button]').forEach((node) => {
+        const active = node === button;
+        node.setAttribute('aria-pressed', active ? 'true' : 'false');
+        node.classList.toggle('active', active);
+      });
+
+      const group = button.dataset.group || 'all';
+      applyGroupFilter(group);
+      send('comparison_filter', {
+        category_id: category,
+        filter_type: 'group',
+        filter_value: group
+      });
     });
 
     document.addEventListener('click', (event) => {
@@ -61,28 +162,33 @@
       const qty = Number(section.querySelector('[data-calc-qty]')?.value || 0);
       const result = section.querySelector('[data-calc-result]');
       if (!(price > 0) || !(qty > 0) || !result) return;
+
       const unitPrice = price / qty;
-      const visible = [...document.querySelectorAll('[data-product-row]')]
+      const visible = currentRows()
         .filter((row) => !row.hidden)
         .map((row) => Number(row.dataset.rowUnitPrice || 0))
         .filter((x) => x > 0);
       const benchmark = visible.length ? Math.min(...visible) : 0;
+
       let verdict = 'benchmark_unavailable';
-      let text = `入力価格は約 ¥${unitPrice < 100 ? unitPrice.toFixed(1) : Math.round(unitPrice).toLocaleString()} / 単位です。`;
+      let text = '入力価格は ' + formatYen(unitPrice) + ' / 単位です。';
       if (benchmark > 0) {
         const diff = ((unitPrice - benchmark) / benchmark) * 100;
         if (diff <= -2) verdict = 'store_cheaper';
         else if (diff >= 2) verdict = 'online_cheaper';
         else verdict = 'roughly_same';
+
         text += diff <= -2
-          ? ` 表示中の最安候補より約 ${Math.abs(diff).toFixed(0)}% 安い価格です。`
+          ? ' 表示中の最安候補より約 ' + Math.abs(diff).toFixed(0) + '% 安い価格です。'
           : diff >= 2
-            ? ` 表示中の最安候補より約 ${diff.toFixed(0)}% 高い価格です。`
+            ? ' 表示中の最安候補より約 ' + diff.toFixed(0) + '% 高い価格です。'
             : ' 表示中の最安候補とほぼ同水準です。';
       }
+
       result.textContent = text;
       result.style.display = 'block';
-      const group = document.querySelector('[data-group-filter]')?.value || 'all';
+      const group = document.querySelector('[data-group-button][aria-pressed="true"]')?.dataset.group || 'all';
+
       send('unit_calculator_use', {
         category_id: category,
         filter_value: group,
@@ -112,7 +218,12 @@
       send('select_item', {
         item_list_id: data.category_id,
         item_list_name: data.category_id,
-        items: [{ item_id: data.item_id, item_name: data.item_name, index: data.position, affiliation: data.merchant }]
+        items: [{
+          item_id: data.item_id,
+          item_name: data.item_name,
+          index: data.position,
+          affiliation: data.merchant
+        }]
       });
     });
   });
