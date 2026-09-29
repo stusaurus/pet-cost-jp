@@ -69,6 +69,7 @@ class QuantityTests(unittest.TestCase):
         )
         self.assertEqual(litter_material("猫砂1番(7L×2セット)"), "mineral")
         self.assertEqual(litter_material("猫砂 ペパーレット チャップ 12L"), "paper")
+        self.assertEqual(litter_material("ココサンド 7L 猫砂 紙 固まる 燃やせる"), "paper")
         self.assertEqual(compatibility("デオトイレ 消臭シート 20枚"), "deotoilet")
         self.assertEqual(
             compatibility("ラクリーン システムトイレ用消臭シート 30枚"),
