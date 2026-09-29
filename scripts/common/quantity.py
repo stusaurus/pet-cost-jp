@@ -20,8 +20,12 @@ def _reject_variant(text: str) -> bool:
     return any(word in text for word in VARIANT_WORDS)
 
 
+def _distinct_numbers(values):
+    return sorted(set(round(float(v), 6) for v in values))
+
+
 def parse_count(title: str):
-    """Return total sheet/item count only when the title has a defensible quantity."""
+    """Return total sheet/item count only when one defensible quantity can be identified."""
     text = normalize_text(title)
     if _reject_variant(text):
         return None
@@ -30,59 +34,76 @@ def parse_count(title: str):
         r"(?<!\d)(\d{1,5})\s*枚(?:入|入り)?\s*x\s*(\d{1,3})\s*(?:袋|個|パック|箱|セット|ケース)?",
         r"(?<!\d)(\d{1,5})\s*枚\s*(?:入|入り)?\s*(\d{1,3})\s*(?:袋|個|パック|箱|セット|ケース)",
     ]
+    explicit_matches = []
     for pattern in explicit_patterns:
-        m = re.search(pattern, text)
-        if m:
+        for m in re.finditer(pattern, text):
             each, packs = int(m.group(1)), int(m.group(2))
             total = each * packs
             if 1 <= total <= 100000:
-                return {"quantity": float(total), "confidence": 0.99, "evidence": m.group(0)}
+                explicit_matches.append((float(total), m.group(0)))
+
+    explicit_totals = _distinct_numbers(x[0] for x in explicit_matches)
+    if len(explicit_totals) > 1:
+        return None
 
     singles = list(re.finditer(r"(?<!\d)(\d{1,5})\s*枚(?:入|入り)?", text))
-    values = [int(m.group(1)) for m in singles if 1 <= int(m.group(1)) <= 100000]
-    if not values:
-        return None
+    single_values = [int(m.group(1)) for m in singles if 1 <= int(m.group(1)) <= 100000]
+    distinct_singles = sorted(set(single_values))
 
-    distinct = sorted(set(values))
-    if len(distinct) > 1:
+    if explicit_matches:
+        total = explicit_totals[0]
+        # "800枚（200枚×4袋）" is consistent. If another unrelated count is present,
+        # accept only when the derived total is also explicitly stated.
+        if len(distinct_singles) > 1 and int(total) not in distinct_singles:
+            return None
+        evidence = next(e for value, e in explicit_matches if round(value, 6) == total)
+        return {"quantity": float(total), "confidence": 0.99, "evidence": evidence}
+
+    if not distinct_singles or len(distinct_singles) > 1:
         return None
-    return {"quantity": float(distinct[0]), "confidence": 0.90, "evidence": singles[0].group(0)}
+    return {"quantity": float(distinct_singles[0]), "confidence": 0.90, "evidence": singles[0].group(0)}
 
 
 def parse_liters(title: str):
-    """Return total liters. kg-only titles are intentionally unsupported."""
+    """Return total liters. kg-only and selectable/range capacities are intentionally unsupported."""
     text = normalize_text(title)
     if _reject_variant(text):
         return None
 
-    explicit = re.search(
-        r"(?<!\d)(\d+(?:\.\d+)?)\s*l(?:iter|リットル)?\s*x\s*(\d{1,3})\s*(?:袋|個|パック|箱|セット|ケース)?",
-        text,
-    )
-    if explicit:
-        amount, packs = float(explicit.group(1)), int(explicit.group(2))
-        total = amount * packs
-        if 0 < total <= 1000:
-            return {"quantity": total, "confidence": 0.99, "evidence": explicit.group(0)}
+    # Examples like "2.5〜63L" are selectable capacities, not one purchasable quantity.
+    if re.search(r"\d+(?:\.\d+)?\s*(?:~|〜|～|-|ー)\s*\d+(?:\.\d+)?\s*l", text):
+        return None
 
-    compound = re.search(
+    explicit_patterns = [
+        r"(?<!\d)(\d+(?:\.\d+)?)\s*l(?:iter|リットル)?\s*x\s*(\d{1,3})\s*(?:袋|個|パック|箱|セット|ケース)?",
         r"(?<!\d)(\d+(?:\.\d+)?)\s*l(?:iter|リットル)?\s*(\d{1,3})\s*(?:袋|個|パック|箱|セット|ケース)",
-        text,
-    )
-    if compound:
-        amount, packs = float(compound.group(1)), int(compound.group(2))
-        total = amount * packs
-        if 0 < total <= 1000:
-            return {"quantity": total, "confidence": 0.97, "evidence": compound.group(0)}
+    ]
+    explicit_matches = []
+    for pattern in explicit_patterns:
+        for m in re.finditer(pattern, text):
+            amount, packs = float(m.group(1)), int(m.group(2))
+            total = amount * packs
+            if 0 < total <= 1000:
+                explicit_matches.append((float(total), m.group(0), amount))
+
+    explicit_totals = _distinct_numbers(x[0] for x in explicit_matches)
+    if len(explicit_totals) > 1:
+        return None
 
     matches = list(re.finditer(r"(?<!\d)(\d+(?:\.\d+)?)\s*l(?:iter|リットル)?", text))
     values = [float(m.group(1)) for m in matches if 0 < float(m.group(1)) <= 1000]
-    if not values:
+    distinct_values = _distinct_numbers(values)
+
+    if explicit_matches:
+        total = explicit_totals[0]
+        if len(distinct_values) > 1 and round(total, 6) not in distinct_values:
+            return None
+        evidence = next(e for value, e, _ in explicit_matches if round(value, 6) == total)
+        return {"quantity": float(total), "confidence": 0.99, "evidence": evidence}
+
+    if not distinct_values or len(distinct_values) > 1:
         return None
-    distinct = sorted(set(values))
-    if len(distinct) > 1:
-        return None
-    return {"quantity": distinct[0], "confidence": 0.90, "evidence": matches[0].group(0)}
+    return {"quantity": float(distinct_values[0]), "confidence": 0.90, "evidence": matches[0].group(0)}
 
 
 def parse_100g(title: str):
@@ -91,14 +112,22 @@ def parse_100g(title: str):
     if _reject_variant(text):
         return None
 
-    explicit = re.search(r"(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)\s*x\s*(\d{1,3})", text)
-    if explicit:
-        amount = float(explicit.group(1))
-        unit = explicit.group(2)
-        packs = int(explicit.group(3))
-        grams = amount * (1000 if unit == "kg" else 1) * packs
+    explicit_matches = list(
+        re.finditer(r"(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)\s*x\s*(\d{1,3})", text)
+    )
+    totals = []
+    for m in explicit_matches:
+        amount = float(m.group(1))
+        grams = amount * (1000 if m.group(2) == "kg" else 1) * int(m.group(3))
         if grams > 0:
-            return {"quantity": grams / 100, "confidence": 0.99, "evidence": explicit.group(0)}
+            totals.append((grams, m.group(0)))
+    distinct_totals = _distinct_numbers(x[0] for x in totals)
+    if len(distinct_totals) > 1:
+        return None
+    if totals:
+        grams = distinct_totals[0]
+        evidence = next(e for value, e in totals if round(value, 6) == grams)
+        return {"quantity": grams / 100, "confidence": 0.99, "evidence": evidence}
 
     matches = list(re.finditer(r"(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)", text))
     grams = []
@@ -106,7 +135,7 @@ def parse_100g(title: str):
         amount = float(m.group(1)) * (1000 if m.group(2) == "kg" else 1)
         if 1 <= amount <= 100000:
             grams.append(amount)
-    distinct = sorted(set(grams))
+    distinct = _distinct_numbers(grams)
     if len(distinct) != 1:
         return None
     return {"quantity": distinct[0] / 100, "confidence": 0.90, "evidence": matches[0].group(0)}
