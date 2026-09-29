@@ -38,7 +38,9 @@ def litter_material(title: str) -> str:
 
     if any(k in text for k in ("シリカ", "silica")):
         signals.add("silica")
-    if any(k in text for k in ("紙製", "紙の", "ペーパー", "ペパーレット")):
+
+    has_standalone_paper = bool(re.search(r"(?:^|[\s/・])紙(?:[\s/・]|$)", text))
+    if any(k in text for k in ("紙製", "紙の", "ペーパー", "ペパーレット")) or has_standalone_paper:
         signals.add("paper")
 
     # クニミネ工業の標準「猫砂1番 7L」はベントナイト。
