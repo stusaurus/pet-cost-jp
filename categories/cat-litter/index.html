@@ -43,7 +43,7 @@
 
   const currentRows = () => [...document.querySelectorAll('[data-product-row]')];
 
-  function updateFeatured(row, rankText, median) {
+  function updateFeatured(row, rankText, median, visibleRows = []) {
     const box = document.querySelector('[data-featured-box]');
     if (!box) return;
     if (!row) {
@@ -58,6 +58,7 @@
     const total = box.querySelector('[data-featured-total]');
     const badge = box.querySelector('[data-featured-badge]');
     const diff = box.querySelector('[data-featured-diff]');
+    const reasons = box.querySelector('[data-featured-reasons]');
     const link = box.querySelector('[data-affiliate-link]');
 
     if (img) {
@@ -76,6 +77,37 @@
     if (total) total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
     if (badge) badge.textContent = rankText || '表示中の最安';
     if (diff) diff.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), median);
+
+    if (reasons) {
+      reasons.innerHTML = '';
+      const rows = visibleRows.length ? visibleRows : [row];
+      const totals = rows.map((item) => Number(item.dataset.totalPrice || 0)).filter((x) => x > 0);
+      const quantities = rows.map((item) => Number(item.dataset.quantity || 0)).filter((x) => x > 0);
+      const minTotal = totals.length ? Math.min(...totals) : 0;
+      const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+      const total = Number(row.dataset.totalPrice || 0);
+      const quantity = Number(row.dataset.quantity || 0);
+      const unit = Number(row.dataset.rowUnitPrice || 0);
+      const chips = [{ text: '単価最安', cls: 'is-primary' }];
+
+      if (unit > 0 && median > 0) {
+        const pct = ((median - unit) / median) * 100;
+        if (pct >= 2) chips.push({ text: '中央値より' + pct.toFixed(0) + '%安い', cls: '' });
+      }
+      if (total > 0 && minTotal > 0 && Math.abs(total - minTotal) < 1e-9) {
+        chips.push({ text: '支払総額も最小', cls: 'is-warm' });
+      }
+      if (quantity > 0 && maxQuantity > 0 && Math.abs(quantity - maxQuantity) < 1e-9) {
+        chips.push({ text: '最大容量', cls: 'is-cool' });
+      }
+
+      chips.slice(0, 4).forEach((chip) => {
+        const span = document.createElement('span');
+        span.className = 'cover-reason' + (chip.cls ? ' ' + chip.cls : '');
+        span.textContent = chip.text;
+        reasons.appendChild(span);
+      });
+    }
 
     if (link) {
       link.href = row.dataset.url || '#';
@@ -369,7 +401,8 @@
     updateFeatured(
       visibleRows[0],
       rankAll ? '表示中の1位' : 'この条件の1位',
-      middle
+      middle,
+      visibleRows
     );
     updateSnapshot(visibleRows, middle);
     updateAngles(visibleRows);
@@ -904,13 +937,32 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .editorial-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.editorial-side-card{display:block;padding:13px;min-height:190px}.editorial-side-card h3{font-size:15px;padding-right:14px}.editorial-side-price{font-size:24px}.editorial-side-art{height:83px;margin-top:4px}.editorial-side-art svg{width:100%;height:100%}.editorial-side-meta{font-size:8px}
   .editorial-footerline{display:block;line-height:1.6}
 }
+
+/* Category cover feature v18 */
+.featured.cover-feature{position:relative;overflow:hidden;display:grid;grid-template-columns:180px minmax(0,1fr) 210px;gap:22px;align-items:center;margin:14px 0 20px;padding:22px;border:1px solid color-mix(in srgb,var(--theme) 24%,#d9e4de);border-radius:26px;background:radial-gradient(circle at 84% 12%,color-mix(in srgb,var(--theme-soft) 76%,transparent),transparent 29%),linear-gradient(145deg,#fff,var(--theme-wash));box-shadow:0 20px 48px rgba(23,49,38,.11)}
+.featured.cover-feature:before{content:"TODAY'S BEST PRICE";position:absolute;right:-31px;top:17px;transform:rotate(38deg);padding:5px 39px;background:#173126;color:#fff;font-size:8px;font-weight:950;letter-spacing:.12em;z-index:3}
+.cover-media{position:relative;display:grid;place-items:center;min-height:180px;border-radius:21px;background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.9);box-shadow:0 12px 30px rgba(23,49,38,.07)}
+.cover-media:after{content:"";position:absolute;left:19%;right:19%;bottom:15px;height:11px;border-radius:50%;background:rgba(23,49,38,.10);filter:blur(7px)}
+.cover-feature .featured-img{position:relative;z-index:1;width:156px;height:156px;border:0;border-radius:18px;background:#fff;object-fit:contain}
+.cover-copy{min-width:0}.cover-kicker{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:var(--theme-dark);font-size:9px;font-weight:950;letter-spacing:.12em}.cover-kicker:before{content:"♛";display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#ffd66e;color:#674c00;font-size:13px}
+.cover-feature .featured-badge{background:var(--theme);font-size:9px;padding:5px 8px;letter-spacing:.03em}.cover-feature .featured-crown{display:none}
+.cover-feature .featured-title{margin:10px 0 3px;font-size:17px;line-height:1.45;-webkit-line-clamp:2}.cover-feature .featured-shop{font-size:10px}
+.cover-reasons{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;min-height:25px}.cover-reason{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;background:#fff;border:1px solid color-mix(in srgb,var(--theme) 18%,#dde7e1);color:#315546;font-size:9px;font-weight:900;box-shadow:0 4px 12px rgba(23,49,38,.04)}.cover-reason.is-primary{background:#173126;color:#fff;border-color:#173126}.cover-reason.is-warm{background:#fff2cb;color:#765600;border-color:#efd99b}.cover-reason.is-cool{background:#e5f3f6;color:#276d78;border-color:#c8e1e7}
+.cover-price-panel{position:relative;padding:17px;border-radius:20px;background:#173126;color:#fff;box-shadow:0 14px 32px rgba(23,49,38,.18)}.cover-price-label{display:block;font-size:9px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.65)}.cover-unit-line{display:flex;align-items:baseline;gap:5px;margin-top:3px}.cover-feature .featured-unit{font-size:40px;line-height:.95;color:#ffd66e;letter-spacing:-.055em}.cover-metric{font-size:10px;font-weight:850;color:rgba(255,255,255,.76)}
+.cover-feature .featured-diff{margin-top:8px;color:#fff;font-size:11px}.cover-feature .featured-total{display:block;margin-top:5px;color:rgba(255,255,255,.68);font-size:10px}.cover-feature .featured-action{margin-top:13px}.cover-feature .featured-action .btn{width:100%;margin:0;background:#fff;color:#173126;box-shadow:none}.cover-feature .featured-action .btn:hover{background:#f5f8f6}
+@media(max-width:759px){
+  .featured.cover-feature{grid-template-columns:104px minmax(0,1fr);grid-template-areas:"media copy" "price price";gap:12px;padding:14px;border-radius:21px}
+  .cover-media{grid-area:media;min-height:112px;border-radius:16px}.cover-feature .featured-img{width:100px;height:100px}.cover-copy{grid-area:copy}.cover-price-panel{grid-area:price;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label total" "unit total" "diff action";gap:2px 10px;padding:13px 14px;border-radius:16px}
+  .cover-price-label{grid-area:label}.cover-unit-line{grid-area:unit}.cover-feature .featured-diff{grid-area:diff;margin-top:5px}.cover-feature .featured-total{grid-area:total;align-self:center;margin:0;text-align:right}.cover-feature .featured-action{grid-area:action;align-self:end;margin:0}.cover-feature .featured-action .btn{width:auto;min-width:106px;padding:9px 10px;font-size:10px}
+  .cover-feature .featured-title{font-size:12px;margin-top:7px}.cover-feature .featured-shop{font-size:8px}.cover-reasons{gap:4px;margin-top:7px}.cover-reason{font-size:7px;padding:4px 6px}.cover-feature .featured-unit{font-size:31px}.cover-metric{font-size:8px}.cover-feature:before{font-size:7px;right:-37px;top:12px}
+}
 </style></head><body data-category-id="cat-litter" class="page-cat-litter"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">猫砂</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">L表記を確認できる猫砂だけを1Lあたりに換算。kgしかない商品を推測でL換算しません。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 20:59 JST</p>
+        <p class="updated">最終更新 2026-09-30 23:16 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
           <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
@@ -950,7 +1002,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
               <span class="filter-icon" aria-hidden="true">▤</span>
               <span class="filter-label">紙</span>
               <span class="filter-meta">紙系</span>
-              <span class="filter-count">9件</span>
+              <span class="filter-count">10件</span>
             </button><button type="button" class="filter-chip"
               data-group-button data-group="okara" data-group-label="おから"
               aria-pressed="false">
@@ -971,7 +1023,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
               <span class="filter-icon" aria-hidden="true">◆</span>
               <span class="filter-label">鉱物・ベントナイト</span>
               <span class="filter-meta">鉱物系</span>
-              <span class="filter-count">6件</span>
+              <span class="filter-count">5件</span>
             </button><button type="button" class="filter-chip"
               data-group-button data-group="mixed" data-group-label="混合素材"
               aria-pressed="false">
@@ -988,25 +1040,32 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
               <span class="filter-count">4件</span>
             </button></div></div>
         <div class="filter-help">横にスワイプして条件を変更できます。選ぶと最安・TOP3・商品一覧も同時に更新します。</div>
-        <div class="featured" data-featured-box>
-      <div><img class="featured-img" data-featured-image src="https://thumbnail.image.rakuten.co.jp/@0_mall/tomclife/cabinet/11471456/imgrc0146915947.jpg?_ex=128x128" alt="【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂" width="120" height="120"></div>
-      <div>
+        <div class="featured cover-feature" data-featured-box>
+      <div class="cover-media"><img class="featured-img" data-featured-image src="https://thumbnail.image.rakuten.co.jp/@0_mall/tomclife/cabinet/11471456/imgrc0146915947.jpg?_ex=128x128" alt="【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂" width="156" height="156"></div>
+      <div class="cover-copy">
+        <div class="cover-kicker">CURRENT LOWEST</div>
         <span class="featured-crown" aria-hidden="true">♛</span><span class="featured-badge" data-featured-badge>この条件の1位</span>
         <div class="featured-title" data-featured-title>【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂</div>
         <div class="featured-shop" data-featured-shop>TOMC LIFE 楽天市場店</div>
-        <div class="featured-price"><span class="featured-unit" data-featured-unit>¥59.5</span><span class="featured-total" data-featured-total>総額 ¥2,500</span></div><div class="featured-diff" data-featured-diff></div>
+        <div class="cover-reasons" data-featured-reasons aria-label="安さの理由"></div>
       </div>
-      <div class="featured-action">
-        <a class="btn" data-affiliate-link
-          data-merchant="rakuten"
-          data-category-id="cat-litter"
-          data-item-id="b86f216f01af"
-          data-item-name="【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂"
-          data-metric="per_liter"
-          data-unit-price="59.5238"
-          data-position="1"
-          data-conversion-source="featured_product"
-          href="https://hb.afl.rakuten.co.jp/hgc/g00uo85o.7cx6md0f.g00uo85o.7cx6na45/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomclife%2Ftocat00003%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomclife%2Fi%2F10000004%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る →</a>
+      <div class="cover-price-panel">
+        <span class="cover-price-label">1Lあたり</span>
+        <div class="cover-unit-line"><span class="featured-unit" data-featured-unit>¥59.5</span><span class="cover-metric">/ 1L</span></div>
+        <div class="featured-diff" data-featured-diff></div>
+        <span class="featured-total" data-featured-total>総額 ¥2,500</span>
+        <div class="featured-action">
+          <a class="btn" data-affiliate-link
+            data-merchant="rakuten"
+            data-category-id="cat-litter"
+            data-item-id="b86f216f01af"
+            data-item-name="【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂"
+            data-metric="per_liter"
+            data-unit-price="59.5238"
+            data-position="1"
+            data-conversion-source="featured_product"
+            href="https://hb.afl.rakuten.co.jp/hgc/g00uo85o.7cx6md0f.g00uo85o.7cx6na45/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomclife%2Ftocat00003%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomclife%2Fi%2F10000004%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る →</a>
+        </div>
       </div>
     </div>
 
@@ -2267,43 +2326,43 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                   href="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F535454%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10183479%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
               </div>
             </article><article class="shop-card" data-product-row
-                data-group="mineral"
-                data-row-unit-price="106.4643"
-                data-total-price="2981"
-                data-quantity="28.0"
-                data-quantity-evidence="7lx4袋"
-                data-image="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128"
-                data-item-id="896700596acc"
-                data-item-name="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品"
-                data-shop="Pet館〜ペット館〜"
-                data-url="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+                data-group="paper"
+                data-row-unit-price="106.8571"
+                data-total-price="748"
+                data-quantity="7.0"
+                data-quantity-evidence="7l"
+                data-image="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128"
+                data-item-id="d19d0f8454eb"
+                data-item-name="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便"
+                data-shop="charm 楽天市場店"
+                data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F65529%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10831908%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
               <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
-                <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128" alt="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品" loading="lazy" width="92" height="92">
+                <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128" alt="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>30</span><span data-rank-badge style="display:none">30位</span></span>
               </div>
               <div class="shop-card-prices">
-                <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥106<small> / 1L</small></div></div>
-                <div class="shop-total"><span>購入総額</span><b>¥2,981</b></div>
+                <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥107<small> / 1L</small></div></div>
+                <div class="shop-total"><span>購入総額</span><b>¥748</b></div>
               </div>
               <div class="shop-card-head">
                 <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7lx4袋</span></div>
+                <div class="shop-card-title">ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便</div>
+                <div class="shop-card-shop">charm 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7l</span></div>
               </div>
-              <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
+              <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
                 <a class="btn" data-affiliate-link
                   data-merchant="rakuten"
                   data-category-id="cat-litter"
-                  data-item-id="896700596acc"
-                  data-item-name="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品"
+                  data-item-id="d19d0f8454eb"
+                  data-item-name="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便"
                   data-metric="per_liter"
-                  data-unit-price="106.4643"
+                  data-unit-price="106.8571"
                   data-position="30"
                   data-conversion-source="comparison_card"
-                  href="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
+                  href="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F65529%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10831908%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
               </div>
             </article></div>
       </section>
