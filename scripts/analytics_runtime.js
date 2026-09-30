@@ -364,12 +364,25 @@
       row.hidden = !visible;
       const rank = row.querySelector('[data-rank-cell]');
       const rankBadge = row.querySelector('[data-rank-badge]');
+      const showcase = row.querySelector('[data-rank-showcase-label]');
+      const affiliate = row.querySelector('a[data-affiliate-link]');
       row.classList.remove('is-rank-1', 'is-rank-2', 'is-rank-3');
+      if (showcase) {
+        showcase.hidden = true;
+        showcase.textContent = '';
+      }
       if (!visible) return;
 
       visibleRows.push(row);
       const visualRank = visibleRows.length;
-      if (visualRank <= 3) row.classList.add('is-rank-' + visualRank);
+      if (visualRank <= 3) {
+        row.classList.add('is-rank-' + visualRank);
+        if (showcase) {
+          showcase.hidden = false;
+          showcase.textContent = visualRank === 1 ? 'この条件の最安' : visualRank === 2 ? '2nd PRICE' : '3rd PRICE';
+        }
+      }
+      if (affiliate) affiliate.dataset.position = String(visualRank);
       if (group === 'all' && !rankAll) {
         if (rank) rank.textContent = '—';
         if (rankBadge) rankBadge.textContent = '条件別';
