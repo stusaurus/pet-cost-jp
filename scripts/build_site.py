@@ -414,6 +414,23 @@ CSS += r'''
 }
 '''
 
+CSS += r'''
+/* Sticky comparison summary v16 */
+.comparison-sticky{position:sticky;top:54px;z-index:9;margin:10px 0 14px;border:1px solid color-mix(in srgb,var(--theme) 18%,#dce7e0);border-radius:18px;background:rgba(255,255,255,.93);box-shadow:0 12px 30px rgba(23,49,38,.10);backdrop-filter:blur(14px);overflow:hidden}
+.comparison-sticky-inner{display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(110px,.8fr) minmax(150px,1fr) 76px auto;align-items:center;gap:0}
+.sticky-cell{min-width:0;padding:10px 12px;border-right:1px solid var(--line)}.sticky-cell:last-of-type{border-right:0}
+.sticky-label{display:block;font-size:8px;font-weight:900;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}.sticky-value{display:block;margin-top:1px;font-size:13px;font-weight:950;color:#173126;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sticky-price .sticky-value{font-size:19px;color:var(--theme-dark);letter-spacing:-.025em}.sticky-gap .sticky-value{color:var(--theme-dark)}
+.sticky-count{text-align:center}.sticky-count .sticky-value{font-size:15px}
+.sticky-jump{display:flex;align-items:center;justify-content:center;align-self:stretch;min-width:104px;padding:0 12px;text-decoration:none;background:var(--theme);color:#fff;font-size:11px;font-weight:950;transition:background .16s ease}.sticky-jump:hover{background:var(--theme-dark)}
+.sticky-jump:after{content:"↓";margin-left:5px;font-size:12px}
+@media(max-width:759px){
+  .comparison-sticky{top:48px;margin:7px -4px 12px;border-radius:15px}
+  .comparison-sticky-inner{grid-template-columns:1.15fr 1fr .82fr auto}
+  .sticky-cell{padding:8px 8px}.sticky-label{font-size:7px}.sticky-value{font-size:10px}.sticky-price .sticky-value{font-size:17px}.sticky-gap{display:none}.sticky-count .sticky-value{font-size:12px}
+  .sticky-jump{min-width:49px;padding:0 8px;font-size:0}.sticky-jump:after{content:"↓";margin:0;font-size:16px}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -720,10 +737,23 @@ def footer():
     </div></footer>'''
 
 
+def relative_price_label(value, median):
+    if not value or not median or median <= 0:
+        return "-"
+    diff = (value - median) / median * 100
+    if abs(diff) < 2:
+        return "中央値付近"
+    if diff < 0:
+        return f"中央値より{abs(diff):.0f}%安い"
+    return f"中央値より{diff:.0f}%高い"
+
+
 def category_page(category, items, categories, updated):
     initial_items = visible_default_items(category, items)
     initial_prices = sorted(x["unit_price"] for x in initial_items)
     initial_median = initial_prices[len(initial_prices) // 2] if initial_prices else None
+    initial_min = initial_prices[0] if initial_prices else None
+    initial_gap = relative_price_label(initial_min, initial_median)
     default_label = group_label(category, category.get("default_group", "all"))
     featured = initial_items[0] if initial_items else None
 
@@ -753,6 +783,15 @@ def category_page(category, items, categories, updated):
     </div></header>
     {nav(categories, category['id'])}
     <main class="main"><div class="wrap">
+      <aside class="comparison-sticky" data-comparison-sticky aria-label="現在の比較条件">
+        <div class="comparison-sticky-inner">
+          <div class="sticky-cell"><span class="sticky-label">比較条件</span><strong class="sticky-value" data-sticky-condition>{esc(default_label)}</strong></div>
+          <div class="sticky-cell sticky-price"><span class="sticky-label">現在最安</span><strong class="sticky-value" data-sticky-min>{yen(initial_min)} / {esc(category['metric_label'])}</strong></div>
+          <div class="sticky-cell sticky-gap"><span class="sticky-label">中央値との差</span><strong class="sticky-value" data-sticky-gap>{esc(initial_gap)}</strong></div>
+          <div class="sticky-cell sticky-count"><span class="sticky-label">表示</span><strong class="sticky-value" data-sticky-count>{len(initial_items)}件</strong></div>
+          <a class="sticky-jump" href="#product-ranking" aria-label="商品ランキングへ移動">一覧へ</a>
+        </div>
+      </aside>
       <section class="section condition-panel">
         <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">サイズ・素材・互換性をそろえると、比較がもっと正確になります。</p><span class="condition-current" data-current-condition>{esc(default_label)}</span></div><strong data-visible-count>{len(initial_items)}件</strong></div>
         <div class="filter-wrap"><div class="filters" data-group-filter data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
@@ -785,7 +824,7 @@ def category_page(category, items, categories, updated):
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="product-ranking">
         <div class="section-head"><div><h2>安い順に比較</h2><p class="section-sub">{esc(default_label)}から表示。画像・総額・単価に加えて、安さの理由も自動表示します。</p></div></div>
         <div class="value-legend" aria-label="安さの理由"><span><i class="u"></i>単価最安</span><span><i class="d"></i>中央値より安い</span><span><i class="t"></i>支払総額が最小</span><span><i class="b"></i>最大容量</span></div>
         <div class="product-grid" data-product-grid>{product_rows(items, category) if items else '<div class="product-empty">安全に単価計算できる商品がまだありません。</div>'}</div>
