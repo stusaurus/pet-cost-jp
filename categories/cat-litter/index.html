@@ -426,6 +426,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-spotlight-link]');
+      if (!link) return;
+      send('daily_spotlight_click', {
+        category_id: link.dataset.categoryId || '',
+        price_gap_percent: Number(link.dataset.gapPercent || 0),
+        conversion_source: 'daily_price_gap'
+      });
+    });
+
+    document.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-affiliate-link]');
       if (!link) return;
       const data = {
@@ -631,13 +641,31 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .category-card{border-radius:21px}.category-card-number{top:11px;left:12px}
   .snapshot-section{padding:18px 14px}.top3-strip{display:flex;grid-template-areas:none;padding:14px 2px 6px;align-items:stretch}.top3-card,.top3-card:nth-child(1),.top3-card:nth-child(2),.top3-card:nth-child(3){grid-area:auto;min-width:78%;min-height:0;transform:none;flex-direction:row;align-items:center}.top3-card:nth-child(1):hover{transform:none}.top3-img,.top3-card:nth-child(1) .top3-img{width:58px;height:58px;flex-basis:58px;margin:0}.top3-copy{text-align:left}.top3-rank,.top3-card:nth-child(1) .top3-rank{position:static;width:31px;height:31px;flex:0 0 31px;font-size:12px}.top3-card:nth-child(1) .top3-rank:before{display:none}.top3-unit,.top3-card:nth-child(1) .top3-unit{font-size:19px}.podium-foot{display:none}
 }
+
+/* Daily price-gap spotlight v11 */
+.daily-spotlight{position:relative;overflow:hidden;padding:0;border:0;background:linear-gradient(138deg,#142f24 0%,#214d39 55%,#2f7152 100%);color:#fff;border-radius:28px;box-shadow:0 26px 60px rgba(20,47,36,.22)}
+.daily-spotlight:before{content:"";position:absolute;width:250px;height:250px;border-radius:50%;right:-90px;top:-115px;background:rgba(255,214,110,.13)}
+.daily-spotlight:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;left:-80px;bottom:-90px;background:rgba(126,211,171,.12)}
+.spotlight-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(250px,.72fr);gap:24px;align-items:center;padding:25px}
+.spotlight-kicker{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:950;letter-spacing:.12em;color:#ffe08a}.spotlight-kicker:before{content:"";width:8px;height:8px;border-radius:50%;background:#ffd66e;box-shadow:0 0 0 5px rgba(255,214,110,.12)}
+.daily-spotlight h2{margin:7px 0 4px;font-size:clamp(27px,5vw,38px);line-height:1.1;letter-spacing:-.035em}.daily-spotlight h2:before{display:none}
+.spotlight-copy{margin:0;color:rgba(255,255,255,.78);font-size:13px;max-width:620px}.spotlight-copy strong{color:#fff}
+.spotlight-gap{display:flex;align-items:baseline;gap:8px;margin:13px 0 4px}.spotlight-gap b{font-size:clamp(42px,7vw,58px);line-height:.95;color:#ffd66e;letter-spacing:-.055em}.spotlight-gap span{font-size:14px;font-weight:850;color:#fff}
+.spotlight-price-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.spotlight-price{display:flex;flex-direction:column;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:8px 10px}.spotlight-price span{font-size:9px;color:rgba(255,255,255,.62);font-weight:800}.spotlight-price b{font-size:17px;color:#fff;line-height:1.2}
+.spotlight-action{display:inline-flex;margin-top:13px;background:#fff;color:#173126;text-decoration:none;border-radius:13px;padding:10px 14px;font-size:12px;font-weight:950;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .16s ease}.spotlight-action:hover{transform:translateY(-2px)}
+.spotlight-product{position:relative;background:linear-gradient(145deg,#fff,#f7fbf8);color:#173126;border-radius:20px;padding:14px;box-shadow:0 16px 38px rgba(0,0,0,.17);min-width:0}.spotlight-product:before{content:"TODAY";position:absolute;right:-19px;top:14px;transform:rotate(38deg);background:#ffd66e;color:#654a00;font-size:8px;font-weight:950;letter-spacing:.12em;padding:4px 27px}
+.spotlight-image{display:block;width:100%;height:135px;object-fit:contain;background:#fff;border-radius:14px}.spotlight-category-art{height:135px}.spotlight-category-art svg{width:100%;height:100%}
+.spotlight-product-name{font-size:12px;font-weight:850;line-height:1.4;margin-top:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.spotlight-product-meta{font-size:10px;color:#66776e;margin-top:4px}
+.gap-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 0}.gap-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;text-decoration:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11);border-radius:13px;padding:8px 10px;color:#fff}.gap-chip span{font-size:10px;color:rgba(255,255,255,.68);font-weight:800}.gap-chip b{font-size:15px;color:#ffe08a;white-space:nowrap}.gap-chip:hover{background:rgba(255,255,255,.12)}
+.spotlight-note{font-size:9px;color:rgba(255,255,255,.53);margin-top:9px}
+@media(max-width:759px){.daily-spotlight{border-radius:22px}.spotlight-inner{grid-template-columns:1fr;padding:18px;gap:15px}.spotlight-product{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:center}.spotlight-image,.spotlight-category-art{width:78px;height:78px}.spotlight-product-name{margin-top:0}.gap-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.gap-chip{min-width:66%;scroll-snap-align:start}.spotlight-gap b{font-size:44px}}
 </style></head><body data-category-id="cat-litter" class="page-cat-litter"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">猫砂</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">L表記を確認できる猫砂だけを1Lあたりに換算。kgしかない商品を推測でL換算しません。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 19:33 JST</p>
+        <p class="updated">最終更新 2026-09-30 19:51 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
           <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
