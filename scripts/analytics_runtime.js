@@ -41,7 +41,7 @@
 
   const currentRows = () => [...document.querySelectorAll('[data-product-row]')];
 
-  function updateFeatured(row, rankText, median) {
+  function updateFeatured(row, rankText, median, visibleRows = []) {
     const box = document.querySelector('[data-featured-box]');
     if (!box) return;
     if (!row) {
@@ -56,6 +56,7 @@
     const total = box.querySelector('[data-featured-total]');
     const badge = box.querySelector('[data-featured-badge]');
     const diff = box.querySelector('[data-featured-diff]');
+    const reasons = box.querySelector('[data-featured-reasons]');
     const link = box.querySelector('[data-affiliate-link]');
 
     if (img) {
@@ -74,6 +75,37 @@
     if (total) total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
     if (badge) badge.textContent = rankText || '表示中の最安';
     if (diff) diff.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), median);
+
+    if (reasons) {
+      reasons.innerHTML = '';
+      const rows = visibleRows.length ? visibleRows : [row];
+      const totals = rows.map((item) => Number(item.dataset.totalPrice || 0)).filter((x) => x > 0);
+      const quantities = rows.map((item) => Number(item.dataset.quantity || 0)).filter((x) => x > 0);
+      const minTotal = totals.length ? Math.min(...totals) : 0;
+      const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+      const total = Number(row.dataset.totalPrice || 0);
+      const quantity = Number(row.dataset.quantity || 0);
+      const unit = Number(row.dataset.rowUnitPrice || 0);
+      const chips = [{ text: '単価最安', cls: 'is-primary' }];
+
+      if (unit > 0 && median > 0) {
+        const pct = ((median - unit) / median) * 100;
+        if (pct >= 2) chips.push({ text: '中央値より' + pct.toFixed(0) + '%安い', cls: '' });
+      }
+      if (total > 0 && minTotal > 0 && Math.abs(total - minTotal) < 1e-9) {
+        chips.push({ text: '支払総額も最小', cls: 'is-warm' });
+      }
+      if (quantity > 0 && maxQuantity > 0 && Math.abs(quantity - maxQuantity) < 1e-9) {
+        chips.push({ text: '最大容量', cls: 'is-cool' });
+      }
+
+      chips.slice(0, 4).forEach((chip) => {
+        const span = document.createElement('span');
+        span.className = 'cover-reason' + (chip.cls ? ' ' + chip.cls : '');
+        span.textContent = chip.text;
+        reasons.appendChild(span);
+      });
+    }
 
     if (link) {
       link.href = row.dataset.url || '#';
@@ -367,7 +399,8 @@
     updateFeatured(
       visibleRows[0],
       rankAll ? '表示中の1位' : 'この条件の1位',
-      middle
+      middle,
+      visibleRows
     );
     updateSnapshot(visibleRows, middle);
     updateAngles(visibleRows);

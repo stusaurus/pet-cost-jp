@@ -459,6 +459,27 @@ CSS += r'''
 }
 '''
 
+CSS += r'''
+/* Category cover feature v18 */
+.featured.cover-feature{position:relative;overflow:hidden;display:grid;grid-template-columns:180px minmax(0,1fr) 210px;gap:22px;align-items:center;margin:14px 0 20px;padding:22px;border:1px solid color-mix(in srgb,var(--theme) 24%,#d9e4de);border-radius:26px;background:radial-gradient(circle at 84% 12%,color-mix(in srgb,var(--theme-soft) 76%,transparent),transparent 29%),linear-gradient(145deg,#fff,var(--theme-wash));box-shadow:0 20px 48px rgba(23,49,38,.11)}
+.featured.cover-feature:before{content:"TODAY'S BEST PRICE";position:absolute;right:-31px;top:17px;transform:rotate(38deg);padding:5px 39px;background:#173126;color:#fff;font-size:8px;font-weight:950;letter-spacing:.12em;z-index:3}
+.cover-media{position:relative;display:grid;place-items:center;min-height:180px;border-radius:21px;background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.9);box-shadow:0 12px 30px rgba(23,49,38,.07)}
+.cover-media:after{content:"";position:absolute;left:19%;right:19%;bottom:15px;height:11px;border-radius:50%;background:rgba(23,49,38,.10);filter:blur(7px)}
+.cover-feature .featured-img{position:relative;z-index:1;width:156px;height:156px;border:0;border-radius:18px;background:#fff;object-fit:contain}
+.cover-copy{min-width:0}.cover-kicker{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:var(--theme-dark);font-size:9px;font-weight:950;letter-spacing:.12em}.cover-kicker:before{content:"♛";display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#ffd66e;color:#674c00;font-size:13px}
+.cover-feature .featured-badge{background:var(--theme);font-size:9px;padding:5px 8px;letter-spacing:.03em}.cover-feature .featured-crown{display:none}
+.cover-feature .featured-title{margin:10px 0 3px;font-size:17px;line-height:1.45;-webkit-line-clamp:2}.cover-feature .featured-shop{font-size:10px}
+.cover-reasons{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;min-height:25px}.cover-reason{display:inline-flex;align-items:center;border-radius:999px;padding:5px 8px;background:#fff;border:1px solid color-mix(in srgb,var(--theme) 18%,#dde7e1);color:#315546;font-size:9px;font-weight:900;box-shadow:0 4px 12px rgba(23,49,38,.04)}.cover-reason.is-primary{background:#173126;color:#fff;border-color:#173126}.cover-reason.is-warm{background:#fff2cb;color:#765600;border-color:#efd99b}.cover-reason.is-cool{background:#e5f3f6;color:#276d78;border-color:#c8e1e7}
+.cover-price-panel{position:relative;padding:17px;border-radius:20px;background:#173126;color:#fff;box-shadow:0 14px 32px rgba(23,49,38,.18)}.cover-price-label{display:block;font-size:9px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.65)}.cover-unit-line{display:flex;align-items:baseline;gap:5px;margin-top:3px}.cover-feature .featured-unit{font-size:40px;line-height:.95;color:#ffd66e;letter-spacing:-.055em}.cover-metric{font-size:10px;font-weight:850;color:rgba(255,255,255,.76)}
+.cover-feature .featured-diff{margin-top:8px;color:#fff;font-size:11px}.cover-feature .featured-total{display:block;margin-top:5px;color:rgba(255,255,255,.68);font-size:10px}.cover-feature .featured-action{margin-top:13px}.cover-feature .featured-action .btn{width:100%;margin:0;background:#fff;color:#173126;box-shadow:none}.cover-feature .featured-action .btn:hover{background:#f5f8f6}
+@media(max-width:759px){
+  .featured.cover-feature{grid-template-columns:104px minmax(0,1fr);grid-template-areas:"media copy" "price price";gap:12px;padding:14px;border-radius:21px}
+  .cover-media{grid-area:media;min-height:112px;border-radius:16px}.cover-feature .featured-img{width:100px;height:100px}.cover-copy{grid-area:copy}.cover-price-panel{grid-area:price;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"label total" "unit total" "diff action";gap:2px 10px;padding:13px 14px;border-radius:16px}
+  .cover-price-label{grid-area:label}.cover-unit-line{grid-area:unit}.cover-feature .featured-diff{grid-area:diff;margin-top:5px}.cover-feature .featured-total{grid-area:total;align-self:center;margin:0;text-align:right}.cover-feature .featured-action{grid-area:action;align-self:end;margin:0}.cover-feature .featured-action .btn{width:auto;min-width:106px;padding:9px 10px;font-size:10px}
+  .cover-feature .featured-title{font-size:12px;margin-top:7px}.cover-feature .featured-shop{font-size:8px}.cover-reasons{gap:4px;margin-top:7px}.cover-reason{font-size:7px;padding:4px 6px}.cover-feature .featured-unit{font-size:31px}.cover-metric{font-size:8px}.cover-feature:before{font-size:7px;right:-37px;top:12px}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -634,33 +655,40 @@ def filter_buttons(category, items):
 
 def featured_box(category, item):
     if not item:
-        return '<div class="featured" data-featured-box hidden></div>'
+        return '<div class="featured cover-feature" data-featured-box hidden></div>'
 
     image = esc(item.get("image", ""))
     image_html = (
-        f'<img class="featured-img" data-featured-image src="{image}" alt="{esc(item["name"])}" width="120" height="120">'
+        f'<img class="featured-img" data-featured-image src="{image}" alt="{esc(item["name"])}" width="156" height="156">'
         if image else
-        f'<img class="featured-img" data-featured-image alt="" width="120" height="120" hidden>'
+        f'<img class="featured-img" data-featured-image alt="" width="156" height="156" hidden>'
     )
-    return f'''<div class="featured" data-featured-box>
-      <div>{image_html}</div>
-      <div>
+    return f'''<div class="featured cover-feature" data-featured-box>
+      <div class="cover-media">{image_html}</div>
+      <div class="cover-copy">
+        <div class="cover-kicker">CURRENT LOWEST</div>
         <span class="featured-crown" aria-hidden="true">♛</span><span class="featured-badge" data-featured-badge>この条件の1位</span>
         <div class="featured-title" data-featured-title>{esc(item['name'])}</div>
         <div class="featured-shop" data-featured-shop>{esc(item.get('shop', ''))}</div>
-        <div class="featured-price"><span class="featured-unit" data-featured-unit>{yen(item['unit_price'])}</span><span class="featured-total" data-featured-total>総額 {yen(item['price'])}</span></div><div class="featured-diff" data-featured-diff></div>
+        <div class="cover-reasons" data-featured-reasons aria-label="安さの理由"></div>
       </div>
-      <div class="featured-action">
-        <a class="btn" data-affiliate-link
-          data-merchant="rakuten"
-          data-category-id="{esc(category['id'])}"
-          data-item-id="{esc(item['product_id'])}"
-          data-item-name="{esc(item['name'])}"
-          data-metric="{esc(category['metric'])}"
-          data-unit-price="{item['unit_price']}"
-          data-position="1"
-          data-conversion-source="featured_product"
-          href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る →</a>
+      <div class="cover-price-panel">
+        <span class="cover-price-label">{esc(category['metric_label'])}あたり</span>
+        <div class="cover-unit-line"><span class="featured-unit" data-featured-unit>{yen(item['unit_price'])}</span><span class="cover-metric">/ {esc(category['metric_label'])}</span></div>
+        <div class="featured-diff" data-featured-diff></div>
+        <span class="featured-total" data-featured-total>総額 {yen(item['price'])}</span>
+        <div class="featured-action">
+          <a class="btn" data-affiliate-link
+            data-merchant="rakuten"
+            data-category-id="{esc(category['id'])}"
+            data-item-id="{esc(item['product_id'])}"
+            data-item-name="{esc(item['name'])}"
+            data-metric="{esc(category['metric'])}"
+            data-unit-price="{item['unit_price']}"
+            data-position="1"
+            data-conversion-source="featured_product"
+            href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る →</a>
+        </div>
       </div>
     </div>'''
 
