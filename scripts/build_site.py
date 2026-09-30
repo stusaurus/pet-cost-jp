@@ -295,6 +295,26 @@ CSS += r'''
 }
 '''
 
+CSS += r'''
+/* Daily price-gap spotlight v11 */
+.daily-spotlight{position:relative;overflow:hidden;padding:0;border:0;background:linear-gradient(138deg,#142f24 0%,#214d39 55%,#2f7152 100%);color:#fff;border-radius:28px;box-shadow:0 26px 60px rgba(20,47,36,.22)}
+.daily-spotlight:before{content:"";position:absolute;width:250px;height:250px;border-radius:50%;right:-90px;top:-115px;background:rgba(255,214,110,.13)}
+.daily-spotlight:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;left:-80px;bottom:-90px;background:rgba(126,211,171,.12)}
+.spotlight-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(250px,.72fr);gap:24px;align-items:center;padding:25px}
+.spotlight-kicker{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:950;letter-spacing:.12em;color:#ffe08a}.spotlight-kicker:before{content:"";width:8px;height:8px;border-radius:50%;background:#ffd66e;box-shadow:0 0 0 5px rgba(255,214,110,.12)}
+.daily-spotlight h2{margin:7px 0 4px;font-size:clamp(27px,5vw,38px);line-height:1.1;letter-spacing:-.035em}.daily-spotlight h2:before{display:none}
+.spotlight-copy{margin:0;color:rgba(255,255,255,.78);font-size:13px;max-width:620px}.spotlight-copy strong{color:#fff}
+.spotlight-gap{display:flex;align-items:baseline;gap:8px;margin:13px 0 4px}.spotlight-gap b{font-size:clamp(42px,7vw,58px);line-height:.95;color:#ffd66e;letter-spacing:-.055em}.spotlight-gap span{font-size:14px;font-weight:850;color:#fff}
+.spotlight-price-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.spotlight-price{display:flex;flex-direction:column;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:8px 10px}.spotlight-price span{font-size:9px;color:rgba(255,255,255,.62);font-weight:800}.spotlight-price b{font-size:17px;color:#fff;line-height:1.2}
+.spotlight-action{display:inline-flex;margin-top:13px;background:#fff;color:#173126;text-decoration:none;border-radius:13px;padding:10px 14px;font-size:12px;font-weight:950;box-shadow:0 8px 20px rgba(0,0,0,.16);transition:transform .16s ease}.spotlight-action:hover{transform:translateY(-2px)}
+.spotlight-product{position:relative;background:linear-gradient(145deg,#fff,#f7fbf8);color:#173126;border-radius:20px;padding:14px;box-shadow:0 16px 38px rgba(0,0,0,.17);min-width:0}.spotlight-product:before{content:"TODAY";position:absolute;right:-19px;top:14px;transform:rotate(38deg);background:#ffd66e;color:#654a00;font-size:8px;font-weight:950;letter-spacing:.12em;padding:4px 27px}
+.spotlight-image{display:block;width:100%;height:135px;object-fit:contain;background:#fff;border-radius:14px}.spotlight-category-art{height:135px}.spotlight-category-art svg{width:100%;height:100%}
+.spotlight-product-name{font-size:12px;font-weight:850;line-height:1.4;margin-top:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.spotlight-product-meta{font-size:10px;color:#66776e;margin-top:4px}
+.gap-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 0}.gap-chip{display:flex;align-items:center;justify-content:space-between;gap:8px;text-decoration:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.11);border-radius:13px;padding:8px 10px;color:#fff}.gap-chip span{font-size:10px;color:rgba(255,255,255,.68);font-weight:800}.gap-chip b{font-size:15px;color:#ffe08a;white-space:nowrap}.gap-chip:hover{background:rgba(255,255,255,.12)}
+.spotlight-note{font-size:9px;color:rgba(255,255,255,.53);margin-top:9px}
+@media(max-width:759px){.daily-spotlight{border-radius:22px}.spotlight-inner{grid-template-columns:1fr;padding:18px;gap:15px}.spotlight-product{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:center}.spotlight-image,.spotlight-category-art{width:78px;height:78px}.spotlight-product-name{margin-top:0}.gap-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.gap-chip{min-width:66%;scroll-snap-align:start}.spotlight-gap b{font-size:44px}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -672,6 +692,71 @@ def category_page(category, items, categories, updated):
     return shell(title, desc, body, category['id'], breadcrumb_schema)
 
 
+def deal_percent(min_price, median_price):
+    if not min_price or not median_price or median_price <= 0:
+        return 0
+    return max(0, round((median_price - min_price) / median_price * 100))
+
+
+def daily_spotlight(categories, summaries):
+    candidates = []
+    for category in categories:
+        summary = summaries.get(category["id"], {})
+        best = summary.get("best")
+        if not best:
+            continue
+        gap = summary.get("deal_percent", 0)
+        candidates.append((gap, category, summary))
+
+    if not candidates:
+        return ""
+
+    candidates.sort(key=lambda x: (x[0], x[2].get("default_count", 0)), reverse=True)
+    gap, category, summary = candidates[0]
+    best = summary["best"]
+    image = esc(best.get("image", ""))
+    visual = (
+        f'<img class="spotlight-image" src="{image}" alt="{esc(best["name"])}" loading="eager">'
+        if image else
+        f'<div class="spotlight-category-art">{category_illustration(category["id"])}</div>'
+    )
+
+    chips = []
+    for item_gap, item_category, item_summary in candidates:
+        chips.append(
+            f'''<a class="gap-chip" href="{BASE_URL}categories/{esc(item_category['id'])}/">
+              <span>{esc(item_category['name'])}<br>{esc(item_summary['default_label'])}</span>
+              <b>{item_gap}%差</b>
+            </a>'''
+        )
+
+    gap_text = f"{gap}%" if gap > 0 else "ほぼ同水準"
+    return f'''<section class="section daily-spotlight" data-daily-spotlight>
+      <div class="spotlight-inner">
+        <div>
+          <div class="spotlight-kicker">TODAY'S PRICE GAP</div>
+          <h2>今日の価格差</h2>
+          <p class="spotlight-copy"><strong>{esc(category['name'])}・{esc(summary['default_label'])}</strong>で、現在掲載中の商品を同じ単位にそろえて比較しました。</p>
+          <div class="spotlight-gap"><b>{esc(gap_text)}</b><span>中央値より最安が低い</span></div>
+          <div class="spotlight-price-row">
+            <div class="spotlight-price"><span>現在の最安</span><b>{yen(summary['min'])} / {esc(category['metric_label'])}</b></div>
+            <div class="spotlight-price"><span>掲載中央値</span><b>{yen(summary['median'])} / {esc(category['metric_label'])}</b></div>
+          </div>
+          <a class="spotlight-action" data-spotlight-link href="{BASE_URL}categories/{esc(category['id'])}/">この比較を見る →</a>
+          <div class="gap-strip">{''.join(chips)}</div>
+          <div class="spotlight-note">※ 過去価格との比較ではなく、本日取得した現在掲載商品の中での最安値と中央値の差です。</div>
+        </div>
+        <div class="spotlight-product">
+          {visual}
+          <div>
+            <div class="spotlight-product-name">{esc(best['name'])}</div>
+            <div class="spotlight-product-meta">{esc(best.get('shop', ''))} ・ 総額 {yen(best['price'])}</div>
+          </div>
+        </div>
+      </div>
+    </section>'''
+
+
 def homepage(categories, summaries, updated):
     cards = []
     for card_index, c in enumerate(categories, 1):
@@ -718,6 +803,8 @@ def homepage(categories, summaries, updated):
         <div class="section-head"><div><h2>いま比較できるもの</h2><p class="section-sub">最初は消耗品に絞って、比較精度を優先しています。</p></div></div>
         <div class="home-grid">{''.join(cards)}</div>
       </section>
+
+      {daily_spotlight(categories, summaries)}
 
       <section class="section story-section">
         <div class="section-head"><div><h2>使い方は3ステップ</h2></div></div>
@@ -797,10 +884,15 @@ def main():
         )
 
         initial_items = visible_default_items(category, ranked)
+        initial_prices = sorted(x["unit_price"] for x in initial_items)
+        min_price = initial_prices[0] if initial_prices else None
+        median_price = initial_prices[len(initial_prices) // 2] if initial_prices else None
         summaries[category["id"]] = {
             "total_count": len(ranked),
             "default_count": len(initial_items),
-            "min": min([x["unit_price"] for x in initial_items], default=None),
+            "min": min_price,
+            "median": median_price,
+            "deal_percent": deal_percent(min_price, median_price),
             "best": initial_items[0] if initial_items else None,
             "default_label": group_label(category, category.get("default_group", "all")),
         }
