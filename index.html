@@ -260,6 +260,68 @@
     });
   }
 
+  function updateValueBadges(visibleRows, median) {
+    if (!visibleRows.length) return;
+
+    const unitValues = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0);
+    const totalValues = visibleRows
+      .map((row) => Number(row.dataset.totalPrice || 0))
+      .filter((x) => x > 0);
+    const quantities = visibleRows
+      .map((row) => Number(row.dataset.quantity || 0))
+      .filter((x) => x > 0);
+
+    const minUnit = unitValues.length ? Math.min(...unitValues) : 0;
+    const minTotal = totalValues.length ? Math.min(...totalValues) : 0;
+    const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+
+    visibleRows.forEach((row) => {
+      const mount = row.querySelector('[data-value-badges]');
+      if (!mount) return;
+      mount.innerHTML = '';
+
+      const unit = Number(row.dataset.rowUnitPrice || 0);
+      const total = Number(row.dataset.totalPrice || 0);
+      const quantity = Number(row.dataset.quantity || 0);
+      const badges = [];
+
+      if (unit > 0 && minUnit > 0 && Math.abs(unit - minUnit) < 1e-9) {
+        badges.push({ cls: 'is-best-unit', text: '単価最安' });
+      }
+
+      if (unit > 0 && median > 0) {
+        const diff = ((median - unit) / median) * 100;
+        if (diff >= 2) {
+          badges.push({ cls: 'is-discount', text: '中央値より' + diff.toFixed(0) + '%安い' });
+        }
+      }
+
+      if (total > 0 && minTotal > 0 && Math.abs(total - minTotal) < 1e-9) {
+        badges.push({ cls: 'is-low-total', text: '支払総額が最小' });
+      }
+
+      if (quantity > 0 && maxQuantity > 0 && Math.abs(quantity - maxQuantity) < 1e-9) {
+        badges.push({ cls: 'is-bulk', text: '最大容量' });
+      }
+
+      badges.slice(0, 3).forEach((badge) => {
+        const span = document.createElement('span');
+        span.className = 'value-badge ' + badge.cls;
+        span.textContent = badge.text;
+        mount.appendChild(span);
+      });
+
+      if (!badges.length) {
+        const empty = document.createElement('span');
+        empty.className = 'value-badge-empty';
+        empty.textContent = '価格特徴を比較中';
+        mount.appendChild(empty);
+      }
+    });
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -281,6 +343,7 @@
       const node = row.querySelector('[data-price-diff]');
       if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
     });
+    updateValueBadges(visibleRows, middle);
 
     updateFeatured(
       visibleRows[0],
@@ -679,6 +742,19 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
 .filter-chip:focus-visible{outline:3px solid color-mix(in srgb,var(--theme) 26%,#fff);outline-offset:2px}
 .filter-help{display:flex;align-items:center;gap:7px;margin:-4px 0 12px;font-size:10px;color:var(--muted)}.filter-help:before{content:"↔";display:grid;place-items:center;width:22px;height:22px;border-radius:8px;background:var(--theme-soft);color:var(--theme-dark);font-weight:950}
 @media(max-width:759px){.condition-panel{padding:16px}.filter-wrap{margin-left:-16px;margin-right:-16px;padding:4px 16px 7px}.filters{display:flex;gap:9px;min-width:max-content}.filter-chip{width:150px;flex:0 0 150px;scroll-snap-align:start}.filter-wrap{scroll-snap-type:x proximity}.filter-help{margin-top:-5px}}
+
+/* Objective value badges v13 */
+.value-badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 2px;min-height:24px}
+.value-badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;line-height:1;border:1px solid transparent}
+.value-badge:before{font-size:11px;line-height:1}
+.value-badge.is-discount{background:#e8f6ed;color:#176443;border-color:#cce9d8}.value-badge.is-discount:before{content:"↓"}
+.value-badge.is-low-total{background:#fff2cc;color:#775800;border-color:#f2dda0}.value-badge.is-low-total:before{content:"¥"}
+.value-badge.is-bulk{background:#e6f3f7;color:#286d78;border-color:#cbe4ea}.value-badge.is-bulk:before{content:"□"}
+.value-badge.is-best-unit{background:#173126;color:#fff;border-color:#173126}.value-badge.is-best-unit:before{content:"♛";color:#ffd66e}
+.shop-card.is-rank-1 .value-badge-row{padding-right:34px}
+.value-badge-empty{font-size:9px;color:var(--muted);padding:4px 0}
+.value-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:9px;color:var(--muted)}.value-legend span{display:inline-flex;align-items:center;gap:4px}.value-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}.value-legend .u{background:#173126}.value-legend .d{background:#55ad83}.value-legend .t{background:#e2b94f}.value-legend .b{background:#69adba}
+@media(max-width:759px){.value-badge{font-size:9px;padding:4px 6px}.value-badge-row{margin-top:5px}.shop-card.is-rank-1 .value-badge-row{padding-right:22px}}
 </style></head><body data-category-id="" class="page-home"><header class="hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
@@ -686,7 +762,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
         <p class="lead">袋の値段ではなく、<span class="hero-lead-mark">1枚・1Lなど同じ単位</span>にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
         <div class="hero-proof"><div class="hero-proof-item"><b>1枚</b><span>シーツを比較</span></div><div class="hero-proof-item"><b>1L</b><span>猫砂を比較</span></div><div class="hero-proof-item"><b>毎朝</b><span>価格を更新</span></div></div>
         <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
-        <p class="updated">最終更新 2026-09-30 19:59 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:06 JST</p>
       </div>
       <div class="hero-art-shell photo-shell"><div class="hero-photo-wrap">
       <img class="hero-photo" src="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"
@@ -715,7 +791,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <span class="price-ribbon">👑 レギュラーの現在最安</span>
                 <strong>ペットシーツ</strong>
                 <div class="category-price">¥4.10<small> / 1枚</small></div>
-                <div class="category-meta">掲載 23件・条件別に比較</div>
+                <div class="category-meta">掲載 24件・条件別に比較</div>
               </div>
               <span class="category-arrow" aria-hidden="true">→</span>
             </a><a class="category-card theme-litter" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">

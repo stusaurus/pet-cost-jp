@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30 19:59 JST",
+  "updated": "2026-09-30 20:06 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -338,6 +338,25 @@
       "confidence": 0.99,
       "group": "wide",
       "unit_price": 34.0787
+    },
+    {
+      "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　ワイド54枚　お一人様4点限り",
+      "price": 1842,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F246764%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10410597%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "charm 楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2469/246764-1.jpg?_ex=128x128",
+      "review_average": 4.71,
+      "review_count": 31,
+      "postage_flag": 1,
+      "product_id": "939679fcb71c",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 54.0,
+      "quantity_evidence": "54枚",
+      "confidence": 0.9,
+      "group": "wide",
+      "unit_price": 34.1111
     },
     {
       "name": "ペットシーツ スーパーワイド コンパクト 200枚 50枚 ×4個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 大きい サイズ LIFELEX 中厚KNPS_SW",
