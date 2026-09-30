@@ -262,6 +262,39 @@ CSS += r'''
 @media(prefers-reduced-motion:reduce){.motion-ready .reveal-item{opacity:1!important;transform:none!important}.hero-photo{transition:none!important}.category-visual{transition:none!important}}
 '''
 
+CSS += r'''
+/* Premium visual hierarchy v10 */
+.home-hero-title{margin:15px 0 12px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:.98;letter-spacing:-.045em}
+.home-hero-title .hero-title-top{font-size:clamp(26px,5vw,38px);font-weight:800;color:#385348;letter-spacing:-.025em}
+.home-hero-title .hero-title-main{position:relative;z-index:1;font-size:clamp(45px,8vw,68px);font-weight:950;color:#173126;padding:2px 2px 5px}
+.home-hero-title .hero-title-main:after{content:"";position:absolute;z-index:-1;left:-3px;right:-5px;bottom:5px;height:.28em;border-radius:999px;background:linear-gradient(90deg,#ffd66e,#ffe9a9);transform:rotate(-1deg);opacity:.92}
+.home-hero-title .hero-title-bottom{font-size:clamp(32px,6vw,48px);font-weight:900;color:#173126}
+.hero-lead-mark{display:inline-block;font-weight:900;color:#173126;border-bottom:2px solid #ffd66e;padding-bottom:1px}
+.hero-proof{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.hero-proof-item{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.72);border:1px solid rgba(191,215,201,.9);border-radius:14px;padding:8px 10px;box-shadow:0 7px 20px rgba(28,68,49,.045)}.hero-proof-item b{font-size:15px;color:#173126}.hero-proof-item span{font-size:10px;color:#66776e;font-weight:750}
+.category-hero-title{display:flex;flex-direction:column;align-items:flex-start;gap:2px}.category-hero-title .category-name{font-size:.62em;font-weight:800;color:var(--theme-dark);letter-spacing:.01em}.category-hero-title .category-question{position:relative;font-size:1.08em;font-weight:950;z-index:1}.category-hero-title .category-question:after{content:"";position:absolute;z-index:-1;left:0;right:-6px;bottom:4px;height:.22em;border-radius:999px;background:var(--theme-soft)}
+.visual-section{padding-top:12px}.visual-section .section-head{margin-bottom:17px}.visual-section .section-head h2{font-size:clamp(24px,5vw,30px)}
+.home-grid{gap:18px}.category-card{border-radius:24px;box-shadow:0 20px 45px rgba(31,65,49,.11),0 1px 0 rgba(255,255,255,.8) inset}.category-card:hover{transform:translateY(-6px) scale(1.006);box-shadow:0 28px 56px rgba(31,65,49,.16)}.category-card.theme-sheet{background:linear-gradient(150deg,#d9f5e5 0%,#f8fffb 68%)}.category-card.theme-litter{background:linear-gradient(150deg,#ffedbd 0%,#fffaf0 68%)}.category-card.theme-system{background:linear-gradient(150deg,#d8f1f5 0%,#f7fdfe 68%)}
+.category-card-copy{padding:4px 18px 20px}.category-card-copy strong{font-size:21px;letter-spacing:-.02em}.category-price{font-size:31px;line-height:1.05}.category-meta{margin-top:7px}.price-ribbon{padding:6px 10px;background:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.72);box-shadow:0 7px 18px rgba(79,79,41,.08)}
+.category-arrow{width:39px;height:39px;right:17px;bottom:17px;box-shadow:0 8px 17px rgba(23,49,38,.17);transition:transform .18s ease}.category-card:hover .category-arrow{transform:translateX(3px)}
+.category-card-number{position:absolute;left:15px;top:13px;z-index:2;font-size:10px;font-weight:950;letter-spacing:.12em;color:rgba(23,49,38,.48);text-transform:uppercase}
+.category-card-number b{font-size:21px;letter-spacing:-.05em;color:rgba(23,49,38,.78);margin-right:5px}
+.snapshot-section{padding:22px 20px 19px;border-radius:24px;background:radial-gradient(circle at 83% 9%,rgba(255,215,111,.16),transparent 25%),linear-gradient(145deg,#142d23,#24513d 66%,#2e6e51);box-shadow:0 24px 55px rgba(20,45,35,.22)}
+.snapshot-section .section-head h2:before{background:radial-gradient(circle at 50% 65%,#ffd66e 0 5px,transparent 5.8px),radial-gradient(circle at 24% 31%,#ffd66e 0 3px,transparent 3.8px),radial-gradient(circle at 48% 20%,#ffd66e 0 3px,transparent 3.8px),radial-gradient(circle at 73% 31%,#ffd66e 0 3px,transparent 3.8px),rgba(255,255,255,.12)}
+.podium-title{display:flex;align-items:center;gap:8px}.podium-title span{display:inline-flex;background:#ffd66e;color:#654a00;border-radius:999px;padding:4px 8px;font-size:9px;font-weight:950;letter-spacing:.08em}
+.top3-strip{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"second first third";gap:12px;align-items:end;padding-top:12px}.top3-card:nth-child(1){grid-area:first;min-height:148px;transform:translateY(-13px);border:2px solid #ffd66e;background:linear-gradient(180deg,#fffdf2,#fff)}.top3-card:nth-child(2){grid-area:second;min-height:128px;border:1px solid #d8dedb}.top3-card:nth-child(3){grid-area:third;min-height:120px;border:1px solid #e4d4c7}
+.top3-card{position:relative;flex-direction:column;align-items:flex-start;padding:13px;border-radius:18px}.top3-card:hover{transform:translateY(-3px)}.top3-card:nth-child(1):hover{transform:translateY(-16px)}
+.top3-rank{position:absolute;top:-11px;left:12px;width:34px;height:34px;border-radius:12px;font-size:14px;box-shadow:0 7px 16px rgba(0,0,0,.18)}.top3-card:nth-child(1) .top3-rank{width:40px;height:40px;top:-16px;background:#ffd66e;color:#654a00;font-size:17px}.top3-card:nth-child(2) .top3-rank{background:#dce2df;color:#50615a}.top3-card:nth-child(3) .top3-rank{background:#d7b594;color:#68492f}
+.top3-card:nth-child(1) .top3-rank:before{content:"♛";position:absolute;top:-15px;font-size:17px;color:#ffd66e;text-shadow:0 2px 0 #6b5100}.top3-card:first-child .top3-rank:after{display:none}
+.top3-img{width:68px;height:68px;flex-basis:68px;margin:5px auto 2px}.top3-card:nth-child(1) .top3-img{width:78px;height:78px;flex-basis:78px}.top3-copy{width:100%;text-align:center}.top3-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:normal;min-height:30px}.top3-unit{display:block;margin-top:5px;font-size:21px}.top3-card:nth-child(1) .top3-unit{font-size:26px}.top3-total{display:block;margin-top:2px}
+.podium-foot{height:7px;border-radius:999px;margin:4px 2px 0;background:linear-gradient(90deg,#ccd7d1 0 30%,#ffd66e 30% 68%,#c99a73 68% 100%);opacity:.85}
+.featured{border-radius:22px}.featured-crown{transform:rotate(-6deg)}.featured-unit{letter-spacing:-.035em}
+@media(max-width:759px){
+  .home-hero-title{gap:0}.home-hero-title .hero-title-top{font-size:25px}.home-hero-title .hero-title-main{font-size:45px}.home-hero-title .hero-title-bottom{font-size:34px}.hero-proof{gap:6px}.hero-proof-item{padding:7px 9px}
+  .category-card{border-radius:21px}.category-card-number{top:11px;left:12px}
+  .snapshot-section{padding:18px 14px}.top3-strip{display:flex;grid-template-areas:none;padding:14px 2px 6px;align-items:stretch}.top3-card,.top3-card:nth-child(1),.top3-card:nth-child(2),.top3-card:nth-child(3){grid-area:auto;min-width:78%;min-height:0;transform:none;flex-direction:row;align-items:center}.top3-card:nth-child(1):hover{transform:none}.top3-img,.top3-card:nth-child(1) .top3-img{width:58px;height:58px;flex-basis:58px;margin:0}.top3-copy{text-align:left}.top3-rank,.top3-card:nth-child(1) .top3-rank{position:static;width:31px;height:31px;flex:0 0 31px;font-size:12px}.top3-card:nth-child(1) .top3-rank:before{display:none}.top3-unit,.top3-card:nth-child(1) .top3-unit{font-size:19px}.podium-foot{display:none}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -552,7 +585,7 @@ def category_page(category, items, categories, updated):
     body = f'''<header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
-        <h1>{esc(category['name'])}<br>いま安いのは？</h1>
+        <h1 class="category-hero-title"><span class="category-name">{esc(category['name'])}</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">{esc(category['intro'])}</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
         <p class="updated">最終更新 {esc(updated)}</p>
@@ -567,13 +600,14 @@ def category_page(category, items, categories, updated):
         {featured_box(category, featured)}
 
         <section class="section snapshot-section">
-          <div class="section-head"><div><h2>上位3商品をひと目で</h2><p class="section-sub">いま選んでいる条件の上位候補と、最安が中央値からどれくらい離れているかを表示します。</p></div></div>
+          <div class="section-head"><div><h2 class="podium-title">上位3商品をひと目で <span>TOP 3</span></h2><p class="section-sub">いま選んでいる条件の上位候補と、最安が中央値からどれくらい離れているかを表示します。</p></div></div>
           <div class="deal-meter">
             <div class="deal-meter-head"><span>この条件の最安ポジション</span><b data-deal-message>価格差を計算中</b></div>
             <div class="deal-track"><span class="deal-dot" data-deal-dot></span></div>
             <div class="deal-scale"><span>かなり安い</span><span>中央値</span><span>高め</span></div>
           </div>
           <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial_items)}</div>
+          <div class="podium-foot" aria-hidden="true"></div>
           <div class="snapshot-note">※ 同じ条件内の現在掲載商品の単価を比較した目安です。過去価格との比較ではありません。</div>
         </section>
 
@@ -640,13 +674,14 @@ def category_page(category, items, categories, updated):
 
 def homepage(categories, summaries, updated):
     cards = []
-    for c in categories:
+    for card_index, c in enumerate(categories, 1):
         s = summaries[c["id"]]
         best = s.get("best")
         image = esc(best.get("image", "")) if best else ""
         visual = category_illustration(c["id"])
         cards.append(
             f'''<a class="category-card {category_theme(c['id'])}" href="{BASE_URL}categories/{esc(c['id'])}/">
+              <span class="category-card-number"><b>0{card_index}</b>CATEGORY</span>
               <div class="category-visual">{visual}</div>
               <div class="category-card-copy">
                 <span class="price-ribbon">👑 {esc(s['default_label'])}の現在最安</span>
@@ -669,8 +704,9 @@ def homepage(categories, summaries, updated):
     body = f'''<header class="hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
-        <h1>ペット用品の<br>「ほんとの安さ」を、<br>ひと目で。</h1>
-        <p class="lead">袋の値段ではなく、1枚・1Lなど同じ単位にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
+        <h1 class="home-hero-title"><span class="hero-title-top">ペット用品の</span><span class="hero-title-main">ほんとの安さ</span><span class="hero-title-bottom">を、ひと目で。</span></h1>
+        <p class="lead">袋の値段ではなく、<span class="hero-lead-mark">1枚・1Lなど同じ単位</span>にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
+        <div class="hero-proof"><div class="hero-proof-item"><b>1枚</b><span>シーツを比較</span></div><div class="hero-proof-item"><b>1L</b><span>猫砂を比較</span></div><div class="hero-proof-item"><b>毎朝</b><span>価格を更新</span></div></div>
         <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
         <p class="updated">最終更新 {esc(updated)}</p>
       </div>
