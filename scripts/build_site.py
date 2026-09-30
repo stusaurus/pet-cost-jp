@@ -331,6 +331,21 @@ CSS += r'''
 @media(max-width:759px){.condition-panel{padding:16px}.filter-wrap{margin-left:-16px;margin-right:-16px;padding:4px 16px 7px}.filters{display:flex;gap:9px;min-width:max-content}.filter-chip{width:150px;flex:0 0 150px;scroll-snap-align:start}.filter-wrap{scroll-snap-type:x proximity}.filter-help{margin-top:-5px}}
 '''
 
+CSS += r'''
+/* Objective value badges v13 */
+.value-badge-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 2px;min-height:24px}
+.value-badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;line-height:1;border:1px solid transparent}
+.value-badge:before{font-size:11px;line-height:1}
+.value-badge.is-discount{background:#e8f6ed;color:#176443;border-color:#cce9d8}.value-badge.is-discount:before{content:"↓"}
+.value-badge.is-low-total{background:#fff2cc;color:#775800;border-color:#f2dda0}.value-badge.is-low-total:before{content:"¥"}
+.value-badge.is-bulk{background:#e6f3f7;color:#286d78;border-color:#cbe4ea}.value-badge.is-bulk:before{content:"□"}
+.value-badge.is-best-unit{background:#173126;color:#fff;border-color:#173126}.value-badge.is-best-unit:before{content:"♛";color:#ffd66e}
+.shop-card.is-rank-1 .value-badge-row{padding-right:34px}
+.value-badge-empty{font-size:9px;color:var(--muted);padding:4px 0}
+.value-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:9px;color:var(--muted)}.value-legend span{display:inline-flex;align-items:center;gap:4px}.value-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}.value-legend .u{background:#173126}.value-legend .d{background:#55ad83}.value-legend .t{background:#e2b94f}.value-legend .b{background:#69adba}
+@media(max-width:759px){.value-badge{font-size:9px;padding:4px 6px}.value-badge-row{margin-top:5px}.shop-card.is-rank-1 .value-badge-row{padding-right:22px}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -406,6 +421,7 @@ def product_rows(items, category):
               </div>
               <div class="shop-card-head">
                 <div class="shop-card-tags"><span class="condition-tag">{esc(label)}</span><span class="condition-tag">{esc(item['quantity_evidence'])}</span></div>
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
                 <div class="shop-card-title">{esc(item['name'])}</div>
                 <div class="shop-card-shop">{esc(item.get('shop', ''))}</div>
               </div>
@@ -701,7 +717,8 @@ def category_page(category, items, categories, updated):
       </section>
 
       <section class="section">
-        <div class="section-head"><div><h2>安い順に比較</h2><p class="section-sub">{esc(default_label)}から表示。画像・総額・単価を一緒に確認できます。</p></div></div>
+        <div class="section-head"><div><h2>安い順に比較</h2><p class="section-sub">{esc(default_label)}から表示。画像・総額・単価に加えて、安さの理由も自動表示します。</p></div></div>
+        <div class="value-legend" aria-label="安さの理由"><span><i class="u"></i>単価最安</span><span><i class="d"></i>中央値より安い</span><span><i class="t"></i>支払総額が最小</span><span><i class="b"></i>最大容量</span></div>
         <div class="product-grid" data-product-grid>{product_rows(items, category) if items else '<div class="product-empty">安全に単価計算できる商品がまだありません。</div>'}</div>
       </section>
 
