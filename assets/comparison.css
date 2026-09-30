@@ -334,9 +334,8 @@ h3 { font-size: 17px; line-height: 1.5; }
   .usage-metric b { font-size: 22px; }
   .condition-start { padding: 18px; font-size: 15px; }
   .page-system-toilet-sheets .filter-chip { min-height: 88px; }
-  .condition-foot { gap: 8px; align-items: center; margin-top: 8px; }
+  .condition-foot { margin-top: 8px; }
   .result-status { font-size: 12px; }
-  .condition-foot .text-link { font-size: 13px; white-space: nowrap; }
   .comparison-sticky { margin-inline: -16px; padding-inline: 16px; margin-bottom: 18px; }
   .comparison-sticky-inner { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 2px 12px; min-height: 86px; padding: 9px 0; }
   .sticky-condition { grid-column: 1; grid-row: 1; }
@@ -432,7 +431,6 @@ h3 { font-size: 17px; line-height: 1.5; }
   .home-kicker { font-size: 12px; }
   .home-photo { width: 90px; height: 102px; border-radius: 3px; }
   .home-note { font-size: 13px; margin-top: 7px; }
-  .home-intro .updated { margin-top: 7px; font-size: 12px; }
   .home-comparison { margin-top: 8px; }
   .care-entry-grid { grid-template-columns: 1fr; gap: 10px; }
   .care-entry { grid-template-columns: 32px 1fr; padding: 13px 16px; gap: 12px; }

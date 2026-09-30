@@ -106,6 +106,7 @@
     }
     function updateUsage() {
       const note = $('[data-usage-scale-note]'); if (note) note.hidden = !usage;
+      text('[data-open-usage]', usage ? '使用量を変える' : '使用量を入れる');
       text('[data-usage-teaser]', usage ? periodLabel + usage.toLocaleString('ja-JP') + (metric === 'per_liter' ? 'L' : '枚') + 'で比較中' : '任意 · どのくらい持つ？');
       renderUsage($('[data-featured-usage]'), visibleRows[0]);
       const picks = anglePicks();
