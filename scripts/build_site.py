@@ -208,6 +208,23 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 '''
 
+CSS += r'''
+/* Product cards v8 */
+.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.shop-card{position:relative;display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-areas:"image head" "image price" "meta meta" "action action";gap:8px 12px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:13px;box-shadow:0 8px 24px rgba(28,68,49,.055);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.shop-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(28,68,49,.10);border-color:#bdd6c8}.shop-card[hidden]{display:none!important}
+.shop-card.is-rank-1{border:2px solid #eac45a;background:linear-gradient(145deg,#fffdf5,#fff 48%)}.shop-card.is-rank-2{border-color:#cfd8d3}.shop-card.is-rank-3{border-color:#dfc6ae}
+.shop-card.is-rank-1:before{content:"BEST";position:absolute;right:-23px;top:12px;transform:rotate(40deg);background:#ffd76f;color:#6b4d00;font-size:9px;font-weight:950;padding:4px 29px;letter-spacing:.08em}
+.shop-card-image-wrap{grid-area:image;position:relative;align-self:start}.shop-card-image{width:92px;height:92px;object-fit:contain;border-radius:14px;background:#fff;border:1px solid var(--line)}
+.shop-card-rank{position:absolute;left:-5px;top:-5px;min-width:31px;height:31px;padding:0 7px;border-radius:10px;display:grid;place-items:center;background:#173126;color:#fff;font-size:12px;font-weight:950;box-shadow:0 5px 12px rgba(23,49,38,.19)}.shop-card.is-rank-1 .shop-card-rank{background:#ffd76f;color:#684c00}
+.shop-card-head{grid-area:head;min-width:0}.shop-card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}.shop-card-title{font-size:13px;font-weight:850;line-height:1.38;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.shop-card-shop{font-size:10px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shop-card-prices{grid-area:price;display:flex;align-items:end;justify-content:space-between;gap:9px}.shop-unit-wrap{min-width:0}.shop-unit-label{font-size:10px;font-weight:800;color:var(--muted)}.shop-unit{font-size:25px;font-weight:950;line-height:1;color:var(--theme-dark)}.shop-unit small{font-size:10px;font-weight:750;color:var(--muted)}.shop-total{text-align:right}.shop-total span{display:block;font-size:9px;color:var(--muted)}.shop-total b{font-size:14px}
+.shop-card-meta{grid-area:meta;display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px dashed var(--line);padding-top:8px}.shop-card-meta .price-diff{font-size:11px;color:var(--theme-dark);font-weight:850}.shop-card-meta .shipping{margin:0}
+.shop-card-action{grid-area:action}.shop-card-action .btn{width:100%;padding:11px 13px;border-radius:12px}.shop-card-action .btn:after{content:"↗";margin-left:5px;font-size:12px}
+.product-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#f8fbf9;border-radius:16px}
+@media(max-width:759px){.product-grid{grid-template-columns:1fr}.shop-card{grid-template-columns:82px minmax(0,1fr);padding:12px}.shop-card-image{width:82px;height:82px}.shop-unit{font-size:23px}.shop-card-title{font-size:13px}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -256,17 +273,17 @@ def shipping_label(flag):
 
 
 def product_rows(items, category):
-    rows = []
+    cards = []
     for idx, item in enumerate(items, 1):
         image = esc(item.get("image", ""))
         image_html = (
-            f'<img class="product-image" src="{image}" alt="{esc(item["name"])}" loading="lazy" width="64" height="64">'
+            f'<img class="shop-card-image" src="{image}" alt="{esc(item["name"])}" loading="lazy" width="92" height="92">'
             if image else
-            f'<div class="category-icon" aria-hidden="true">{esc(category["emoji"])}</div>'
+            f'<div class="shop-card-image category-icon" aria-hidden="true">{esc(category["emoji"])}</div>'
         )
         label = group_label(category, item.get("group"))
-        rows.append(
-            f'''<tr data-product-row
+        cards.append(
+            f'''<article class="shop-card" data-product-row
                 data-group="{esc(item['group'])}"
                 data-row-unit-price="{item['unit_price']}"
                 data-total-price="{item['price']}"
@@ -277,16 +294,21 @@ def product_rows(items, category):
                 data-item-name="{esc(item['name'])}"
                 data-shop="{esc(item.get('shop', ''))}"
                 data-url="{esc(item['url'])}">
-              <td class="rank"><span class="rank-number" data-rank-cell>{idx}</span><span class="rank-badge" data-rank-badge>{idx}位</span></td>
-              <td class="image-cell">{image_html}</td>
-              <td class="product">
-                <div><span class="condition-tag">{esc(label)}</span><span class="condition-tag">{esc(item['quantity_evidence'])}</span></div>
-                <div class="product-title">{esc(item['name'])}</div>
-                <div class="meta">{esc(item.get('shop', ''))}</div>
-              </td>
-              <td class="total">¥{item['price']:,}</td>
-              <td class="unit">{yen(item['unit_price'])}<div class="meta">/{esc(category['metric_label'])}</div><div class="price-diff" data-price-diff></div></td>
-              <td class="action">
+              <div class="shop-card-image-wrap">
+                {image_html}
+                <span class="shop-card-rank"><span data-rank-cell>{idx}</span><span data-rank-badge style="display:none">{idx}位</span></span>
+              </div>
+              <div class="shop-card-head">
+                <div class="shop-card-tags"><span class="condition-tag">{esc(label)}</span><span class="condition-tag">{esc(item['quantity_evidence'])}</span></div>
+                <div class="shop-card-title">{esc(item['name'])}</div>
+                <div class="shop-card-shop">{esc(item.get('shop', ''))}</div>
+              </div>
+              <div class="shop-card-prices">
+                <div class="shop-unit-wrap"><div class="shop-unit-label">{esc(category['metric_label'])}あたり</div><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div>
+                <div class="shop-total"><span>購入総額</span><b>¥{item['price']:,}</b></div>
+              </div>
+              <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div>
+              <div class="shop-card-action">
                 <a class="btn" data-affiliate-link
                   data-merchant="rakuten"
                   data-category-id="{esc(category['id'])}"
@@ -295,13 +317,12 @@ def product_rows(items, category):
                   data-metric="{esc(category['metric'])}"
                   data-unit-price="{item['unit_price']}"
                   data-position="{idx}"
-                  data-conversion-source="comparison_table"
-                  href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る →</a>
-                <div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div>
-              </td>
-            </tr>'''
+                  data-conversion-source="comparison_card"
+                  href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
+              </div>
+            </article>'''
         )
-    return ''.join(rows)
+    return ''.join(cards)
 
 
 def visible_default_items(category, items):
@@ -535,10 +556,7 @@ def category_page(category, items, categories, updated):
 
       <section class="section">
         <div class="section-head"><div><h2>安い順に比較</h2><p class="section-sub">{esc(default_label)}から表示。画像・総額・単価を一緒に確認できます。</p></div></div>
-        <div class="table-wrap"><table class="compare">
-          <thead><tr><th>順</th><th></th><th>商品</th><th>総額</th><th>単価</th><th>確認</th></tr></thead>
-          <tbody>{product_rows(items, category) if items else '<tr><td colspan="6" class="empty">安全に単価計算できる商品がまだありません。</td></tr>'}</tbody>
-        </table></div>
+        <div class="product-grid" data-product-grid>{product_rows(items, category) if items else '<div class="product-empty">安全に単価計算できる商品がまだありません。</div>'}</div>
       </section>
 
       <section class="section">

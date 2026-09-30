@@ -301,9 +301,12 @@
       row.hidden = !visible;
       const rank = row.querySelector('[data-rank-cell]');
       const rankBadge = row.querySelector('[data-rank-badge]');
+      row.classList.remove('is-rank-1', 'is-rank-2', 'is-rank-3');
       if (!visible) return;
 
       visibleRows.push(row);
+      const visualRank = visibleRows.length;
+      if (visualRank <= 3) row.classList.add('is-rank-' + visualRank);
       if (group === 'all' && !rankAll) {
         if (rank) rank.textContent = '—';
         if (rankBadge) rankBadge.textContent = '条件別';
