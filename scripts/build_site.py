@@ -371,6 +371,49 @@ CSS += r'''
 }
 '''
 
+CSS += r'''
+/* Mobile-first product information hierarchy v15 */
+.shop-unit-wrap{position:relative}.shop-unit-label{letter-spacing:.01em}.shop-unit{font-variant-numeric:tabular-nums}
+.shop-card-meta{min-height:29px}.shipping{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 7px;background:#f1f5f2;color:#607067;font-size:9px;font-weight:800}
+.shop-card-head .shop-card-tags{margin:7px 0 0}.shop-card-title{letter-spacing:-.01em}
+.price-diff:empty{display:none}
+.mobile-price-caption{display:none}
+@media(max-width:759px){
+  .shop-card,.shop-card.is-rank-1,.shop-card.is-rank-2,.shop-card.is-rank-3{
+    grid-template-columns:88px minmax(0,1fr);
+    grid-template-areas:"image price" "image head" "meta meta" "action action";
+    gap:7px 11px;
+    padding:12px;
+  }
+  .shop-card.is-rank-1{grid-template-columns:104px minmax(0,1fr);padding:14px}
+  .shop-card-image,.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:88px;height:88px}
+  .shop-card.is-rank-1 .shop-card-image{width:104px;height:104px}
+  .shop-card-prices,.shop-card.is-rank-1 .shop-card-prices{
+    align-self:start;display:block;text-align:left;padding:2px 0 0;
+  }
+  .shop-unit-label{font-size:9px;color:var(--theme-dark);font-weight:900}
+  .shop-unit,.shop-card.is-rank-1 .shop-unit{font-size:29px;line-height:1.04;letter-spacing:-.045em}
+  .shop-unit small{display:block;margin-top:3px;font-size:9px;letter-spacing:0}
+  .shop-total{display:flex;align-items:baseline;gap:5px;text-align:left;margin-top:6px!important}
+  .shop-total span{font-size:8px}.shop-total b,.shop-card.is-rank-1 .shop-total b{font-size:13px}
+  .shop-card-head,.shop-card.is-rank-1 .shop-card-head{padding-top:0}
+  .value-badge-row{order:0;margin:0 0 5px;min-height:0}.value-badge{font-size:8px;padding:4px 6px}
+  .shop-card-title,.shop-card.is-rank-1 .shop-card-title,.shop-card.is-rank-2 .shop-card-title,.shop-card.is-rank-3 .shop-card-title{
+    font-size:12px;line-height:1.4;-webkit-line-clamp:2;
+  }
+  .shop-card-shop{font-size:9px;margin-top:3px}
+  .shop-card-tags{gap:3px!important;margin-top:6px!important}.condition-tag{font-size:8px;padding:3px 6px}
+  .shop-card-meta{display:flex;justify-content:flex-start;gap:6px;border-top:1px dashed var(--line);padding-top:7px;min-height:0}
+  .shop-card-meta .price-diff{font-size:9px;background:var(--theme-soft);color:var(--theme-dark);border-radius:999px;padding:4px 7px}
+  .shipping{font-size:8px;padding:4px 7px}
+  .shop-card-action .btn,.shop-card.is-rank-1 .shop-card-action .btn{min-height:43px;font-size:12px;padding:11px 13px}
+  .shop-card.is-rank-1 .rank-showcase-label{left:119px;top:10px;font-size:8px}
+  .shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{left:43px;top:7px;font-size:8px}
+  .shop-card.is-rank-1 .shop-card-rank{width:36px;height:36px;font-size:14px}
+  .shop-card.is-rank-1 .shop-card-rank:before{top:-15px;font-size:15px}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -445,15 +488,15 @@ def product_rows(items, category):
                 {image_html}
                 <span class="shop-card-rank"><span data-rank-cell>{idx}</span><span data-rank-badge style="display:none">{idx}位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">{esc(label)}</span><span class="condition-tag">{esc(item['quantity_evidence'])}</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">{esc(item['name'])}</div>
-                <div class="shop-card-shop">{esc(item.get('shop', ''))}</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">{esc(category['metric_label'])}あたり</div><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥{item['price']:,}</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">{esc(item['name'])}</div>
+                <div class="shop-card-shop">{esc(item.get('shop', ''))}</div>
+                <div class="shop-card-tags"><span class="condition-tag">{esc(label)}</span><span class="condition-tag">{esc(item['quantity_evidence'])}</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div>
               <div class="shop-card-action">
