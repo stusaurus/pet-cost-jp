@@ -988,7 +988,7 @@ def homepage(categories, summaries, updated):
             <h3>{esc(lead['name'])}</h3>
             <div class="editorial-lead-sub">{esc(s['default_label'])}を同じ単位で比較 ・ 掲載 {s['total_count']}件</div>
             <div class="editorial-price-block">
-              <span class="editorial-price-caption">現在の最安</span>
+              <span class="editorial-price-caption">{esc(s['default_label'])}の現在最安</span>
               <strong class="editorial-price">{yen(s['min'])}<small> / {esc(lead['metric_label'])}</small></strong>
               <span class="editorial-gap">{esc(relative_price_label(s.get('min'), s.get('median')))}</span>
             </div>
