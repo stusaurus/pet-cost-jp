@@ -5,8 +5,15 @@ on:
     - cron: "20 21 * * *" # 06:20 JST
   push:
     branches: [main]
+    paths-ignore:
+      - "index.html"
+      - "categories/**"
+      - "data/**"
+      - "robots.txt"
+      - "sitemap.xml"
+      - ".nojekyll"
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -31,6 +38,24 @@ jobs:
         run: python scripts/build_site.py
       - name: Product quality audit
         run: python scripts/audit_products.py
+      - name: Mirror generated site to main branch
+        run: |
+          rm -rf categories data
+          cp site/index.html ./index.html
+          cp -R site/categories ./categories
+          cp -R site/data ./data
+          cp site/robots.txt ./robots.txt
+          cp site/sitemap.xml ./sitemap.xml
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A index.html categories data robots.txt sitemap.xml .nojekyll
+          if git diff --cached --quiet; then
+            echo "Published files already match generated site."
+          else
+            git commit -m "Sync generated Pages output"
+            git push origin HEAD:main
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
