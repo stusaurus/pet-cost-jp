@@ -986,7 +986,7 @@ def homepage(categories, summaries, updated):
           <div class="editorial-lead-copy">
             <span class="editorial-index">01 / TODAY'S LEAD</span>
             <h3>{esc(lead['name'])}</h3>
-            <div class="editorial-lead-sub">{esc(s['default_label'])}を同じ単位で比較</div>
+            <div class="editorial-lead-sub">{esc(s['default_label'])}を同じ単位で比較 ・ 掲載 {s['total_count']}件</div>
             <div class="editorial-price-block">
               <span class="editorial-price-caption">現在の最安</span>
               <strong class="editorial-price">{yen(s['min'])}<small> / {esc(lead['metric_label'])}</small></strong>
