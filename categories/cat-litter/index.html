@@ -1,4 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>猫砂はどれが安い？1Lあたりで比較 | ペット用品コスパ比較</title><meta name="description" content="猫砂を1Lあたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"><meta name="robots" content="index,follow"><link rel="canonical" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"><meta property="og:type" content="website"><meta property="og:title" content="猫砂はどれが安い？1Lあたりで比較 | ペット用品コスパ比較"><meta property="og:description" content="猫砂を1Lあたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"><meta property="og:url" content="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://stusaurus.github.io/pet-cost-jp/"}, {"@type": "ListItem", "position": 2, "name": "猫砂", "item": "https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"}]}</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-GFVSZ8YDQ5"></script>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>猫砂はどれが安い？1Lあたりで比較 | ペット用品コスパ比較</title><meta name="description" content="猫砂を1Lあたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"><meta name="robots" content="index,follow"><link rel="canonical" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"><link rel="icon" href="https://stusaurus.github.io/pet-cost-jp/assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="https://stusaurus.github.io/pet-cost-jp/assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="猫砂はどれが安い？1Lあたりで比較 | ペット用品コスパ比較"><meta property="og:description" content="猫砂を1Lあたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"><meta property="og:url" content="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"><meta property="og:image" content="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"><meta property="og:image:alt" content="犬と猫がペット用品を比較するビジュアル"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="猫砂はどれが安い？1Lあたりで比較 | ペット用品コスパ比較"><meta name="twitter:description" content="猫砂を1Lあたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"><meta name="twitter:image" content="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "トップ", "item": "https://stusaurus.github.io/pet-cost-jp/"}, {"@type": "ListItem", "position": 2, "name": "猫砂", "item": "https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"}]}</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-GFVSZ8YDQ5"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','G-GFVSZ8YDQ5');</script>
 <script>(() => {
   const TEST_KEY = 'pet_cost_operator_test_v1';
@@ -322,7 +322,33 @@
     updateSummary(visibleRows, rankAll || group !== 'all');
   }
 
+  function setupRevealMotion() {
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nodes = [...document.querySelectorAll('.section, .category-card, .shop-card, .step, .angle-card')];
+    if (!nodes.length || reduced || !('IntersectionObserver' in window)) {
+      nodes.forEach((node) => node.classList.add('is-visible'));
+      return;
+    }
+
+    document.documentElement.classList.add('motion-ready');
+    nodes.forEach((node, index) => {
+      node.classList.add('reveal-item');
+      node.style.transitionDelay = Math.min(index % 5, 4) * 45 + 'ms';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    nodes.forEach((node) => observer.observe(node));
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    setupRevealMotion();
     const category = document.body.dataset.categoryId || '';
     const activeButton = document.querySelector('[data-group-button][aria-pressed="true"]');
     if (activeButton) applyGroupFilter(activeButton.dataset.group || 'all');
@@ -557,18 +583,42 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
 .shop-card-action{grid-area:action}.shop-card-action .btn{width:100%;padding:11px 13px;border-radius:12px}.shop-card-action .btn:after{content:"↗";margin-left:5px;font-size:12px}
 .product-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#f8fbf9;border-radius:16px}
 @media(max-width:759px){.product-grid{grid-template-columns:1fr}.shop-card{grid-template-columns:82px minmax(0,1fr);padding:12px}.shop-card-image{width:82px;height:82px}.shop-unit{font-size:23px}.shop-card-title{font-size:13px}}
+
+/* Visual polish v9 */
+.brand-logo{display:block;width:214px;height:auto;max-width:44vw}.footer-logo{display:block;width:230px;height:auto;max-width:72vw}
+.brand{padding:2px 0}.brand-name,.brand>.brand-mark{display:none}
+.topnav{box-shadow:0 8px 26px rgba(23,49,38,.045)}
+.category-visual{filter:drop-shadow(0 10px 16px rgba(37,70,53,.08))}
+.category-card{isolation:isolate}.category-card:before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.38),transparent 43%);pointer-events:none;z-index:0}
+.category-card:hover .category-visual{transform:translateY(-3px) scale(1.015)}.category-visual{transition:transform .22s ease}
+.shop-card{box-shadow:0 9px 24px rgba(28,68,49,.06),0 1px 0 rgba(255,255,255,.9) inset}.shop-card:hover{box-shadow:0 18px 38px rgba(28,68,49,.12),0 1px 0 rgba(255,255,255,.9) inset}
+.shop-card-image-wrap:after{content:"";position:absolute;inset:auto 9px -8px 9px;height:10px;border-radius:50%;background:rgba(23,49,38,.09);filter:blur(6px);z-index:-1}
+.shop-card-action .btn{box-shadow:0 7px 18px color-mix(in srgb,var(--theme) 24%,transparent);transition:transform .16s ease,box-shadow .16s ease,background .16s ease}.shop-card-action .btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px color-mix(in srgb,var(--theme) 31%,transparent)}
+.hero-photo{transition:transform 8s ease}.hero:hover .hero-photo{transform:scale(1.025)}
+.scene-label{font-size:9px;font-weight:900;letter-spacing:.08em}.scene-price{font-size:16px;font-weight:950}
+.motion-ready .reveal-item{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}.motion-ready .reveal-item.is-visible{opacity:1;transform:none}
+.motion-ready .shop-card.reveal-item{transition:opacity .42s ease,transform .42s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,border-color .18s ease}
+@media(max-width:719px){.topnav .brand{display:flex}.brand-logo{width:164px;max-width:none}.topnav .wrap{gap:6px}.topnav .chip{display:none}.category-visual{height:126px}.hero-photo{transition:none}}
+@media(prefers-reduced-motion:reduce){.motion-ready .reveal-item{opacity:1!important;transform:none!important}.hero-photo{transition:none!important}.category-visual{transition:none!important}}
 </style></head><body data-category-id="cat-litter" class="page-cat-litter"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1>猫砂<br>いま安いのは？</h1>
         <p class="lead">L表記を確認できる猫砂だけを1Lあたりに換算。kgしかない商品を推測でL換算しません。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 19:20 JST</p>
+        <p class="updated">最終更新 2026-09-30 19:26 JST</p>
       </div>
-      <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 150" role="img" aria-label="猫砂のイラスト"><ellipse cx="151" cy="132" rx="105" ry="10" fill="#e8d7ad" opacity=".55"/><path d="M68 79q0-22 22-22h123q22 0 22 22v38H68z" fill="#fff" stroke="#d8bd78" stroke-width="3"/><path d="M83 84h137l-10 31H93z" fill="#ead7aa"/><g fill="#c6a85d"><circle cx="107" cy="96" r="4"/><circle cx="128" cy="105" r="4"/><circle cx="153" cy="94" r="4"/><circle cx="180" cy="105" r="4"/><circle cx="201" cy="96" r="4"/></g><g transform="translate(112 12)"><circle cx="40" cy="40" r="34" fill="#9eb8be"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#708e97"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><rect x="218" y="37" width="48" height="28" rx="8" fill="#ffce62"/><text x="232" y="56" font-size="15" font-family="sans-serif" font-weight="900" fill="#6d5200">1L</text></svg></div></div>
+      <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
+          <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
+          <path d="M45 78q0-20 20-20h143q20 0 20 20v47H45z" fill="#fff" stroke="#d4b773" stroke-width="3"/><path d="M59 84h155l-11 35H70z" fill="#ead6a6"/>
+          <g fill="#c3a35a"><circle cx="88" cy="99" r="4"/><circle cx="111" cy="110" r="4"/><circle cx="137" cy="96" r="4"/><circle cx="163" cy="109" r="4"/><circle cx="191" cy="98" r="4"/></g>
+          <g transform="translate(111 6)"><circle cx="42" cy="42" r="36" fill="#9fb9bf"/><path d="M14 22 18 0l22 16M70 22 67 0 45 16" fill="#708e97"/><circle cx="30" cy="39" r="4.3" fill="#173126"/><circle cx="55" cy="39" r="4.3" fill="#173126"/><path d="m42 48-5 4h10z" fill="#e59a95"/><path d="M33 58q9 6 18 0" fill="none" stroke="#173126" stroke-width="2.4" stroke-linecap="round"/></g>
+          <g transform="translate(220 31)"><rect width="57" height="45" rx="12" fill="#fff0c8" stroke="#e1bd66"/><text x="10" y="16" class="scene-label" font-family="sans-serif" fill="#806018">COMPARE</text><text x="13" y="34" class="scene-price" font-family="sans-serif" fill="#806018">1L</text></g>
+          <path d="M29 112c9-9 14-21 15-34M31 110c-10-5-16-11-19-20M30 105c13-4 20-10 26-18" stroke="#8aaf6d" stroke-width="5" stroke-linecap="round"/>
+        </svg></div></div>
     </div></header>
     <div class="topnav"><div class="wrap">
-      <a class="brand" href="https://stusaurus.github.io/pet-cost-jp/"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ペット用品コスパ比較<small>PET COST CHECK</small></span></a>
+      <a class="brand" href="https://stusaurus.github.io/pet-cost-jp/" aria-label="ペット用品コスパ比較 トップ"><img class="brand-logo" src="https://stusaurus.github.io/pet-cost-jp/assets/pet-cost-logo.svg" alt="ペット用品コスパ比較"></a>
       <a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">🐶 ペットシーツ</a><a class="chip current" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">🐱 猫砂</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">🧻 猫用システムトイレシート</a>
     </div></div>
     <main class="main"><div class="wrap">
@@ -1868,7 +1918,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
       </section>
     </div></main>
     <footer class="footer"><div class="wrap footer-box">
-      <div class="footer-brand"><span class="brand-mark" aria-hidden="true"></span><div><strong>ペット用品コスパ比較</strong><span>同じ単位で、迷わず比べる。</span></div></div>
+      <div class="footer-brand"><img class="footer-logo" src="https://stusaurus.github.io/pet-cost-jp/assets/pet-cost-logo.svg" alt="ペット用品コスパ比較"></div>
       <div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div>
       <div class="rakuten-credit">
         <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
