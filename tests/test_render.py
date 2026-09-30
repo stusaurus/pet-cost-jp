@@ -87,6 +87,8 @@ class RenderTests(unittest.TestCase):
                 "total_count": 23,
                 "default_count": 8,
                 "min": 5.5,
+                "median": 8.0,
+                "deal_percent": 31,
                 "best": self.item,
                 "default_label": "レギュラー",
             }
@@ -108,6 +110,10 @@ class RenderTests(unittest.TestCase):
         self.assertIn("assets/hero-pet-comparison.webp", page)
         self.assertIn("同じ単位で比較", page)
         self.assertIn("使い方は3ステップ", page)
+        self.assertIn("今日の価格差", page)
+        self.assertIn('data-daily-spotlight', page)
+        self.assertIn('data-spotlight-link', page)
+        self.assertIn("31%", page)
         self.assertIn("story-section", page)
         self.assertIn("trust-section", page)
         self.assertIn("store-section", page)
