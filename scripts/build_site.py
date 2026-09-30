@@ -982,7 +982,7 @@ def homepage(categories, summaries, updated):
     if lead:
         s = summaries[lead["id"]]
         gap = s.get("deal_percent", 0)
-        lead_html = f'''<a class="editorial-lead {category_theme(lead['id'])}" href="{BASE_URL}categories/{esc(lead['id'])}/">
+        lead_html = f'''<a class="editorial-lead {category_theme(lead['id'])}" data-editorial-category="{esc(lead['id'])}" data-editorial-position="1" href="{BASE_URL}categories/{esc(lead['id'])}/">
           <div class="editorial-lead-copy">
             <span class="editorial-index">01 / TODAY'S LEAD</span>
             <h3>{esc(lead['name'])}</h3>
@@ -990,7 +990,7 @@ def homepage(categories, summaries, updated):
             <div class="editorial-price-block">
               <span class="editorial-price-caption">現在の最安</span>
               <strong class="editorial-price">{yen(s['min'])}<small> / {esc(lead['metric_label'])}</small></strong>
-              <span class="editorial-gap"><b>{gap}%</b> 中央値より低い</span>
+              <span class="editorial-gap">{esc(relative_price_label(s.get('min'), s.get('median')))}</span>
             </div>
           </div>
           <div class="editorial-lead-art">{category_illustration(lead['id'])}</div>
@@ -1000,13 +1000,13 @@ def homepage(categories, summaries, updated):
     for index, category in enumerate(side_categories, 2):
         s = summaries[category["id"]]
         side_html.append(
-            f'''<a class="editorial-side-card {category_theme(category['id'])}" href="{BASE_URL}categories/{esc(category['id'])}/">
+            f'''<a class="editorial-side-card {category_theme(category['id'])}" data-editorial-category="{esc(category['id'])}" data-editorial-position="{index}" href="{BASE_URL}categories/{esc(category['id'])}/">
               <span class="editorial-folio">0{index}</span>
               <div>
                 <span class="editorial-index">{esc(s['default_label'])}</span>
                 <h3>{esc(category['name'])}</h3>
                 <div class="editorial-side-price">{yen(s['min'])}<small> / {esc(category['metric_label'])}</small></div>
-                <div class="editorial-side-meta">中央値より {s.get('deal_percent', 0)}%低い ・ 掲載{s['total_count']}件</div>
+                <div class="editorial-side-meta">{esc(relative_price_label(s.get('min'), s.get('median')))} ・ 掲載{s['total_count']}件</div>
               </div>
               <div class="editorial-side-art">{category_illustration(category['id'])}</div>
             </a>'''
