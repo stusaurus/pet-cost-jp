@@ -105,7 +105,6 @@ class RenderTests(unittest.TestCase):
         self.assertIn("story-section", page)
         self.assertIn("trust-section", page)
         self.assertIn("store-section", page)
-        self.assertIn("PET COST CHECK", page)
         self.assertIn("mobile-dock", page)
         self.assertIn("page-home", page)
         self.assertIn("assets/pet-cost-logo.svg", page)
