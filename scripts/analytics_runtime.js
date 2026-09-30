@@ -169,6 +169,95 @@
     }
   }
 
+  function updateAngles(visibleRows) {
+    const grid = document.querySelector('[data-angle-grid]');
+    if (!grid || !visibleRows.length) return;
+
+    const picks = [
+      {
+        role: 'unit',
+        icon: '💰',
+        label: '単価最安',
+        row: [...visibleRows].sort((a, b) =>
+          Number(a.dataset.rowUnitPrice || 0) - Number(b.dataset.rowUnitPrice || 0)
+        )[0],
+        value: (row) => {
+          const sourceLink = row.querySelector('a[data-affiliate-link]');
+          const suffix = sourceLink?.dataset.metric === 'per_liter' ? ' / 1L' : ' / 1枚';
+          return formatYen(Number(row.dataset.rowUnitPrice || 0)) + suffix;
+        }
+      },
+      {
+        role: 'total',
+        icon: '🧾',
+        label: '支払総額が最小',
+        row: [...visibleRows].sort((a, b) =>
+          Number(a.dataset.totalPrice || 0) - Number(b.dataset.totalPrice || 0)
+        )[0],
+        value: (row) => formatYen(Number(row.dataset.totalPrice || 0))
+      },
+      {
+        role: 'bulk',
+        icon: '📦',
+        label: '最大容量',
+        row: [...visibleRows].sort((a, b) =>
+          Number(b.dataset.quantity || 0) - Number(a.dataset.quantity || 0)
+        )[0],
+        value: (row) => row.dataset.quantityEvidence || String(row.dataset.quantity || '')
+      }
+    ];
+
+    grid.innerHTML = '';
+    picks.forEach((pick) => {
+      const row = pick.row;
+      if (!row) return;
+      const sourceLink = row.querySelector('a[data-affiliate-link]');
+      const link = document.createElement('a');
+      link.className = 'angle-card';
+      link.href = row.dataset.url || '#';
+      link.target = '_blank';
+      link.rel = 'nofollow sponsored noopener';
+      link.dataset.angleCard = '1';
+      link.dataset.angleRole = pick.role;
+      link.dataset.affiliateLink = '1';
+      link.dataset.merchant = 'rakuten';
+      link.dataset.categoryId = document.body.dataset.categoryId || '';
+      link.dataset.metric = sourceLink?.dataset.metric || '';
+      link.dataset.itemId = row.dataset.itemId || '';
+      link.dataset.itemName = row.dataset.itemName || '';
+      link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+      link.dataset.position = '0';
+      link.dataset.conversionSource = 'comparison_angle_' + pick.role;
+
+      const icon = document.createElement('span');
+      icon.className = 'angle-icon';
+      icon.textContent = pick.icon;
+      link.appendChild(icon);
+
+      const label = document.createElement('span');
+      label.className = 'angle-label';
+      label.textContent = pick.label;
+      link.appendChild(label);
+
+      const value = document.createElement('span');
+      value.className = 'angle-value';
+      value.textContent = pick.value(row);
+      link.appendChild(value);
+
+      const name = document.createElement('span');
+      name.className = 'angle-name';
+      name.textContent = row.dataset.itemName || '';
+      link.appendChild(name);
+
+      const cta = document.createElement('span');
+      cta.className = 'angle-cta';
+      cta.textContent = '楽天で確認 →';
+      link.appendChild(cta);
+
+      grid.appendChild(link);
+    });
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -197,6 +286,7 @@
       middle
     );
     updateSnapshot(visibleRows, middle);
+    updateAngles(visibleRows);
   }
 
   function applyGroupFilter(group) {
