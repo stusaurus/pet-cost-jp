@@ -527,6 +527,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-editorial-category]');
+      if (!link) return;
+      send('homepage_editorial_click', {
+        category_id: link.dataset.editorialCategory || '',
+        editorial_position: Number(link.dataset.editorialPosition || 0),
+        conversion_source: 'homepage_editorial'
+      });
+    });
+
+    document.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-spotlight-link]');
       if (!link) return;
       send('daily_spotlight_click', {
