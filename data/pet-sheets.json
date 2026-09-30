@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30 23:32 JST",
+  "updated": "2026-10-01 00:34 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -262,25 +262,6 @@
       "confidence": 0.9,
       "group": "wide",
       "unit_price": 17.44
-    },
-    {
-      "name": "純国産ペットシーツ　ワイド300枚[送料無料]表面：白色",
-      "price": 6600,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00puweo.7cx6m6c1.g00puweo.7cx6n670/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjushop%2F1081963%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fjushop%2Fi%2F10000336%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "ジェイユーショップ",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/jushop/cabinet/j/jun-w-box1.jpg?_ex=128x128",
-      "review_average": 4.58,
-      "review_count": 2324,
-      "postage_flag": 0,
-      "product_id": "ef6d162ffc16",
-      "category_id": "pet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 300.0,
-      "quantity_evidence": "300枚",
-      "confidence": 0.9,
-      "group": "wide",
-      "unit_price": 22.0
     },
     {
       "name": "コスパがいいペットシーツ（1回使い捨てタイプ）　スーパーワイド　200枚入り　関東当日便",
