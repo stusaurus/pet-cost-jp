@@ -366,12 +366,25 @@
       row.hidden = !visible;
       const rank = row.querySelector('[data-rank-cell]');
       const rankBadge = row.querySelector('[data-rank-badge]');
+      const showcase = row.querySelector('[data-rank-showcase-label]');
+      const affiliate = row.querySelector('a[data-affiliate-link]');
       row.classList.remove('is-rank-1', 'is-rank-2', 'is-rank-3');
+      if (showcase) {
+        showcase.hidden = true;
+        showcase.textContent = '';
+      }
       if (!visible) return;
 
       visibleRows.push(row);
       const visualRank = visibleRows.length;
-      if (visualRank <= 3) row.classList.add('is-rank-' + visualRank);
+      if (visualRank <= 3) {
+        row.classList.add('is-rank-' + visualRank);
+        if (showcase) {
+          showcase.hidden = false;
+          showcase.textContent = visualRank === 1 ? 'この条件の最安' : visualRank === 2 ? '2nd PRICE' : '3rd PRICE';
+        }
+      }
+      if (affiliate) affiliate.dataset.position = String(visualRank);
       if (group === 'all' && !rankAll) {
         if (rank) rank.textContent = '—';
         if (rankBadge) rankBadge.textContent = '条件別';
@@ -755,13 +768,36 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
 .value-badge-empty{font-size:9px;color:var(--muted);padding:4px 0}
 .value-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:9px;color:var(--muted)}.value-legend span{display:inline-flex;align-items:center;gap:4px}.value-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}.value-legend .u{background:#173126}.value-legend .d{background:#55ad83}.value-legend .t{background:#e2b94f}.value-legend .b{background:#69adba}
 @media(max-width:759px){.value-badge{font-size:9px;padding:4px 6px}.value-badge-row{margin-top:5px}.shop-card.is-rank-1 .value-badge-row{padding-right:22px}}
+
+/* Rank showcase v14 */
+.product-grid{align-items:start}
+.rank-showcase-label{display:none;position:absolute;z-index:3;left:13px;top:13px;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.08em;box-shadow:0 6px 16px rgba(23,49,38,.12)}
+.shop-card.is-rank-1{grid-column:1/-1;grid-template-columns:170px minmax(0,1fr) 190px;grid-template-areas:"image head price" "image meta price" "image action action";gap:10px 18px;min-height:205px;padding:18px;border:2px solid #e7bd49;background:radial-gradient(circle at 91% 10%,rgba(255,215,111,.24),transparent 25%),linear-gradient(145deg,#fffdf3,#fff 60%);box-shadow:0 22px 48px rgba(72,57,11,.14)}
+.shop-card.is-rank-1:before{content:"CURRENT BEST";right:-31px;top:18px;padding:5px 39px;background:#ffd76f;color:#674c00;font-size:9px}
+.shop-card.is-rank-1 .rank-showcase-label{display:inline-flex;background:#173126;color:#fff;left:183px;top:17px}
+.shop-card.is-rank-1 .shop-card-image-wrap{align-self:center;padding-top:8px}.shop-card.is-rank-1 .shop-card-image{width:150px;height:150px;border-radius:18px;box-shadow:0 12px 28px rgba(23,49,38,.08)}
+.shop-card.is-rank-1 .shop-card-rank{left:-8px;top:-7px;width:42px;height:42px;border-radius:14px;font-size:17px;background:#ffd76f;color:#654a00;box-shadow:0 8px 18px rgba(129,92,0,.22)}
+.shop-card.is-rank-1 .shop-card-rank:before{content:"♛";position:absolute;top:-18px;font-size:18px;color:#e8b935;text-shadow:0 1px 0 #6a4d00}
+.shop-card.is-rank-1 .shop-card-head{padding-top:30px}.shop-card.is-rank-1 .shop-card-title{font-size:17px;line-height:1.45;-webkit-line-clamp:2}.shop-card.is-rank-1 .shop-card-shop{font-size:11px}
+.shop-card.is-rank-1 .shop-card-prices{align-self:center;display:block;text-align:right;padding-top:24px}.shop-card.is-rank-1 .shop-unit{font-size:36px}.shop-card.is-rank-1 .shop-unit-label{font-size:11px}.shop-card.is-rank-1 .shop-total{margin-top:10px}.shop-card.is-rank-1 .shop-total b{font-size:18px}
+.shop-card.is-rank-1 .shop-card-meta{border-top:0;padding-top:0}.shop-card.is-rank-1 .shop-card-action{display:flex;justify-content:flex-end}.shop-card.is-rank-1 .shop-card-action .btn{width:auto;min-width:210px;padding:13px 18px;font-size:14px}
+.shop-card.is-rank-2,.shop-card.is-rank-3{border-width:2px;border-top-width:5px}.shop-card.is-rank-2{border-color:#c9d1ce;background:linear-gradient(145deg,#fbfdfc,#fff)}.shop-card.is-rank-3{border-color:#d5b18d;background:linear-gradient(145deg,#fffaf6,#fff)}
+.shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{display:inline-flex;left:48px;top:10px}.shop-card.is-rank-2 .rank-showcase-label{background:#e2e8e5;color:#50615a}.shop-card.is-rank-3 .rank-showcase-label{background:#e4c3a4;color:#68492f}
+.shop-card.is-rank-2 .shop-card-rank{background:#dce3e0;color:#4f6058}.shop-card.is-rank-3 .shop-card-rank{background:#d8b18b;color:#68492f}
+.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:104px;height:104px}.shop-card.is-rank-2,.shop-card.is-rank-3{grid-template-columns:104px minmax(0,1fr)}.shop-card.is-rank-2 .shop-card-title,.shop-card.is-rank-3 .shop-card-title{font-size:14px}
+@media(max-width:759px){
+  .shop-card.is-rank-1{grid-column:auto;grid-template-columns:110px minmax(0,1fr);grid-template-areas:"image head" "image price" "meta meta" "action action";gap:8px 12px;min-height:0;padding:14px}
+  .shop-card.is-rank-1 .shop-card-image{width:110px;height:110px}.shop-card.is-rank-1 .shop-card-head{padding-top:27px}.shop-card.is-rank-1 .shop-card-prices{display:flex;text-align:left;padding-top:0}.shop-card.is-rank-1 .shop-unit{font-size:27px}.shop-card.is-rank-1 .shop-total{margin-top:0}.shop-card.is-rank-1 .shop-card-action .btn{width:100%;min-width:0}
+  .shop-card.is-rank-1 .rank-showcase-label{left:126px;top:12px}.shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{left:44px;top:8px}
+  .shop-card.is-rank-2,.shop-card.is-rank-3{grid-template-columns:88px minmax(0,1fr)}.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:88px;height:88px}
+}
 </style></head><body data-category-id="pet-sheets" class="page-pet-sheets"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">ペットシーツ</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">レギュラー・ワイド・スーパーワイドを混ぜず、同じサイズだけを1枚あたりの価格で比較します。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 20:06 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:18 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="ペットシーツのイラスト">
           <ellipse cx="150" cy="143" rx="112" ry="9" fill="#8dbca1" opacity=".22"/>
@@ -959,6 +995,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【最大1000円オフクーポン■要事前取得】【200枚×4袋】GRAN PETS グランペッツ ペットシーツ レギュラー 薄型 800枚 (犬・ドッグ)"
                 data-shop="スイートペット"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00s21jo.7cx6m5fa.g00s21jo.7cx6n2d1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsweet-pet%2Fset3604gran%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsweet-pet%2Fi%2F10011815%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/sweet-pet/cabinet/granpets/set3604gran.jpg?_ex=128x128" alt="【最大1000円オフクーポン■要事前取得】【200枚×4袋】GRAN PETS グランペッツ ペットシーツ レギュラー 薄型 800枚 (犬・ドッグ)" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>1</span><span data-rank-badge style="display:none">1位</span></span>
@@ -997,6 +1034,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ レギュラー 800枚 超薄型 送料無料 ペットシート トイレシート 超薄型レギュラー ペットトイレシート おしっこシート 大容量 業務用 PSD001"
                 data-shop="伊藤家の食卓"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00sjpho.7cx6mc6a.g00sjpho.7cx6n4be/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fitoukenoshokutaku%2Fps1000001%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fitoukenoshokutaku%2Fi%2F10000234%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/itoukenoshokutaku/cabinet/petfood/item/petsheets/pet-sheetsr-sam.jpg?_ex=128x128" alt="ペットシーツ レギュラー 800枚 超薄型 送料無料 ペットシート トイレシート 超薄型レギュラー ペットトイレシート おしっこシート 大容量 業務用 PSD001" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>2</span><span data-rank-badge style="display:none">2位</span></span>
@@ -1035,6 +1073,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="トムキャット 業務用ペットシーツ 薄型レギュラー 100枚 ×8袋入"
                 data-shop="トムキャット楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pxxxo.7cx6m93a.g00pxxxo.7cx6nede/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomcat%2Fbb602011%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomcat%2Fi%2F10018163%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/tomcat/cabinet/doggoods/toiletries/petsheets/bb602011.jpg?_ex=128x128" alt="トムキャット 業務用ペットシーツ 薄型レギュラー 100枚 ×8袋入" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>3</span><span data-rank-badge style="display:none">3位</span></span>
@@ -1073,6 +1112,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【最大1000円オフクーポン■要事前取得】【100枚×4袋】GRAN PETS グランペッツ ペットシーツ ワイド 薄型 400枚 (犬・ドッグ)"
                 data-shop="スイートペット"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00s21jo.7cx6m5fa.g00s21jo.7cx6n2d1/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fsweet-pet%2Fset3605gran%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fsweet-pet%2Fi%2F10011816%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/sweet-pet/cabinet/granpets/set3605gran.jpg?_ex=128x128" alt="【最大1000円オフクーポン■要事前取得】【100枚×4袋】GRAN PETS グランペッツ ペットシーツ ワイド 薄型 400枚 (犬・ドッグ)" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>4</span><span data-rank-badge style="display:none">4位</span></span>
@@ -1111,6 +1151,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　国産ペットシーツ　薄型レギュラー　160枚　1回交換タイプ（45cm×34cm）　お一人様4点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F214000%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10559251%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2145/214000-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　国産ペットシーツ　薄型レギュラー　160枚　1回交換タイプ（45cm×34cm）　お一人様4点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>5</span><span data-rank-badge style="display:none">5位</span></span>
@@ -1149,6 +1190,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ レギュラー 中厚 800枚 200枚 × 4個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ LIFELEX 中厚KNPS_R"
                 data-shop="コーナンeショップ 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F452283109105804%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10145962%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202408/s1/452283109105804_01.jpg?_ex=128x128" alt="ペットシーツ レギュラー 中厚 800枚 200枚 × 4個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ LIFELEX 中厚KNPS_R" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>6</span><span data-rank-badge style="display:none">6位</span></span>
@@ -1187,6 +1229,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ レギュラー 中厚 200枚 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ LIFELEX 中厚KNPS_R"
                 data-shop="コーナンeショップ 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F4522831091058%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10020417%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202408/s1/4522831091058_01.jpg?_ex=128x128" alt="ペットシーツ レギュラー 中厚 200枚 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ LIFELEX 中厚KNPS_R" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>7</span><span data-rank-badge style="display:none">7位</span></span>
@@ -1225,6 +1268,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="純国産 ペットシーツ レギュラー600枚 (白色) 薄型　[送料無料]"
                 data-shop="ジェイユーショップ"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00puweo.7cx6m6c1.g00puweo.7cx6n670/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjushop%2F1081654%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fjushop%2Fi%2F10000335%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/jushop/cabinet/j/2022-r-ota.jpg?_ex=128x128" alt="純国産 ペットシーツ レギュラー600枚 (白色) 薄型　[送料無料]" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>8</span><span data-rank-badge style="display:none">8位</span></span>
@@ -1263,6 +1307,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ ワイド 薄型 400枚 業務用 100枚×4袋 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 多頭飼い LIFELEX 業務用KNPS_W"
                 data-shop="コーナンeショップ 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F452283109116402%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10020362%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202301/s1/452283109116402_01.jpg?_ex=128x128" alt="ペットシーツ ワイド 薄型 400枚 業務用 100枚×4袋 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 多頭飼い LIFELEX 業務用KNPS_W" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>9</span><span data-rank-badge style="display:none">9位</span></span>
@@ -1301,6 +1346,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペット用品 業務用 ペットシーツ 超薄型 スーパーワイド 300枚(75枚×4) ペットライブラリー ペツトシ-ツチヨウウスガタSW300"
                 data-shop="Joshin web 家電とPCの大型専門店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pukwo.7cx6me71.g00pukwo.7cx6n06c/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjism%2F4582439462469-73-30002835-n%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fjism%2Fi%2F14395222%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/jism/cabinet/0449/4582439462469.jpg?_ex=128x128" alt="ペット用品 業務用 ペットシーツ 超薄型 スーパーワイド 300枚(75枚×4) ペットライブラリー ペツトシ-ツチヨウウスガタSW300" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>10</span><span data-rank-badge style="display:none">10位</span></span>
@@ -1339,6 +1385,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ハニーケア ペットシート 薄型 ワイドタイプ HND-100(100枚入)"
                 data-shop="楽天24"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00r136o.7cx6meef.g00r136o.7cx6n891/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4580639721003%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Frakuten24%2Fi%2F11283286%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/003/4580639721003.jpg?_ex=128x128" alt="ハニーケア ペットシート 薄型 ワイドタイプ HND-100(100枚入)" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>11</span><span data-rank-badge style="display:none">11位</span></span>
@@ -1377,6 +1424,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="純国産ペットシーツ　ワイド300枚[送料無料]表面：白色"
                 data-shop="ジェイユーショップ"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00puweo.7cx6m6c1.g00puweo.7cx6n670/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjushop%2F1081963%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fjushop%2Fi%2F10000336%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/jushop/cabinet/j/jun-w-box1.jpg?_ex=128x128" alt="純国産ペットシーツ　ワイド300枚[送料無料]表面：白色" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>12</span><span data-rank-badge style="display:none">12位</span></span>
@@ -1415,6 +1463,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="コスパがいいペットシーツ（1回使い捨てタイプ）　スーパーワイド　200枚入り　関東当日便"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F284018%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F11092927%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2841/284018-1.jpg?_ex=128x128" alt="コスパがいいペットシーツ（1回使い捨てタイプ）　スーパーワイド　200枚入り　関東当日便" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>13</span><span data-rank-badge style="display:none">13位</span></span>
@@ -1453,6 +1502,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="中厚型 ペットシーツ ワイド ケース販売(50枚入*4個)【ペティオ(Petio)】"
                 data-shop="楽天24"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00r136o.7cx6meef.g00r136o.7cx6n891/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4903588745027%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Frakuten24%2Fi%2F10973051%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/027/4903588745027.jpg?_ex=128x128" alt="中厚型 ペットシーツ ワイド ケース販売(50枚入*4個)【ペティオ(Petio)】" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>14</span><span data-rank-badge style="display:none">14位</span></span>
@@ -1491,6 +1541,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　ワイド　54枚×4袋　お一人様1点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F274219%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F11085157%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2745/274219-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　ワイド　54枚×4袋　お一人様1点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>15</span><span data-rank-badge style="display:none">15位</span></span>
@@ -1529,6 +1580,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　ワイド54枚　お一人様4点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F246764%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10410597%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2469/246764-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　ワイド54枚　お一人様4点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>16</span><span data-rank-badge style="display:none">16位</span></span>
@@ -1567,6 +1619,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ スーパーワイド コンパクト 200枚 50枚 ×4個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 大きい サイズ LIFELEX 中厚KNPS_SW"
                 data-shop="コーナンeショップ 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F452283109107204%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10145963%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202407/s1/452283109107204_01.jpg?_ex=128x128" alt="ペットシーツ スーパーワイド コンパクト 200枚 50枚 ×4個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ最高 コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 大きい サイズ LIFELEX 中厚KNPS_SW" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>17</span><span data-rank-badge style="display:none">17位</span></span>
@@ -1605,6 +1658,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　国産ペットシーツ　厚型炭入り　ワイド　40枚（44×60cm）吸収力抜群　ダブル消臭　抗菌剤配合　お一人様4点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F214700%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10635731%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2151/214700-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　国産ペットシーツ　厚型炭入り　ワイド　40枚（44×60cm）吸収力抜群　ダブル消臭　抗菌剤配合　お一人様4点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>18</span><span data-rank-badge style="display:none">18位</span></span>
@@ -1643,6 +1697,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="ペットシーツ スーパーワイド 中厚 100枚 50枚×2個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ 大きい サイズ LIFELEX 中厚KNPS_SW"
                 data-shop="コーナンeショップ 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F452283109107202%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10130398%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202407/s1/452283109107202_01.jpg?_ex=128x128" alt="ペットシーツ スーパーワイド 中厚 100枚 50枚×2個セット 安い ペット シーツ ペットシート トイレ シート 大容量 コスパ コーナン オリジナル 犬 猫 おしっこ 使い捨て 吸収力 おすすめ 大きい サイズ LIFELEX 中厚KNPS_SW" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>19</span><span data-rank-badge style="display:none">19位</span></span>
@@ -1681,6 +1736,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【500円OFFクーポンあり9/19(土)20：00～9/30(水)23：59】トムキャット 業務用ペットシーツ 厚型スーパーワイド 25枚 ×6袋入"
                 data-shop="トムキャット楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pxxxo.7cx6m93a.g00pxxxo.7cx6nede/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomcat%2Fbb601031%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomcat%2Fi%2F10000902%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/tomcat/cabinet/sale/sale01/limited/bb601031.jpg?_ex=128x128" alt="【500円OFFクーポンあり9/19(土)20：00～9/30(水)23：59】トムキャット 業務用ペットシーツ 厚型スーパーワイド 25枚 ×6袋入" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>20</span><span data-rank-badge style="display:none">20位</span></span>
@@ -1719,6 +1775,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　スーパーワイド　薄型　40枚　1回交換タイプ（90cm×60cm）国産　ペットシート　お一人様4点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F190727%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10220355%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/1911/190727-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　スーパーワイド　薄型　40枚　1回交換タイプ（90cm×60cm）国産　ペットシート　お一人様4点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>21</span><span data-rank-badge style="display:none">21位</span></span>
@@ -1757,6 +1814,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="国産 業務用ペットシーツ 中厚型 スーパーワイド 80枚［319079／大容量／多頭飼い／まとめ買い／おしっこ／トイレ／シート／大型犬／中型犬／小型犬／コーチョー］"
                 data-shop="interzoo clinicclub"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00rww7o.7cx6m286.g00rww7o.7cx6ne1a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Finterzoo-pet%2F005-0485-03-06%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Finterzoo-pet%2Fi%2F10000218%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/interzoo-pet/cabinet/dogetc/petsheets/imgrc0090808328.jpg?_ex=128x128" alt="国産 業務用ペットシーツ 中厚型 スーパーワイド 80枚［319079／大容量／多頭飼い／まとめ買い／おしっこ／トイレ／シート／大型犬／中型犬／小型犬／コーチョー］" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>22</span><span data-rank-badge style="display:none">22位</span></span>
@@ -1795,6 +1853,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　スーパーワイド　23枚×4　お一人様1点限り"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F222436%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10413133%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2229/222436-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　スーパーワイド　23枚×4　お一人様1点限り" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>23</span><span data-rank-badge style="display:none">23位</span></span>
@@ -1833,6 +1892,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 data-item-name="【10／1限定】当選確率2分の1！1等最大100％　コーチョー　ネオシーツ　カーボンDX　スーパーワイド　18枚×4袋　お一人様1点限り　ペットシーツ"
                 data-shop="charm 楽天市場店"
                 data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F204738%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10485067%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2049/204738-1.jpg?_ex=128x128" alt="【10／1限定】当選確率2分の1！1等最大100％　コーチョー　ネオシーツ　カーボンDX　スーパーワイド　18枚×4袋　お一人様1点限り　ペットシーツ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>24</span><span data-rank-badge style="display:none">24位</span></span>
