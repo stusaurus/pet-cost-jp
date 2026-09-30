@@ -89,15 +89,12 @@ body{background:#f4f7f2;background-image:radial-gradient(circle at 12% 8%,rgba(2
 
 
 def hero_illustration():
-    return '''<svg class="hero-art" viewBox="0 0 420 300" role="img" aria-label="犬と猫がペット用品の単価を比べているイラスト">
-      <defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#173126" flood-opacity=".12"/></filter><linearGradient id="board" x1="0" x2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f4fbf6"/></linearGradient></defs>
-      <circle cx="335" cy="58" r="34" fill="#ffe39a"/><circle cx="65" cy="55" r="21" fill="#d8f1e3"/>
-      <path d="M42 246c38-43 83-60 136-52 38 6 64 25 92 35 38 13 73 7 108-12v54H42z" fill="#dff3e7"/>
-      <g filter="url(#softShadow)"><rect x="126" y="55" width="196" height="148" rx="22" fill="url(#board)" stroke="#d2e5d9"/><rect x="151" y="82" width="91" height="14" rx="7" fill="#173126" opacity=".9"/><rect x="151" y="109" width="125" height="8" rx="4" fill="#c7d9cf"/><rect x="151" y="127" width="101" height="8" rx="4" fill="#d9e7df"/><rect x="151" y="155" width="22" height="24" rx="5" fill="#94d8b8"/><rect x="181" y="142" width="22" height="37" rx="5" fill="#55b88f"/><rect x="211" y="126" width="22" height="53" rx="5" fill="#237a57"/><circle cx="277" cy="159" r="22" fill="#ffd66e"/><path d="M270 154h15M277.5 146v26" stroke="#6d5410" stroke-width="5" stroke-linecap="round"/></g>
-      <g transform="translate(38 127)" filter="url(#softShadow)"><ellipse cx="66" cy="111" rx="52" ry="34" fill="#d99b67"/><circle cx="64" cy="57" r="45" fill="#e8ae79"/><path d="M28 28 13 2l36 16M99 27l15-26-36 17" fill="#b87448"/><ellipse cx="64" cy="67" rx="24" ry="18" fill="#f7d0a4"/><circle cx="49" cy="51" r="4.6" fill="#173126"/><circle cx="80" cy="51" r="4.6" fill="#173126"/><ellipse cx="64" cy="63" rx="5" ry="4" fill="#173126"/><path d="M56 72q8 8 16 0" fill="none" stroke="#173126" stroke-width="3" stroke-linecap="round"/><path d="M31 104q-19 7-16 27" fill="none" stroke="#b87448" stroke-width="8" stroke-linecap="round"/></g>
-      <g transform="translate(292 137)" filter="url(#softShadow)"><ellipse cx="49" cy="103" rx="43" ry="30" fill="#8ba6ad"/><circle cx="48" cy="55" r="38" fill="#9cb6bc"/><path d="M18 30 21 1l23 20M78 29 76 0 54 21" fill="#6f8f98"/><circle cx="35" cy="52" r="4.2" fill="#173126"/><circle cx="61" cy="52" r="4.2" fill="#173126"/><path d="m48 61-5 5h10z" fill="#e79b96"/><path d="M36 72q12 8 24 0" fill="none" stroke="#173126" stroke-width="2.5" stroke-linecap="round"/><path d="M18 64H-4M19 72H0M78 64h22M77 72h18" stroke="#526f77" stroke-width="2" stroke-linecap="round"/><path d="M88 99q25-18 19 9" fill="none" stroke="#6f8f98" stroke-width="7" stroke-linecap="round"/></g>
-      <g transform="translate(181 210) rotate(-4)" filter="url(#softShadow)"><path d="M0 0h91l18 24-18 24H0z" fill="#ffca55"/><circle cx="91" cy="24" r="5" fill="#fff4cf"/><text x="16" y="31" font-family="sans-serif" font-size="18" font-weight="900" fill="#6b4c00">1枚 ¥5.8</text></g>
-    </svg>'''
+    return f'''<div class="hero-photo-wrap">
+      <img class="hero-photo" src="{BASE_URL}assets/hero-pet-comparison.webp"
+        alt="犬と猫、ペットシーツ・猫砂・システムトイレ用品を天秤で比較するイメージ"
+        width="480" height="320" fetchpriority="high">
+      <div class="hero-photo-label"><span>PRICE CHECK</span><b>同じ単位で比較</b></div>
+    </div>'''
 
 
 def category_illustration(category_id):
@@ -118,6 +115,23 @@ def step_illustration(kind):
     if kind == 2:
         return '''<div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="15" width="76" height="42" rx="11" fill="#fff" stroke="#cfe2d7" stroke-width="3"/><path d="M28 27h45M28 37h34M28 47h51" stroke="#237a57" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="27" r="4" fill="#ffd064"/><circle cx="18" cy="37" r="4" fill="#ffd064"/><circle cx="18" cy="47" r="4" fill="#ffd064"/></svg></div>'''
     return '''<div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="18" width="76" height="38" rx="10" fill="#173126"/><path d="M29 44V34M45 44V27M61 44V22M77 44V16" stroke="#74caa5" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="22" r="12" fill="#ffd064"/><path d="M16 22h8M20 18v8" stroke="#725400" stroke-width="3" stroke-linecap="round"/></svg></div>'''
+
+CSS += r'''
+/* Visual identity v4 */
+.photo-shell{padding:0;background:#fff;border-color:#eadfca;box-shadow:0 22px 56px rgba(54,73,61,.14)}
+.photo-shell:before{display:none}
+.hero-photo-wrap{position:relative;height:100%;min-height:250px;display:grid;place-items:center;overflow:hidden;border-radius:27px;background:#fff}
+.hero-photo{display:block;width:100%;height:100%;min-height:250px;object-fit:cover;object-position:center}
+.hero-photo-label{position:absolute;left:15px;bottom:14px;display:flex;align-items:center;gap:8px;background:rgba(23,49,38,.92);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 11px;box-shadow:0 7px 20px rgba(23,49,38,.18);backdrop-filter:blur(8px)}
+.hero-photo-label span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#ffd978}.hero-photo-label b{font-size:12px}
+.story-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff8e7,#fff 60%);border-color:#f0dfba}.story-section:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-65px;bottom:-72px;background:rgba(255,207,98,.15);pointer-events:none}
+.trust-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#edf9f2,#fff 64%);border-color:#d6ebdf}.trust-section:after{content:"";position:absolute;right:16px;top:14px;width:70px;height:70px;opacity:.09;background:radial-gradient(circle at 25% 25%,#237a57 0 8px,transparent 9px),radial-gradient(circle at 75% 25%,#237a57 0 8px,transparent 9px),radial-gradient(circle at 50% 72%,#237a57 0 18px,transparent 19px)}
+.store-section{background:linear-gradient(135deg,#eef8fb,#fff 62%);border-color:#d7ebef}
+.visual-section .section-sub{max-width:620px}
+.category-card-copy strong{display:block;margin-top:9px}
+@media(min-width:760px){.photo-shell,.hero-photo-wrap,.hero-photo{min-height:330px}.hero-photo{object-fit:cover}.story-section,.trust-section,.store-section{padding:24px}}
+@media(max-width:759px){.photo-shell,.hero-photo-wrap,.hero-photo{min-height:220px}.hero-photo{object-fit:cover}.hero-photo-label{left:10px;bottom:10px;padding:6px 9px}.hero-photo-label b{font-size:11px}}
+'''
 
 
 def schema_script(data):
@@ -421,7 +435,7 @@ def homepage(categories, summaries, updated):
         <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
         <p class="updated">最終更新 {esc(updated)}</p>
       </div>
-      <div class="hero-art-shell">{hero_illustration()}</div>
+      <div class="hero-art-shell photo-shell">{hero_illustration()}</div>
     </div></header>
     {nav(categories)}
     <main class="main"><div class="wrap">
@@ -430,7 +444,7 @@ def homepage(categories, summaries, updated):
         <div class="home-grid">{''.join(cards)}</div>
       </section>
 
-      <section class="section">
+      <section class="section story-section">
         <div class="section-head"><div><h2>使い方は3ステップ</h2></div></div>
         <div class="steps">
           <div class="step">{step_illustration(1)}<div class="step-num">1</div><div><b>用品を選ぶ</b><span>ペットシーツ・猫砂・システムトイレシートから選択。</span></div></div>
@@ -439,7 +453,7 @@ def homepage(categories, summaries, updated):
         </div>
       </section>
 
-      <section class="section">
+      <section class="section trust-section">
         <div class="section-head"><div><h2>「安い」を雑に作らない</h2><p class="section-sub">件数より、間違った1位を出さないことを優先します。</p></div></div>
         <div class="guide-grid">
           <div class="guide-item"><span class="guide-check">✓</span><span>選択式で数量が確定しない商品は除外します。</span></div>
@@ -448,7 +462,7 @@ def homepage(categories, summaries, updated):
         </div>
       </section>
 
-      <section class="section">
+      <section class="section store-section">
         <div class="section-head"><div><h2>店頭でも使える</h2></div></div>
         <p class="method">各比較ページには単価計算機があります。ホームセンターで「これ安い？」と思ったとき、価格と枚数・容量を入れれば、現在の楽天候補と同じ単位で比べられます。</p>
       </section>
@@ -471,6 +485,9 @@ def write_text(path, text):
 def copy_static_verification_files():
     for source in ROOT.glob("google*.html"):
         shutil.copy2(source, SITE / source.name)
+    assets = ROOT / "assets"
+    if assets.exists():
+        shutil.copytree(assets, SITE / "assets", dirs_exist_ok=True)
 
 
 def main():
