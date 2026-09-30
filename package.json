@@ -1,0 +1,6 @@
+{
+  "name": "pet-cost-jp-ui-checks",
+  "private": true,
+  "scripts": { "test": "node --test tests/comparison.test.cjs" },
+  "devDependencies": { "jsdom": "26.1.0" }
+}

@@ -53,3 +53,25 @@ GA4は日用品版と同じMeasurement IDを使用し、全イベントに `site
 
 ## 公開
 GitHub Actionsがテスト → 楽天データ取得 → 静的サイト生成 → 商品品質監査 → GitHub Pages公開を行います。毎日06:20 JSTにも自動更新します。
+
+## 比較画面と検証
+
+条件 → 最安の結論と計算根拠 → 同じ尺度のTOP3 → 3つの選び方 → 商品一覧 → 店頭比較の順に表示します。
+`assets/comparison.css` が共通スタイルで、生成HTMLにインライン化します。旧版の装飾CSSは撤去しました。
+中央値は偶数件の場合、中央2件の平均です。送料別の商品は送料を加算せず、その旨を表示します。
+
+既存の `homepage_editorial_click` / `daily_spotlight_click` も維持しています。統合したカテゴリ入口で両方を送ります。
+新しい `comparison_angle_select` は選び方の変更を計測し、`angle_role=unit|total|bulk` と現在の条件・商品IDを送ります。
+条件変更は既存 `comparison_filter` に結果件数・最安単価・中央値を追加。店頭比較の自動再計算ではイベントを再送しません。
+`?test=1` で運営者検証の `operator_test=1` を付け、`?test=0` で解除できます。
+
+```sh
+python -m unittest discover -s tests -p 'test_*.py'
+npm ci --ignore-scripts
+npm test
+python scripts/audit_products.py
+```
+
+`npm test` はコミット済みの商品データを再描画して、全カテゴリの全表示フィルター・順位・理由・中央値・3つの選び方・店頭比較・GA4送信をDOMで検証します。
+APIを呼ばず画面だけ生成する場合は `python scripts/build_site.py --reuse-data`。取得日時は既存データのままです。
+通常の本番ビルドは引き続きAPIから取得します。本番Actionsは新しく取得したデータに対して `PET_COST_TEST_SITE=1 npm test` を実行し、品質監査後に公開します。
