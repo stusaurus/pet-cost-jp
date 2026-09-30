@@ -99,11 +99,29 @@ def hero_illustration():
 
 def category_illustration(category_id):
     if category_id == "pet-sheets":
-        return '''<svg viewBox="0 0 300 150" role="img" aria-label="ペットシーツのイラスト"><ellipse cx="151" cy="131" rx="112" ry="10" fill="#bddfca" opacity=".45"/><rect x="66" y="72" width="170" height="58" rx="16" fill="#fff" stroke="#93c9ac" stroke-width="3"/><path d="M88 91h126M88 106h98" stroke="#d7ebe0" stroke-width="7" stroke-linecap="round"/><g transform="translate(104 16)"><circle cx="47" cy="42" r="35" fill="#e9b17f"/><path d="M18 22 6 2l31 13M76 22 89 2 59 14" fill="#b8754a"/><circle cx="35" cy="38" r="4" fill="#173126"/><circle cx="59" cy="38" r="4" fill="#173126"/><ellipse cx="47" cy="49" rx="5" ry="4" fill="#173126"/></g><circle cx="236" cy="54" r="27" fill="#ffcf62"/><path d="m236 35 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#fff5d6"/></svg>'''
+        return '''<svg viewBox="0 0 300 160" role="img" aria-label="ペットシーツのイラスト">
+          <ellipse cx="150" cy="143" rx="112" ry="9" fill="#8dbca1" opacity=".22"/>
+          <path d="M36 121c21-29 45-39 75-31 19 5 29 17 47 20 31 5 54-10 104-24v44H36z" fill="#cfeedd"/>
+          <g transform="translate(36 41)"><rect x="0" y="31" width="88" height="61" rx="14" fill="#fff" stroke="#75b997" stroke-width="3"/><path d="M12 49h64M12 64h46" stroke="#d8eee2" stroke-width="7" stroke-linecap="round"/><rect x="58" y="9" width="54" height="36" rx="10" fill="#2d7f5d"/><path d="M68 20h34M68 30h24" stroke="#d9f1e4" stroke-width="5" stroke-linecap="round"/></g>
+          <g transform="translate(144 12)"><circle cx="50" cy="45" r="38" fill="#e7ab75"/><path d="M20 23 7 3l33 14M80 22 94 2 61 16" fill="#b8754a"/><ellipse cx="50" cy="55" rx="23" ry="18" fill="#f7d0a4"/><circle cx="37" cy="41" r="4.5" fill="#173126"/><circle cx="64" cy="41" r="4.5" fill="#173126"/><ellipse cx="50" cy="52" rx="5" ry="4" fill="#173126"/><path d="M42 62q8 7 16 0" fill="none" stroke="#173126" stroke-width="2.7" stroke-linecap="round"/></g>
+          <g transform="translate(202 86) rotate(-4)"><path d="M0 0h64l12 16-12 16H0z" fill="#ffd66e"/><circle cx="63" cy="16" r="3" fill="#fff4d0"/><text x="9" y="13" class="scene-label" font-family="sans-serif" fill="#6b4c00">PRICE</text><text x="9" y="26" class="scene-price" font-family="sans-serif" fill="#6b4c00">1枚</text></g>
+        </svg>'''
     if category_id == "cat-litter":
-        return '''<svg viewBox="0 0 300 150" role="img" aria-label="猫砂のイラスト"><ellipse cx="151" cy="132" rx="105" ry="10" fill="#e8d7ad" opacity=".55"/><path d="M68 79q0-22 22-22h123q22 0 22 22v38H68z" fill="#fff" stroke="#d8bd78" stroke-width="3"/><path d="M83 84h137l-10 31H93z" fill="#ead7aa"/><g fill="#c6a85d"><circle cx="107" cy="96" r="4"/><circle cx="128" cy="105" r="4"/><circle cx="153" cy="94" r="4"/><circle cx="180" cy="105" r="4"/><circle cx="201" cy="96" r="4"/></g><g transform="translate(112 12)"><circle cx="40" cy="40" r="34" fill="#9eb8be"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#708e97"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><rect x="218" y="37" width="48" height="28" rx="8" fill="#ffce62"/><text x="232" y="56" font-size="15" font-family="sans-serif" font-weight="900" fill="#6d5200">1L</text></svg>'''
-    return '''<svg viewBox="0 0 300 150" role="img" aria-label="システムトイレシートのイラスト"><ellipse cx="150" cy="132" rx="106" ry="10" fill="#bcdde3" opacity=".55"/><rect x="65" y="66" width="170" height="62" rx="18" fill="#fff" stroke="#8cc7d0" stroke-width="3"/><rect x="78" y="83" width="144" height="29" rx="9" fill="#dff3f6"/><path d="M93 97h113" stroke="#9ed5dc" stroke-width="5" stroke-linecap="round"/><g transform="translate(112 9)"><circle cx="40" cy="40" r="34" fill="#98b6bd"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#6e8e96"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><circle cx="238" cy="52" r="27" fill="#5db7c4"/><path d="m226 53 8 8 16-19" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'''
-
+        return '''<svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
+          <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
+          <path d="M45 78q0-20 20-20h143q20 0 20 20v47H45z" fill="#fff" stroke="#d4b773" stroke-width="3"/><path d="M59 84h155l-11 35H70z" fill="#ead6a6"/>
+          <g fill="#c3a35a"><circle cx="88" cy="99" r="4"/><circle cx="111" cy="110" r="4"/><circle cx="137" cy="96" r="4"/><circle cx="163" cy="109" r="4"/><circle cx="191" cy="98" r="4"/></g>
+          <g transform="translate(111 6)"><circle cx="42" cy="42" r="36" fill="#9fb9bf"/><path d="M14 22 18 0l22 16M70 22 67 0 45 16" fill="#708e97"/><circle cx="30" cy="39" r="4.3" fill="#173126"/><circle cx="55" cy="39" r="4.3" fill="#173126"/><path d="m42 48-5 4h10z" fill="#e59a95"/><path d="M33 58q9 6 18 0" fill="none" stroke="#173126" stroke-width="2.4" stroke-linecap="round"/></g>
+          <g transform="translate(220 31)"><rect width="57" height="45" rx="12" fill="#fff0c8" stroke="#e1bd66"/><text x="10" y="16" class="scene-label" font-family="sans-serif" fill="#806018">COMPARE</text><text x="13" y="34" class="scene-price" font-family="sans-serif" fill="#806018">1L</text></g>
+          <path d="M29 112c9-9 14-21 15-34M31 110c-10-5-16-11-19-20M30 105c13-4 20-10 26-18" stroke="#8aaf6d" stroke-width="5" stroke-linecap="round"/>
+        </svg>'''
+    return '''<svg viewBox="0 0 300 160" role="img" aria-label="システムトイレシートのイラスト">
+      <ellipse cx="150" cy="143" rx="111" ry="9" fill="#78b8c2" opacity=".24"/>
+      <rect x="44" y="80" width="173" height="52" rx="17" fill="#fff" stroke="#78bcc7" stroke-width="3"/><rect x="58" y="94" width="145" height="24" rx="8" fill="#ddf1f4"/><path d="M75 106h112" stroke="#9ad1d8" stroke-width="5" stroke-linecap="round"/>
+      <g transform="translate(107 7)"><circle cx="43" cy="42" r="36" fill="#9bb7be"/><path d="M15 22 18 0l22 16M71 22 68 0 46 16" fill="#6f8e96"/><circle cx="31" cy="39" r="4.3" fill="#173126"/><circle cx="56" cy="39" r="4.3" fill="#173126"/><path d="m43 48-5 4h10z" fill="#e59a95"/><path d="M34 58q9 6 18 0" fill="none" stroke="#173126" stroke-width="2.4" stroke-linecap="round"/></g>
+      <g transform="translate(213 38)"><circle cx="29" cy="29" r="28" fill="#4da9b6"/><path d="m16 30 9 9 18-21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g transform="translate(216 100)"><path d="M0 0h61l10 14-10 14H0z" fill="#ffd66e"/><text x="8" y="18" class="scene-label" font-family="sans-serif" fill="#6b4c00">FIT CHECK</text></g>
+    </svg>'''
 
 def category_theme(category_id):
     return {"pet-sheets": "theme-sheet", "cat-litter": "theme-litter", "system-toilet-sheets": "theme-system"}.get(category_id, "theme-sheet")
@@ -225,6 +243,25 @@ CSS += r'''
 @media(max-width:759px){.product-grid{grid-template-columns:1fr}.shop-card{grid-template-columns:82px minmax(0,1fr);padding:12px}.shop-card-image{width:82px;height:82px}.shop-unit{font-size:23px}.shop-card-title{font-size:13px}}
 '''
 
+CSS += r'''
+/* Visual polish v9 */
+.brand-logo{display:block;width:214px;height:auto;max-width:44vw}.footer-logo{display:block;width:230px;height:auto;max-width:72vw}
+.brand{padding:2px 0}.brand-name,.brand>.brand-mark{display:none}
+.topnav{box-shadow:0 8px 26px rgba(23,49,38,.045)}
+.category-visual{filter:drop-shadow(0 10px 16px rgba(37,70,53,.08))}
+.category-card{isolation:isolate}.category-card:before{content:"";position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.38),transparent 43%);pointer-events:none;z-index:0}
+.category-card:hover .category-visual{transform:translateY(-3px) scale(1.015)}.category-visual{transition:transform .22s ease}
+.shop-card{box-shadow:0 9px 24px rgba(28,68,49,.06),0 1px 0 rgba(255,255,255,.9) inset}.shop-card:hover{box-shadow:0 18px 38px rgba(28,68,49,.12),0 1px 0 rgba(255,255,255,.9) inset}
+.shop-card-image-wrap:after{content:"";position:absolute;inset:auto 9px -8px 9px;height:10px;border-radius:50%;background:rgba(23,49,38,.09);filter:blur(6px);z-index:-1}
+.shop-card-action .btn{box-shadow:0 7px 18px color-mix(in srgb,var(--theme) 24%,transparent);transition:transform .16s ease,box-shadow .16s ease,background .16s ease}.shop-card-action .btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px color-mix(in srgb,var(--theme) 31%,transparent)}
+.hero-photo{transition:transform 8s ease}.hero:hover .hero-photo{transform:scale(1.025)}
+.scene-label{font-size:9px;font-weight:900;letter-spacing:.08em}.scene-price{font-size:16px;font-weight:950}
+.motion-ready .reveal-item{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}.motion-ready .reveal-item.is-visible{opacity:1;transform:none}
+.motion-ready .shop-card.reveal-item{transition:opacity .42s ease,transform .42s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,border-color .18s ease}
+@media(max-width:719px){.topnav .brand{display:flex}.brand-logo{width:164px;max-width:none}.topnav .wrap{gap:6px}.topnav .chip{display:none}.category-visual{height:126px}.hero-photo{transition:none}}
+@media(prefers-reduced-motion:reduce){.motion-ready .reveal-item{opacity:1!important;transform:none!important}.hero-photo{transition:none!important}.category-visual{transition:none!important}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -233,7 +270,7 @@ def schema_script(data):
 def shell(title, description, body, category_id="", schema=None):
     page_url = f"{BASE_URL}{'categories/'+category_id+'/' if category_id else ''}"
     schema_html = schema_script(schema) if schema else ""
-    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(page_url)}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(page_url)}">{schema_html}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" class="page-{esc(category_id or 'home')}">{body}</body></html>'''
+    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(page_url)}"><link rel="icon" href="{BASE_URL}assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="{BASE_URL}assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(page_url)}"><meta property="og:image" content="{BASE_URL}assets/hero-pet-comparison.webp"><meta property="og:image:alt" content="犬と猫がペット用品を比較するビジュアル"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{BASE_URL}assets/hero-pet-comparison.webp">{schema_html}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" class="page-{esc(category_id or 'home')}">{body}</body></html>'''
 
 
 def nav(categories, current=""):
@@ -242,7 +279,7 @@ def nav(categories, current=""):
         for c in categories
     )
     return f'''<div class="topnav"><div class="wrap">
-      <a class="brand" href="{BASE_URL}"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ペット用品コスパ比較<small>PET COST CHECK</small></span></a>
+      <a class="brand" href="{BASE_URL}" aria-label="ペット用品コスパ比較 トップ"><img class="brand-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較"></a>
       {links}
     </div></div>'''
 
@@ -481,7 +518,7 @@ def faq_html(category):
 
 def footer():
     return f'''<footer class="footer"><div class="wrap footer-box">
-      <div class="footer-brand"><span class="brand-mark" aria-hidden="true"></span><div><strong>ペット用品コスパ比較</strong><span>同じ単位で、迷わず比べる。</span></div></div>
+      <div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較"></div>
       <div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div>
       <div class="rakuten-credit">
         <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
