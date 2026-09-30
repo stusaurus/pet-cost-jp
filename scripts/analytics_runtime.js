@@ -84,6 +84,91 @@
     }
   }
 
+  function updateSnapshot(visibleRows, median) {
+    const strip = document.querySelector('[data-top3-strip]');
+    const message = document.querySelector('[data-deal-message]');
+    const dot = document.querySelector('[data-deal-dot]');
+    const topRows = visibleRows.slice(0, 3);
+
+    if (strip) {
+      strip.innerHTML = '';
+      topRows.forEach((row, index) => {
+        const link = document.createElement('a');
+        link.className = 'top3-card';
+        link.href = row.dataset.url || '#';
+        link.target = '_blank';
+        link.rel = 'nofollow sponsored noopener';
+        link.dataset.top3Card = '1';
+        link.dataset.affiliateLink = '1';
+        link.dataset.merchant = 'rakuten';
+        link.dataset.categoryId = document.body.dataset.categoryId || '';
+        const sourceLink = row.querySelector('a[data-affiliate-link]');
+        link.dataset.metric = sourceLink?.dataset.metric || '';
+        link.dataset.itemId = row.dataset.itemId || '';
+        link.dataset.itemName = row.dataset.itemName || '';
+        link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+        link.dataset.position = String(index + 1);
+        link.dataset.conversionSource = 'top3_snapshot';
+
+        const rank = document.createElement('span');
+        rank.className = 'top3-rank';
+        rank.textContent = String(index + 1);
+        link.appendChild(rank);
+
+        if (row.dataset.image) {
+          const img = document.createElement('img');
+          img.className = 'top3-img';
+          img.src = row.dataset.image;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.width = 50;
+          img.height = 50;
+          link.appendChild(img);
+        }
+
+        const copy = document.createElement('span');
+        copy.className = 'top3-copy';
+
+        const name = document.createElement('span');
+        name.className = 'top3-name';
+        name.textContent = row.dataset.itemName || '';
+        copy.appendChild(name);
+
+        const unit = document.createElement('span');
+        unit.className = 'top3-unit';
+        unit.textContent = formatYen(Number(row.dataset.rowUnitPrice || 0));
+        const small = document.createElement('small');
+        const metricLabel = sourceLink?.dataset.metric === 'per_liter' ? ' / 1L' : ' / 1枚';
+        small.textContent = metricLabel;
+        unit.appendChild(small);
+        copy.appendChild(unit);
+
+        const total = document.createElement('span');
+        total.className = 'top3-total';
+        total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
+        copy.appendChild(total);
+
+        link.appendChild(copy);
+        strip.appendChild(link);
+      });
+    }
+
+    const cheapest = topRows.length ? Number(topRows[0].dataset.rowUnitPrice || 0) : 0;
+    if (message) {
+      message.textContent = cheapest > 0 && median > 0
+        ? relativeLabel(cheapest, median)
+        : '比較できる商品がありません';
+    }
+    if (dot) {
+      let position = 50;
+      if (cheapest > 0 && median > 0) {
+        const diff = ((cheapest - median) / median) * 100;
+        position = Math.max(5, Math.min(95, 50 + diff * 1.25));
+      }
+      dot.style.left = position.toFixed(1) + '%';
+    }
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -111,6 +196,7 @@
       rankAll ? '表示中の1位' : 'この条件の1位',
       middle
     );
+    updateSnapshot(visibleRows, middle);
   }
 
   function applyGroupFilter(group) {
