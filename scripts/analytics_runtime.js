@@ -258,6 +258,68 @@
     });
   }
 
+  function updateValueBadges(visibleRows, median) {
+    if (!visibleRows.length) return;
+
+    const unitValues = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0);
+    const totalValues = visibleRows
+      .map((row) => Number(row.dataset.totalPrice || 0))
+      .filter((x) => x > 0);
+    const quantities = visibleRows
+      .map((row) => Number(row.dataset.quantity || 0))
+      .filter((x) => x > 0);
+
+    const minUnit = unitValues.length ? Math.min(...unitValues) : 0;
+    const minTotal = totalValues.length ? Math.min(...totalValues) : 0;
+    const maxQuantity = quantities.length ? Math.max(...quantities) : 0;
+
+    visibleRows.forEach((row) => {
+      const mount = row.querySelector('[data-value-badges]');
+      if (!mount) return;
+      mount.innerHTML = '';
+
+      const unit = Number(row.dataset.rowUnitPrice || 0);
+      const total = Number(row.dataset.totalPrice || 0);
+      const quantity = Number(row.dataset.quantity || 0);
+      const badges = [];
+
+      if (unit > 0 && minUnit > 0 && Math.abs(unit - minUnit) < 1e-9) {
+        badges.push({ cls: 'is-best-unit', text: '単価最安' });
+      }
+
+      if (unit > 0 && median > 0) {
+        const diff = ((median - unit) / median) * 100;
+        if (diff >= 2) {
+          badges.push({ cls: 'is-discount', text: '中央値より' + diff.toFixed(0) + '%安い' });
+        }
+      }
+
+      if (total > 0 && minTotal > 0 && Math.abs(total - minTotal) < 1e-9) {
+        badges.push({ cls: 'is-low-total', text: '支払総額が最小' });
+      }
+
+      if (quantity > 0 && maxQuantity > 0 && Math.abs(quantity - maxQuantity) < 1e-9) {
+        badges.push({ cls: 'is-bulk', text: '最大容量' });
+      }
+
+      badges.slice(0, 3).forEach((badge) => {
+        const span = document.createElement('span');
+        span.className = 'value-badge ' + badge.cls;
+        span.textContent = badge.text;
+        mount.appendChild(span);
+      });
+
+      if (!badges.length) {
+        const empty = document.createElement('span');
+        empty.className = 'value-badge-empty';
+        empty.textContent = '価格特徴を比較中';
+        mount.appendChild(empty);
+      }
+    });
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -279,6 +341,7 @@
       const node = row.querySelector('[data-price-diff]');
       if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
     });
+    updateValueBadges(visibleRows, middle);
 
     updateFeatured(
       visibleRows[0],
