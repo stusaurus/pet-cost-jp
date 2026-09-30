@@ -73,6 +73,10 @@ class RenderTests(unittest.TestCase):
         self.assertIn('Supported by Rakuten Developers', page)
         self.assertIn('送料込み', page)
         self.assertIn('application/ld+json', page)
+        self.assertIn('assets/favicon.svg', page)
+        self.assertIn('assets/site.webmanifest', page)
+        self.assertIn('assets/hero-pet-comparison.webp', page)
+        self.assertIn('assets/pet-cost-logo.svg', page)
 
     def test_homepage_uses_total_count_and_best_image(self):
         summaries = {
@@ -104,6 +108,9 @@ class RenderTests(unittest.TestCase):
         self.assertIn("PET COST CHECK", page)
         self.assertIn("mobile-dock", page)
         self.assertIn("page-home", page)
+        self.assertIn("assets/pet-cost-logo.svg", page)
+        self.assertIn("assets/favicon.svg", page)
+        self.assertIn("twitter:card", page)
 
     def test_google_verification_file_is_copied_to_site(self):
         verification_files = list(ROOT.glob("google*.html"))
@@ -118,6 +125,9 @@ class RenderTests(unittest.TestCase):
                     self.assertTrue((Path(tmp) / source.name).exists())
                 if (ROOT / "assets" / "hero-pet-comparison.webp").exists():
                     self.assertTrue((Path(tmp) / "assets" / "hero-pet-comparison.webp").exists())
+                for asset in ("pet-cost-logo.svg", "favicon.svg", "site.webmanifest"):
+                    if (ROOT / "assets" / asset).exists():
+                        self.assertTrue((Path(tmp) / "assets" / asset).exists())
         finally:
             build_site.SITE = original_site
 
