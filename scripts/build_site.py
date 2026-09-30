@@ -431,6 +431,34 @@ CSS += r'''
 }
 '''
 
+CSS += r'''
+/* Editorial homepage v17 */
+.editorial-section{position:relative;overflow:hidden;padding:24px;border-radius:30px;background:#f7f3e9;border:1px solid #e9dfc9;box-shadow:0 20px 48px rgba(77,58,20,.08)}
+.editorial-section:before{content:"PET COST JOURNAL";position:absolute;right:-8px;top:12px;font-size:10px;font-weight:950;letter-spacing:.18em;color:rgba(91,71,30,.22);transform:rotate(1deg)}
+.editorial-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;padding-bottom:13px;border-bottom:2px solid #173126}
+.editorial-head h2{margin:0;font-size:clamp(28px,5vw,36px);letter-spacing:-.04em}.editorial-head h2:before{display:none}
+.editorial-head-copy{max-width:610px}.editorial-eyebrow{display:block;margin-bottom:4px;font-size:9px;font-weight:950;letter-spacing:.16em;color:#8d6d2d}.editorial-date{flex:0 0 auto;text-align:right;font-size:9px;font-weight:850;color:#7d7464;line-height:1.5}
+.editorial-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.85fr);gap:14px}
+.editorial-lead{position:relative;min-height:360px;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.9fr);align-items:stretch;overflow:hidden;text-decoration:none;color:#173126;border-radius:24px;border:1px solid color-mix(in srgb,var(--theme) 20%,#e4ddd0);background:linear-gradient(145deg,#fff,var(--theme-wash));box-shadow:0 18px 42px rgba(23,49,38,.10)}
+.editorial-lead-copy{position:relative;z-index:2;padding:28px 10px 26px 27px;display:flex;flex-direction:column;justify-content:center}
+.editorial-index{display:inline-flex;width:max-content;border:1px solid currentColor;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950;letter-spacing:.12em;color:var(--theme-dark)}
+.editorial-lead h3{margin:13px 0 5px;font-size:clamp(31px,5vw,45px);line-height:1.02;letter-spacing:-.055em}.editorial-lead-sub{font-size:12px;font-weight:800;color:#5f7168}
+.editorial-price-block{margin-top:22px}.editorial-price-caption{display:block;font-size:9px;font-weight:900;color:#6f7b74}.editorial-price{display:block;margin-top:2px;font-size:clamp(38px,6vw,54px);font-weight:950;line-height:.95;letter-spacing:-.06em;color:var(--theme-dark)}.editorial-price small{font-size:12px;letter-spacing:0}
+.editorial-gap{display:inline-flex;width:max-content;margin-top:10px;border-radius:999px;padding:6px 9px;background:#173126;color:#fff;font-size:10px;font-weight:900}.editorial-gap b{color:#ffd66e;margin-right:3px}
+.editorial-lead-art{position:relative;display:grid;place-items:center;min-width:0;padding:22px;background:radial-gradient(circle at 52% 44%,rgba(255,255,255,.95),rgba(255,255,255,.3) 47%,transparent 68%)}.editorial-lead-art svg{width:100%;height:auto;max-height:260px}.editorial-lead-art:after{content:"TODAY'S FEATURE";position:absolute;right:12px;bottom:11px;font-size:8px;font-weight:950;letter-spacing:.14em;color:color-mix(in srgb,var(--theme-dark) 55%,transparent)}
+.editorial-arrow{position:absolute;right:18px;top:18px;z-index:4;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#173126;color:#fff;font-size:19px;box-shadow:0 8px 18px rgba(23,49,38,.16);transition:transform .18s ease}.editorial-lead:hover .editorial-arrow{transform:translate(3px,-2px)}
+.editorial-side{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}.editorial-side-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 105px;align-items:center;overflow:hidden;text-decoration:none;color:#173126;border-radius:21px;border:1px solid color-mix(in srgb,var(--theme) 18%,#e7dfcf);background:linear-gradient(145deg,#fff,var(--theme-wash));padding:17px;box-shadow:0 12px 28px rgba(23,49,38,.07);transition:transform .18s ease,box-shadow .18s ease}.editorial-side-card:hover{transform:translateY(-3px);box-shadow:0 17px 34px rgba(23,49,38,.11)}
+.editorial-side-card h3{margin:6px 0 5px;font-size:19px;line-height:1.1;letter-spacing:-.035em}.editorial-side-price{font-size:27px;font-weight:950;line-height:1;letter-spacing:-.045em;color:var(--theme-dark)}.editorial-side-price small{font-size:9px;letter-spacing:0}.editorial-side-meta{margin-top:7px;font-size:9px;font-weight:800;color:#6d796f}.editorial-side-art{height:105px;display:grid;place-items:center}.editorial-side-art svg{width:115px;max-width:100%;height:100%}
+.editorial-folio{position:absolute;right:10px;top:8px;font-size:8px;font-weight:950;letter-spacing:.1em;color:rgba(23,49,38,.38)}
+.editorial-footerline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px;padding-top:11px;border-top:1px solid #dfd5c2;font-size:9px;color:#796f5f}.editorial-footerline strong{color:#173126}
+@media(max-width:759px){
+  .editorial-section{padding:16px;border-radius:22px}.editorial-section:before{font-size:7px;right:4px}.editorial-head{align-items:flex-start}.editorial-date{display:none}
+  .editorial-grid{grid-template-columns:1fr}.editorial-lead{min-height:0;grid-template-columns:1fr 126px}.editorial-lead-copy{padding:20px 4px 19px 18px}.editorial-lead h3{font-size:29px}.editorial-lead-art{padding:8px}.editorial-lead-art svg{max-height:170px}.editorial-price{font-size:38px}.editorial-price-block{margin-top:16px}.editorial-arrow{width:34px;height:34px;right:9px;top:9px}
+  .editorial-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.editorial-side-card{display:block;padding:13px;min-height:190px}.editorial-side-card h3{font-size:15px;padding-right:14px}.editorial-side-price{font-size:24px}.editorial-side-art{height:83px;margin-top:4px}.editorial-side-art svg{width:100%;height:100%}.editorial-side-meta{font-size:8px}
+  .editorial-footerline{display:block;line-height:1.6}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -938,25 +966,54 @@ def daily_spotlight(categories, summaries):
 
 
 def homepage(categories, summaries, updated):
-    cards = []
-    for card_index, c in enumerate(categories, 1):
-        s = summaries[c["id"]]
-        best = s.get("best")
-        image = esc(best.get("image", "")) if best else ""
-        visual = category_illustration(c["id"])
-        cards.append(
-            f'''<a class="category-card {category_theme(c['id'])}" href="{BASE_URL}categories/{esc(c['id'])}/">
-              <span class="category-card-number"><b>0{card_index}</b>CATEGORY</span>
-              <div class="category-visual">{visual}</div>
-              <div class="category-card-copy">
-                <span class="price-ribbon">👑 {esc(s['default_label'])}の現在最安</span>
-                <strong>{esc(c['name'])}</strong>
-                <div class="category-price">{yen(s['min'])}<small> / {esc(c['metric_label'])}</small></div>
-                <div class="category-meta">掲載 {s['total_count']}件・条件別に比較</div>
+    ranked_categories = sorted(
+        categories,
+        key=lambda category: (
+            summaries.get(category["id"], {}).get("deal_percent", 0),
+            summaries.get(category["id"], {}).get("total_count", 0),
+        ),
+        reverse=True,
+    )
+    lead = ranked_categories[0] if ranked_categories else None
+    side_categories = ranked_categories[1:3]
+    lead_html = ""
+    side_html = []
+
+    if lead:
+        s = summaries[lead["id"]]
+        gap = s.get("deal_percent", 0)
+        lead_html = f'''<a class="editorial-lead {category_theme(lead['id'])}" href="{BASE_URL}categories/{esc(lead['id'])}/">
+          <div class="editorial-lead-copy">
+            <span class="editorial-index">01 / TODAY'S LEAD</span>
+            <h3>{esc(lead['name'])}</h3>
+            <div class="editorial-lead-sub">{esc(s['default_label'])}を同じ単位で比較</div>
+            <div class="editorial-price-block">
+              <span class="editorial-price-caption">現在の最安</span>
+              <strong class="editorial-price">{yen(s['min'])}<small> / {esc(lead['metric_label'])}</small></strong>
+              <span class="editorial-gap"><b>{gap}%</b> 中央値より低い</span>
+            </div>
+          </div>
+          <div class="editorial-lead-art">{category_illustration(lead['id'])}</div>
+          <span class="editorial-arrow" aria-hidden="true">→</span>
+        </a>'''
+
+    for index, category in enumerate(side_categories, 2):
+        s = summaries[category["id"]]
+        side_html.append(
+            f'''<a class="editorial-side-card {category_theme(category['id'])}" href="{BASE_URL}categories/{esc(category['id'])}/">
+              <span class="editorial-folio">0{index}</span>
+              <div>
+                <span class="editorial-index">{esc(s['default_label'])}</span>
+                <h3>{esc(category['name'])}</h3>
+                <div class="editorial-side-price">{yen(s['min'])}<small> / {esc(category['metric_label'])}</small></div>
+                <div class="editorial-side-meta">中央値より {s.get('deal_percent', 0)}%低い ・ 掲載{s['total_count']}件</div>
               </div>
-              <span class="category-arrow" aria-hidden="true">→</span>
+              <div class="editorial-side-art">{category_illustration(category['id'])}</div>
             </a>'''
         )
+
+    while len(side_html) < 2:
+        side_html.append('<div class="editorial-side-card" aria-hidden="true"></div>')
 
     website_schema = {
         "@context": "https://schema.org",
@@ -979,9 +1036,16 @@ def homepage(categories, summaries, updated):
     </div></header>
     {nav(categories)}
     <main class="main"><div class="wrap">
-      <section class="section visual-section">
-        <div class="section-head"><div><h2>いま比較できるもの</h2><p class="section-sub">最初は消耗品に絞って、比較精度を優先しています。</p></div></div>
-        <div class="home-grid">{''.join(cards)}</div>
+      <section class="section editorial-section">
+        <div class="editorial-head">
+          <div class="editorial-head-copy"><span class="editorial-eyebrow">TODAY'S PET COST EDITION</span><h2>今日、まず見る3つ。</h2><p class="section-sub">現在掲載中の商品だけで比較し、平均との差が大きいカテゴリを主役にしています。</p></div>
+          <div class="editorial-date">DAILY PRICE EDITION<br>{esc(updated)}</div>
+        </div>
+        <div class="editorial-grid">
+          {lead_html}
+          <div class="editorial-side">{''.join(side_html)}</div>
+        </div>
+        <div class="editorial-footerline"><span><strong>編集ルール：</strong>過去価格ではなく、同じ条件の現在掲載商品内で比較。</span><span>数量が曖昧な商品は掲載しません。</span></div>
       </section>
 
       {daily_spotlight(categories, summaries)}
