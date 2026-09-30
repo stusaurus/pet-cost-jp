@@ -1,176 +1,127 @@
+import json
 import sys
 import tempfile
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-
+sys.path.insert(0, str(ROOT / 'scripts'))
 import build_site
+
+
+class Page(HTMLParser):
+    def __init__(self, source):
+        super().__init__()
+        self.tags = []
+        self.feed(source)
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append((tag, dict(attrs)))
+
+    def with_attr(self, attr):
+        return [attrs for _, attrs in self.tags if attr in attrs]
 
 
 class RenderTests(unittest.TestCase):
     def setUp(self):
-        self.category = {
-            "id": "pet-sheets",
-            "name": "ペットシーツ",
-            "emoji": "🐶",
-            "metric": "per_sheet",
-            "metric_label": "1枚",
-            "default_group": "regular",
-            "rank_all": False,
-            "groups": {"regular": "レギュラー", "wide": "ワイド"},
-            "intro": "同じサイズで比較します。",
-            "guide": ["サイズをそろえる"],
-            "faq": [{"q": "なぜ？", "a": "条件をそろえるためです。"}],
-        }
-        self.item = {
-            "name": "ペットシーツ レギュラー 200枚",
-            "price": 2000,
-            "url": "https://hb.afl.rakuten.co.jp/example",
-            "shop": "テストショップ",
-            "image": "https://example.com/item.jpg",
-            "postage_flag": 0,
-            "product_id": "abc123",
-            "metric": "per_sheet",
-            "metric_label": "1枚",
-            "quantity": 200.0,
-            "quantity_evidence": "200枚",
-            "group": "regular",
-            "unit_price": 10.0,
-        }
+        self.categories = build_site.load_categories()
+        self.category = self.categories[0]
+        self.item = dict(name='ペットシーツ レギュラー 200枚', price=2000,
+                         url='https://hb.afl.rakuten.co.jp/example', shop='テストショップ',
+                         image='https://example.com/item.jpg', postage_flag=0,
+                         product_id='abc123', metric='per_sheet', metric_label='1枚',
+                         quantity=200.0, quantity_evidence='200枚', group='regular', unit_price=10.0)
 
-    def test_category_page_contains_mobile_ui_and_credit(self):
-        page = build_site.category_page(
-            self.category,
-            [self.item],
-            [self.category],
-            "2026-09-30 07:00 JST",
-        )
-        self.assertIn('data-featured-box', page)
-        self.assertIn('aria-label="ペットシーツのイラスト"', page)
-        self.assertIn('class="featured-crown"', page)
-        self.assertIn('cover-feature', page)
-        self.assertIn('data-featured-reasons', page)
-        self.assertIn("TODAY'S BEST PRICE", build_site.CSS)
-        self.assertIn('cover-price-panel', page)
-        self.assertIn('data-featured-diff', page)
-        self.assertIn('data-price-diff', page)
-        self.assertIn('data-top3-strip', page)
-        self.assertIn('data-deal-message', page)
-        self.assertIn('data-deal-dot', page)
-        self.assertIn('top3_snapshot', page)
-        self.assertIn('class="podium-title"', page)
-        self.assertIn('class="podium-foot"', page)
-        self.assertIn('class="category-hero-title"', page)
-        self.assertIn('data-angle-grid', page)
-        self.assertIn('comparison_angle_unit', page)
-        self.assertIn('comparison_angle_total', page)
-        self.assertIn('comparison_angle_bulk', page)
-        self.assertIn('data-group-button', page)
-        self.assertIn('data-group-label="レギュラー"', page)
-        self.assertIn('class="filter-icon"', page)
-        self.assertIn('class="filter-count"', page)
-        self.assertIn('data-current-condition', page)
-        self.assertIn('data-comparison-sticky', page)
-        self.assertIn('data-sticky-condition', page)
-        self.assertIn('data-sticky-min', page)
-        self.assertIn('data-sticky-gap', page)
-        self.assertIn('data-sticky-count', page)
-        self.assertIn('id="product-ranking"', page)
-        self.assertIn('condition-panel', page)
-        self.assertIn('brand-mark', page)
-        self.assertIn('mobile-dock', page)
-        self.assertIn('chip current', page)
-        self.assertIn('page-pet-sheets', page)
-        self.assertIn('data-product-grid', page)
-        self.assertIn('class="shop-card"', page)
-        self.assertIn('class="shop-card-image"', page)
-        self.assertIn('comparison_card', page)
-        self.assertIn('data-rank-showcase-label', page)
-        self.assertIn('CURRENT BEST', build_site.CSS)
-        self.assertIn('2nd PRICE', (ROOT / "scripts" / "analytics_runtime.js").read_text(encoding="utf-8"))
-        self.assertIn('data-value-badges', page)
-        self.assertLess(page.index('class="shop-card-prices"'), page.index('class="shop-card-head"'))
-        self.assertIn('grid-template-areas:"image price" "image head"', build_site.CSS)
-        self.assertIn('class="value-legend"', page)
-        self.assertIn('単価最安', page)
-        self.assertIn('中央値より安い', page)
-        self.assertIn('楽天で価格を見る', page)
-        self.assertIn('Supported by Rakuten Developers', page)
-        self.assertIn('送料込み', page)
-        self.assertIn('application/ld+json', page)
-        self.assertIn('assets/favicon.svg', page)
-        self.assertIn('assets/site.webmanifest', page)
-        self.assertIn('assets/hero-pet-comparison.webp', page)
-        self.assertIn('assets/pet-cost-logo.svg', page)
+    def render(self, items):
+        return build_site.category_page(self.category, items, self.categories, '2026-09-30 07:00 JST')
 
-    def test_homepage_uses_total_count_and_best_image(self):
-        summaries = {
-            "pet-sheets": {
-                "total_count": 23,
-                "default_count": 8,
-                "min": 5.5,
-                "median": 8.0,
-                "deal_percent": 31,
-                "best": self.item,
-                "default_label": "レギュラー",
-            }
-        }
-        page = build_site.homepage(
-            [self.category],
-            summaries,
-            "2026-09-30 07:00 JST",
-        )
-        self.assertIn("掲載 23件", page)
-        self.assertIn("レギュラーの現在最安", page)
-        self.assertIn('class="editorial-lead theme-sheet"', page)
-        self.assertIn('data-editorial-category="pet-sheets"', page)
-        self.assertIn('data-editorial-position="1"', page)
-        self.assertIn("今日、まず見る3つ。", page)
-        self.assertIn("TODAY'S PET COST EDITION", page)
-        self.assertIn("中央値より31%安い", page)
-        self.assertIn("homepage_editorial_click", (ROOT / "scripts" / "analytics_runtime.js").read_text(encoding="utf-8"))
-        self.assertIn('aria-label="ペットシーツのイラスト"', page)
-        self.assertIn("ペット用品の", page)
-        self.assertIn("ほんとの安さ", page)
-        self.assertIn('class="home-hero-title"', page)
-        self.assertIn('class="hero-proof"', page)
-        self.assertIn("assets/hero-pet-comparison.webp", page)
-        self.assertIn("同じ単位で比較", page)
-        self.assertIn("使い方は3ステップ", page)
-        self.assertIn("今日の価格差", page)
-        self.assertIn('data-daily-spotlight', page)
-        self.assertIn('data-spotlight-link', page)
-        self.assertIn("31%", page)
-        self.assertIn("story-section", page)
-        self.assertIn("trust-section", page)
-        self.assertIn("store-section", page)
-        self.assertIn("mobile-dock", page)
-        self.assertIn("page-home", page)
-        self.assertIn("assets/pet-cost-logo.svg", page)
-        self.assertIn("assets/favicon.svg", page)
-        self.assertIn("twitter:card", page)
+    def test_static_page_is_already_filtered_and_ranked_without_javascript(self):
+        wide = dict(self.item, product_id='wide', group='wide', unit_price=5.0, price=1000)
+        page = Page(self.render([wide, self.item]))
+        rows = page.with_attr('data-product-row')
+        self.assertIn('hidden', rows[0])
+        self.assertNotIn('hidden', rows[1])
+        self.assertEqual(rows[1]['data-item-id'], 'abc123')
+        buttons = page.with_attr('data-group-button')
+        self.assertEqual([b['data-group'] for b in buttons if b['aria-pressed'] == 'true'], ['regular'])
+        self.assertEqual([b['data-group'] for b in buttons], ['regular', 'wide'])
+        featured = [x for x in page.with_attr('data-affiliate-link') if x.get('data-conversion-source') == 'featured_product'][0]
+        self.assertEqual(featured['data-item-id'], 'abc123')
+        self.assertEqual(featured['href'], self.item['url'])
 
-    def test_google_verification_file_is_copied_to_site(self):
-        verification_files = list(ROOT.glob("google*.html"))
-        if not verification_files:
-            self.skipTest("No Google verification file in repository")
+    def test_even_median_and_reasons_use_current_condition(self):
+        rows = [dict(self.item, product_id=str(i), unit_price=u, price=u * 200) for i, u in enumerate([4, 6, 10, 20])]
+        self.assertEqual(build_site.comparison_stats(rows), {'min': 4, 'median': 8})
+        badges = dict(build_site.reason_badges(rows[0], rows, 8))
+        self.assertEqual(badges['median'], '中央値より50%安い')
+        self.assertIn('unit', badges)
+        self.assertIn('total', badges)
+        self.assertIn('bulk', badges)
+        self.assertNotIn('median', dict(build_site.reason_badges(rows[2], rows, 8)))
+
+    def test_empty_condition_has_no_product_advertisement(self):
+        page = Page(self.render([]))
+        self.assertIn('hidden', page.with_attr('data-featured-box')[0])
+        self.assertEqual(page.with_attr('data-product-row'), [])
+        self.assertNotIn('hidden', page.with_attr('data-empty-result')[0])
+
+    def test_comparison_and_purchase_links_keep_tracking_and_seo(self):
+        source = self.render([self.item])
+        page = Page(source)
+        links = [attrs for tag, attrs in page.tags if tag == 'a' and attrs.get('href', '').startswith('https://hb.afl.')]
+        self.assertEqual(len(links), 4)  # Answer, TOP3, selected angle, list
+        self.assertEqual({x['data-conversion-source'] for x in links}, {'featured_product', 'top3_snapshot', 'comparison_angle_unit', 'comparison_card'})
+        for link in links:
+            self.assertEqual(link['data-item-name'], self.item['name'])
+            self.assertEqual(link['target'], '_blank')
+            self.assertTrue({'nofollow', 'sponsored', 'noopener'} <= set(link['rel'].split()))
+        canonicals = [a['href'] for tag, a in page.tags if tag == 'link' and a.get('rel') == 'canonical']
+        self.assertEqual(canonicals, [build_site.BASE_URL + 'categories/pet-sheets/'])
+        self.assertIn('BreadcrumbList', source)
+        self.assertIn('Supported by Rakuten Developers', source)
+        self.assertIn('prefers-reduced-motion', source)
+        self.assertIn('aria-live="polite"', source)
+
+    def test_promotions_trim_only_display_and_titles_are_escaped(self):
+        item = dict(self.item, name='【ポイント10倍】<img src=x onerror=alert(1)> ペットシーツ 200枚')
+        source = self.render([item])
+        page = Page(source)
+        row = page.with_attr('data-product-row')[0]
+        self.assertEqual(row['data-item-name'], item['name'])
+        self.assertNotIn('ポイント10倍', row['data-display-name'])
+        self.assertIn('<img src=x', row['data-display-name'])
+        self.assertNotIn('<img src=x onerror=', source)
+        self.assertEqual(build_site.display_name('【厚型】ペットシーツ 200枚'), '【厚型】ペットシーツ 200枚')
+        self.assertEqual(json.loads(build_site.schema_script({'name': '</script>'}).split('>', 1)[1].rsplit('<', 1)[0])['name'], '</script>')
+
+    def test_home_price_difference_and_category_entry_are_one_link(self):
+        summaries = {'pet-sheets': {'total_count': 23, 'default_count': 8, 'min': 5.5, 'median': 8.0,
+                                   'deal_percent': 31, 'best': self.item, 'default_label': 'レギュラー'}}
+        source = build_site.homepage([self.category], summaries, '2026-09-30 07:00 JST')
+        page = Page(source)
+        entries = page.with_attr('data-editorial-category')
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]['href'], build_site.BASE_URL + 'categories/pet-sheets/')
+        self.assertEqual(entries[0]['data-gap-percent'], '31')
+        self.assertIn('data-spotlight-link', entries[0])
+        self.assertIn('この条件 8件', source)
+        self.assertIn('現在掲載商品の最安と中央値の差', source)
+        self.assertIn('WebSite', source)
+
+    def test_google_verification_file_and_assets_are_copied(self):
         original_site = build_site.SITE
         try:
             with tempfile.TemporaryDirectory() as tmp:
                 build_site.SITE = Path(tmp)
                 build_site.copy_static_verification_files()
-                for source in verification_files:
-                    self.assertTrue((Path(tmp) / source.name).exists())
-                if (ROOT / "assets" / "hero-pet-comparison.webp").exists():
-                    self.assertTrue((Path(tmp) / "assets" / "hero-pet-comparison.webp").exists())
-                for asset in ("pet-cost-logo.svg", "favicon.svg", "site.webmanifest"):
-                    if (ROOT / "assets" / asset).exists():
-                        self.assertTrue((Path(tmp) / "assets" / asset).exists())
+                for source in ROOT.glob('google*.html'):
+                    self.assertEqual((Path(tmp) / source.name).read_bytes(), source.read_bytes())
+                for asset in ('pet-cost-logo.svg', 'favicon.svg', 'site.webmanifest', 'comparison.css'):
+                    self.assertTrue((Path(tmp) / 'assets' / asset).exists())
         finally:
             build_site.SITE = original_site
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

@@ -29,6 +29,12 @@ jobs:
           python-version: "3.12"
       - name: Unit tests
         run: python -m unittest discover -s tests -p 'test_*.py'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install UI test dependencies
+        run: npm ci --ignore-scripts
       - name: Build site
         env:
           RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
@@ -36,6 +42,10 @@ jobs:
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           GA_MEASUREMENT_ID: G-GFVSZ8YDQ5
         run: python scripts/build_site.py
+      - name: Comparison interaction regression tests
+        env:
+          PET_COST_TEST_SITE: "1"
+        run: npm test
       - name: Product quality audit
         run: python scripts/audit_products.py
       - name: Mirror generated site to main branch
