@@ -133,6 +133,23 @@ CSS += r'''
 @media(max-width:759px){.photo-shell,.hero-photo-wrap,.hero-photo{min-height:220px}.hero-photo{object-fit:cover}.hero-photo-label{left:10px;bottom:10px;padding:6px 9px}.hero-photo-label b{font-size:11px}}
 '''
 
+CSS += r'''
+/* Comparison snapshot v5 */
+.snapshot-section{background:linear-gradient(135deg,#173126 0%,#214c39 58%,#2d6b4f 100%);color:#fff;border:0;box-shadow:0 18px 42px rgba(23,49,38,.16);overflow:hidden;position:relative}
+.snapshot-section:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-90px;top:-110px;background:rgba(255,215,111,.10)}
+.snapshot-section .section-sub{color:rgba(255,255,255,.72)}.snapshot-section h2{color:#fff}
+.deal-meter{position:relative;z-index:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:14px;margin-bottom:13px;backdrop-filter:blur(6px)}
+.deal-meter-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.deal-meter-head span{font-size:12px;color:rgba(255,255,255,.74);font-weight:750}.deal-meter-head b{font-size:15px;color:#ffe08a;text-align:right}
+.deal-track{height:12px;border-radius:999px;background:linear-gradient(90deg,#6dd0a4 0%,#dbe8df 50%,#ffc978 100%);position:relative;margin:13px 0 5px;box-shadow:inset 0 1px 2px rgba(0,0,0,.16)}
+.deal-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#fff;border:5px solid #ffd76f;box-shadow:0 4px 12px rgba(0,0,0,.22);transform:translate(-50%,-50%);left:50%;transition:left .22s ease}
+.deal-scale{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.65)}
+.top3-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;position:relative;z-index:1}.top3-card{display:flex;gap:10px;align-items:center;min-width:0;background:#fff;color:var(--text);border-radius:16px;padding:10px;text-decoration:none;box-shadow:0 9px 22px rgba(0,0,0,.12);transition:transform .16s ease}.top3-card:hover{transform:translateY(-2px)}
+.top3-rank{width:28px;height:28px;flex:0 0 28px;border-radius:9px;display:grid;place-items:center;background:#173126;color:#fff;font-weight:950;font-size:12px}.top3-card:first-child .top3-rank{background:#ffd76f;color:#694d00}
+.top3-img{width:50px;height:50px;flex:0 0 50px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--line)}.top3-copy{min-width:0}.top3-name{font-size:11px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top3-unit{font-size:18px;font-weight:950;color:var(--accent-dark);line-height:1.2}.top3-total{font-size:10px;color:var(--muted)}
+.snapshot-note{position:relative;z-index:1;margin-top:10px;font-size:11px;color:rgba(255,255,255,.66)}
+@media(max-width:759px){.snapshot-section{padding:15px}.top3-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 5px}.top3-card{min-width:82%;scroll-snap-align:start}.deal-meter-head{align-items:flex-start;flex-direction:column;gap:3px}.deal-meter-head b{text-align:left}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -278,6 +295,38 @@ def featured_box(category, item):
     </div>'''
 
 
+def snapshot_cards(category, items):
+    cards = []
+    for idx, item in enumerate(items[:3], 1):
+        image = esc(item.get("image", ""))
+        image_html = (
+            f'<img class="top3-img" src="{image}" alt="" loading="lazy" width="50" height="50">'
+            if image else
+            f'<div class="top3-img" aria-hidden="true"></div>'
+        )
+        cards.append(
+            f'''<a class="top3-card" data-top3-card data-affiliate-link
+              data-merchant="rakuten"
+              data-category-id="{esc(category['id'])}"
+              data-item-id="{esc(item['product_id'])}"
+              data-item-name="{esc(item['name'])}"
+              data-metric="{esc(category['metric'])}"
+              data-unit-price="{item['unit_price']}"
+              data-position="{idx}"
+              data-conversion-source="top3_snapshot"
+              href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">
+              <span class="top3-rank">{idx}</span>
+              {image_html}
+              <span class="top3-copy">
+                <span class="top3-name">{esc(item['name'])}</span>
+                <span class="top3-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></span>
+                <span class="top3-total">総額 {yen(item['price'])}</span>
+              </span>
+            </a>'''
+        )
+    return ''.join(cards)
+
+
 def guide_html(category):
     items = ''.join(
         f'<div class="guide-item"><span class="guide-check">✓</span><span>{esc(text)}</span></div>'
@@ -342,6 +391,18 @@ def category_page(category, items, categories, updated):
         <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">いま選んでいる条件だけで順位・最安値を更新します。</p></div><strong data-visible-count>{len(initial_items)}件</strong></div>
         <div class="filter-wrap"><div class="filters" data-group-filter data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
         {featured_box(category, featured)}
+
+        <section class="section snapshot-section">
+          <div class="section-head"><div><h2>上位3商品をひと目で</h2><p class="section-sub">いま選んでいる条件の上位候補と、最安が中央値からどれくらい離れているかを表示します。</p></div></div>
+          <div class="deal-meter">
+            <div class="deal-meter-head"><span>この条件の最安ポジション</span><b data-deal-message>価格差を計算中</b></div>
+            <div class="deal-track"><span class="deal-dot" data-deal-dot></span></div>
+            <div class="deal-scale"><span>かなり安い</span><span>中央値</span><span>高め</span></div>
+          </div>
+          <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial_items)}</div>
+          <div class="snapshot-note">※ 同じ条件内の現在掲載商品の単価を比較した目安です。過去価格との比較ではありません。</div>
+        </section>
+
         <div class="kpi">
           <div class="kpi-card"><span>全掲載商品</span><b>{len(items)}件</b></div>
           <div class="kpi-card"><span>この条件</span><b data-stat-count>{len(initial_items)}件</b></div>
