@@ -80,7 +80,12 @@ class RenderTests(unittest.TestCase):
         self.assertIn('aria-label="ペットシーツのイラスト"', page)
         self.assertIn("ペット用品の", page)
         self.assertIn("ほんとの安さ", page)
+        self.assertIn("assets/hero-pet-comparison.webp", page)
+        self.assertIn("同じ単位で比較", page)
         self.assertIn("使い方は3ステップ", page)
+        self.assertIn("story-section", page)
+        self.assertIn("trust-section", page)
+        self.assertIn("store-section", page)
 
     def test_google_verification_file_is_copied_to_site(self):
         verification_files = list(ROOT.glob("google*.html"))
@@ -93,6 +98,8 @@ class RenderTests(unittest.TestCase):
                 build_site.copy_static_verification_files()
                 for source in verification_files:
                     self.assertTrue((Path(tmp) / source.name).exists())
+                if (ROOT / "assets" / "hero-pet-comparison.webp").exists():
+                    self.assertTrue((Path(tmp) / "assets" / "hero-pet-comparison.webp").exists())
         finally:
             build_site.SITE = original_site
 
