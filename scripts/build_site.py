@@ -315,6 +315,22 @@ CSS += r'''
 @media(max-width:759px){.daily-spotlight{border-radius:22px}.spotlight-inner{grid-template-columns:1fr;padding:18px;gap:15px}.spotlight-product{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:center}.spotlight-image,.spotlight-category-art{width:78px;height:78px}.spotlight-product-name{margin-top:0}.gap-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory}.gap-chip{min-width:66%;scroll-snap-align:start}.spotlight-gap b{font-size:44px}}
 '''
 
+CSS += r'''
+/* Visual condition selector v12 */
+.condition-panel{position:relative;overflow:hidden;background:linear-gradient(145deg,var(--theme-wash),#fff 58%);border-color:color-mix(in srgb,var(--theme) 18%,#dce7e0);padding:20px}.condition-panel:before{content:"SELECT";position:absolute;right:14px;top:11px;font-size:9px;font-weight:950;letter-spacing:.16em;color:color-mix(in srgb,var(--theme) 35%,transparent)}
+.condition-current{display:inline-flex;align-items:center;gap:6px;margin-top:5px;padding:5px 9px;border-radius:999px;background:var(--theme-soft);color:var(--theme-dark);font-size:11px;font-weight:900}.condition-current:before{content:"●";font-size:7px}
+.filter-wrap{margin:8px -4px 16px;padding:4px;overflow:auto}.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:9px;min-width:0}
+.filter-chip{position:relative;appearance:none;display:grid;grid-template-columns:38px minmax(0,1fr);grid-template-areas:"icon label" "icon meta";gap:0 9px;align-items:center;text-align:left;min-height:66px;padding:10px 11px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--text);font:inherit;cursor:pointer;box-shadow:0 5px 15px rgba(28,68,49,.035);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background .16s ease}
+.filter-chip:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--theme) 42%,#dce7e0);box-shadow:0 10px 22px rgba(28,68,49,.075)}
+.filter-chip.active,.filter-chip[aria-pressed="true"]{background:linear-gradient(145deg,var(--theme),var(--theme-dark));border-color:var(--theme);color:#fff;box-shadow:0 11px 25px color-mix(in srgb,var(--theme) 24%,transparent);transform:translateY(-2px)}
+.filter-icon{grid-area:icon;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--theme-soft);color:var(--theme-dark);font-size:19px;font-weight:950;line-height:1}.filter-chip.active .filter-icon,.filter-chip[aria-pressed="true"] .filter-icon{background:rgba(255,255,255,.17);color:#fff}
+.filter-label{grid-area:label;font-size:12px;font-weight:900;line-height:1.25;white-space:normal}.filter-meta{grid-area:meta;font-size:9px;font-weight:750;color:var(--muted);margin-top:3px}.filter-chip.active .filter-meta,.filter-chip[aria-pressed="true"] .filter-meta{color:rgba(255,255,255,.72)}
+.filter-count{position:absolute;right:8px;top:7px;min-width:23px;height:20px;padding:0 6px;border-radius:999px;display:grid;place-items:center;background:#f1f5f2;color:#5d6f65;font-size:9px;font-weight:900}.filter-chip.active .filter-count,.filter-chip[aria-pressed="true"] .filter-count{background:#ffd76f;color:#664b00}
+.filter-chip:focus-visible{outline:3px solid color-mix(in srgb,var(--theme) 26%,#fff);outline-offset:2px}
+.filter-help{display:flex;align-items:center;gap:7px;margin:-4px 0 12px;font-size:10px;color:var(--muted)}.filter-help:before{content:"↔";display:grid;place-items:center;width:22px;height:22px;border-radius:8px;background:var(--theme-soft);color:var(--theme-dark);font-weight:950}
+@media(max-width:759px){.condition-panel{padding:16px}.filter-wrap{margin-left:-16px;margin-right:-16px;padding:4px 16px 7px}.filters{display:flex;gap:9px;min-width:max-content}.filter-chip{width:150px;flex:0 0 150px;scroll-snap-align:start}.filter-wrap{scroll-snap-type:x proximity}.filter-help{margin-top:-5px}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -431,6 +447,38 @@ def group_counts(category, items):
     return counts
 
 
+def filter_visual(category_id, key):
+    visuals = {
+        "pet-sheets": {
+            "regular": ("▭", "標準サイズ"),
+            "wide": ("▰", "広めサイズ"),
+            "super_wide": ("▣", "大判サイズ"),
+            "unknown": ("?", "サイズ不明"),
+            "all": ("◎", "すべて表示"),
+        },
+        "cat-litter": {
+            "all": ("◎", "素材を問わず"),
+            "paper": ("▤", "紙系"),
+            "okara": ("♧", "おから系"),
+            "wood": ("▥", "木・ひのき"),
+            "mineral": ("◆", "鉱物系"),
+            "silica": ("✦", "シリカ系"),
+            "mixed": ("◐", "複合素材"),
+            "system": ("▱", "システム用"),
+            "unknown": ("?", "素材不明"),
+        },
+        "system-toilet-sheets": {
+            "all": ("◎", "すべて表示"),
+            "deotoilet": ("D", "デオトイレ系"),
+            "nyantomo": ("N", "ニャンとも系"),
+            "iris": ("I", "アイリス系"),
+            "universal": ("↔", "各社共通"),
+            "unknown": ("?", "対応不明"),
+        },
+    }
+    return visuals.get(category_id, {}).get(key, ("•", "条件別"))
+
+
 def filter_buttons(category, items):
     counts = group_counts(category, items)
     default_group = category.get("default_group", "all")
@@ -440,10 +488,16 @@ def filter_buttons(category, items):
         if key != "all" and count <= 0:
             continue
         active = key == default_group
+        icon, hint = filter_visual(category["id"], key)
         parts.append(
-            f'<button type="button" class="filter-chip{" active" if active else ""}" '
-            f'data-group-button data-group="{esc(key)}" aria-pressed="{"true" if active else "false"}">'
-            f'{esc(label)} <span>{count}</span></button>'
+            f'''<button type="button" class="filter-chip{" active" if active else ""}"
+              data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}"
+              aria-pressed="{"true" if active else "false"}">
+              <span class="filter-icon" aria-hidden="true">{esc(icon)}</span>
+              <span class="filter-label">{esc(label)}</span>
+              <span class="filter-meta">{esc(hint)}</span>
+              <span class="filter-count">{count}件</span>
+            </button>'''
         )
     return ''.join(parts)
 
@@ -614,9 +668,10 @@ def category_page(category, items, categories, updated):
     </div></header>
     {nav(categories, category['id'])}
     <main class="main"><div class="wrap">
-      <section class="section">
-        <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">いま選んでいる条件だけで順位・最安値を更新します。</p></div><strong data-visible-count>{len(initial_items)}件</strong></div>
+      <section class="section condition-panel">
+        <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">サイズ・素材・互換性をそろえると、比較がもっと正確になります。</p><span class="condition-current" data-current-condition>{esc(default_label)}</span></div><strong data-visible-count>{len(initial_items)}件</strong></div>
         <div class="filter-wrap"><div class="filters" data-group-filter data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
+        <div class="filter-help">横にスワイプして条件を変更できます。選ぶと最安・TOP3・商品一覧も同時に更新します。</div>
         {featured_box(category, featured)}
 
         <section class="section snapshot-section">
