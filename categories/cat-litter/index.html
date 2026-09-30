@@ -791,13 +791,54 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .shop-card.is-rank-1 .rank-showcase-label{left:126px;top:12px}.shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{left:44px;top:8px}
   .shop-card.is-rank-2,.shop-card.is-rank-3{grid-template-columns:88px minmax(0,1fr)}.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:88px;height:88px}
 }
+
+/* Mobile-first product information hierarchy v15 */
+.shop-unit-wrap{position:relative}.shop-unit-label{letter-spacing:.01em}.shop-unit{font-variant-numeric:tabular-nums}
+.shop-card-meta{min-height:29px}.shipping{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 7px;background:#f1f5f2;color:#607067;font-size:9px;font-weight:800}
+.shop-card-head .shop-card-tags{margin:7px 0 0}.shop-card-title{letter-spacing:-.01em}
+.price-diff:empty{display:none}
+.mobile-price-caption{display:none}
+@media(max-width:759px){
+  .shop-card,.shop-card.is-rank-1,.shop-card.is-rank-2,.shop-card.is-rank-3{
+    grid-template-columns:88px minmax(0,1fr);
+    grid-template-areas:"image price" "image head" "meta meta" "action action";
+    gap:7px 11px;
+    padding:12px;
+  }
+  .shop-card.is-rank-1{grid-template-columns:104px minmax(0,1fr);padding:14px}
+  .shop-card-image,.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:88px;height:88px}
+  .shop-card.is-rank-1 .shop-card-image{width:104px;height:104px}
+  .shop-card-prices,.shop-card.is-rank-1 .shop-card-prices{
+    align-self:start;display:block;text-align:left;padding:2px 0 0;
+  }
+  .shop-unit-label{font-size:9px;color:var(--theme-dark);font-weight:900}
+  .shop-unit,.shop-card.is-rank-1 .shop-unit{font-size:29px;line-height:1.04;letter-spacing:-.045em}
+  .shop-unit small{display:block;margin-top:3px;font-size:9px;letter-spacing:0}
+  .shop-total{display:flex;align-items:baseline;gap:5px;text-align:left;margin-top:6px!important}
+  .shop-total span{font-size:8px}.shop-total b,.shop-card.is-rank-1 .shop-total b{font-size:13px}
+  .shop-card-head,.shop-card.is-rank-1 .shop-card-head{padding-top:0}
+  .value-badge-row{order:0;margin:0 0 5px;min-height:0}.value-badge{font-size:8px;padding:4px 6px}
+  .shop-card-title,.shop-card.is-rank-1 .shop-card-title,.shop-card.is-rank-2 .shop-card-title,.shop-card.is-rank-3 .shop-card-title{
+    font-size:12px;line-height:1.4;-webkit-line-clamp:2;
+  }
+  .shop-card-shop{font-size:9px;margin-top:3px}
+  .shop-card-tags{gap:3px!important;margin-top:6px!important}.condition-tag{font-size:8px;padding:3px 6px}
+  .shop-card-meta{display:flex;justify-content:flex-start;gap:6px;border-top:1px dashed var(--line);padding-top:7px;min-height:0}
+  .shop-card-meta .price-diff{font-size:9px;background:var(--theme-soft);color:var(--theme-dark);border-radius:999px;padding:4px 7px}
+  .shipping{font-size:8px;padding:4px 7px}
+  .shop-card-action .btn,.shop-card.is-rank-1 .shop-card-action .btn{min-height:43px;font-size:12px;padding:11px 13px}
+  .shop-card.is-rank-1 .rank-showcase-label{left:119px;top:10px;font-size:8px}
+  .shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{left:43px;top:7px;font-size:8px}
+  .shop-card.is-rank-1 .shop-card-rank{width:36px;height:36px;font-size:14px}
+  .shop-card.is-rank-1 .shop-card-rank:before{top:-15px;font-size:15px}
+}
 </style></head><body data-category-id="cat-litter" class="page-cat-litter"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">猫砂</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">L表記を確認できる猫砂だけを1Lあたりに換算。kgしかない商品を推測でL換算しません。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 20:18 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:22 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
           <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
@@ -1029,15 +1070,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/tomclife/cabinet/11471456/imgrc0146915947.jpg?_ex=128x128" alt="【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>1</span><span data-rank-badge style="display:none">1位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂</div>
-                <div class="shop-card-shop">TOMC LIFE 楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥59.5<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,500</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">【SALE 15KG 激安】 猫砂 おから 7L×6袋 MOEW&#x27;S 送料無料 固まる 消臭 脱臭 トイレに流せる 燃やせる 飛び散りにくい 低粉塵 天然素材 食品グレード 持ち手付き 大容量 まとめ買い 多頭飼い 買い置き ミルクの香り 猫 トイレ砂 ネコ砂</div>
+                <div class="shop-card-shop">TOMC LIFE 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1068,15 +1109,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/cat-land/cabinet/logo/7066251.jpg?_ex=128x128" alt="猫砂 大容量 木製猫砂 ペレット 木質ペレット ネコ砂 猫トイレ 33L 無添加 天然木 消臭 脱臭 多頭飼い システム用 システム システムトイレ ねこ砂 ペレット システムトイレ用 添加物不使用 粉になるタイプ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>2</span><span data-rank-badge style="display:none">2位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 大容量 木製猫砂 ペレット 木質ペレット ネコ砂 猫トイレ 33L 無添加 天然木 消臭 脱臭 多頭飼い システム用 システム システムトイレ ねこ砂 ペレット システムトイレ用 添加物不使用 粉になるタイプ</div>
-                <div class="shop-card-shop">キャットランド</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥60.6<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,000</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 大容量 木製猫砂 ペレット 木質ペレット ネコ砂 猫トイレ 33L 無添加 天然木 消臭 脱臭 多頭飼い システム用 システム システムトイレ ねこ砂 ペレット システムトイレ用 添加物不使用 粉になるタイプ</div>
+                <div class="shop-card-shop">キャットランド</div>
+                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1107,15 +1148,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/pet-studio/cabinet/imgrc0144521473.jpg?_ex=128x128" alt="業務用 ひのき猫砂 50L｜猫 トイレ ネコ砂 流せる 固まる 消臭 脱臭 無香料 木製 おすすめ 大容量" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>3</span><span data-rank-badge style="display:none">3位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">50l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">業務用 ひのき猫砂 50L｜猫 トイレ ネコ砂 流せる 固まる 消臭 脱臭 無香料 木製 おすすめ 大容量</div>
-                <div class="shop-card-shop">ペットスタジオ</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥65.6<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,280</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">業務用 ひのき猫砂 50L｜猫 トイレ ネコ砂 流せる 固まる 消臭 脱臭 無香料 木製 おすすめ 大容量</div>
+                <div class="shop-card-shop">ペットスタジオ</div>
+                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">50l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1146,15 +1187,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/pet-gardeninglife/cabinet/pet-i/suna/03/1.jpg?_ex=128x128" alt="【 まとめ買い 】 猫砂 大容量 紙 ねこ砂 紙の猫砂 抗菌・消臭プラス 60L (10l×6袋) 【燃やせる・流せる・ しっかり固まる】 箱、パッケージを無地にし価格を抑えたケース販売 ペットアイ 国産 猫砂 紙 猫砂 紙製" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>4</span><span data-rank-badge style="display:none">4位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">10lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">【 まとめ買い 】 猫砂 大容量 紙 ねこ砂 紙の猫砂 抗菌・消臭プラス 60L (10l×6袋) 【燃やせる・流せる・ しっかり固まる】 箱、パッケージを無地にし価格を抑えたケース販売 ペットアイ 国産 猫砂 紙 猫砂 紙製</div>
-                <div class="shop-card-shop">ペット&amp;ガーデニングライフ</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥67.0<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥4,018</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">【 まとめ買い 】 猫砂 大容量 紙 ねこ砂 紙の猫砂 抗菌・消臭プラス 60L (10l×6袋) 【燃やせる・流せる・ しっかり固まる】 箱、パッケージを無地にし価格を抑えたケース販売 ペットアイ 国産 猫砂 紙 猫砂 紙製</div>
+                <div class="shop-card-shop">ペット&amp;ガーデニングライフ</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">10lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1185,15 +1226,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/comcon/cabinet/0217004/imgrc0075153636.jpg?_ex=128x128" alt="常陸化工　ファインホワイト 12L 　固まる・流せる・燃やせる　【目隠し梱包不可　国産　猫砂・トイレタリー猫砂】　オシッコの色がわかる紙製猫砂！お買い得な大容量サイズ★" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>5</span><span data-rank-badge style="display:none">5位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">常陸化工　ファインホワイト 12L 　固まる・流せる・燃やせる　【目隠し梱包不可　国産　猫砂・トイレタリー猫砂】　オシッコの色がわかる紙製猫砂！お買い得な大容量サイズ★</div>
-                <div class="shop-card-shop">ホヌ・ホヌ</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥74.0<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥888</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">常陸化工　ファインホワイト 12L 　固まる・流せる・燃やせる　【目隠し梱包不可　国産　猫砂・トイレタリー猫砂】　オシッコの色がわかる紙製猫砂！お買い得な大容量サイズ★</div>
+                <div class="shop-card-shop">ホヌ・ホヌ</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1224,15 +1265,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/beisia/cabinet/09485898/4952667185988x5.jpg?_ex=128x128" alt="常陸化工 ファインブルー 固まる紙製猫砂 12L×5個入 | トイレ用品 まとめ買い ペット ねこ砂 ネコ砂 猫砂 ねこすな 紙タイプ 大容量 固まる パワフル消臭 トイレに流せる 抗菌 色が変わる" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>6</span><span data-rank-badge style="display:none">6位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12lx5個</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">常陸化工 ファインブルー 固まる紙製猫砂 12L×5個入 | トイレ用品 まとめ買い ペット ねこ砂 ネコ砂 猫砂 ねこすな 紙タイプ 大容量 固まる パワフル消臭 トイレに流せる 抗菌 色が変わる</div>
-                <div class="shop-card-shop">ベイシア楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥76.7<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥4,600</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">常陸化工 ファインブルー 固まる紙製猫砂 12L×5個入 | トイレ用品 まとめ買い ペット ねこ砂 ネコ砂 猫砂 ねこすな 紙タイプ 大容量 固まる パワフル消臭 トイレに流せる 抗菌 色が変わる</div>
+                <div class="shop-card-shop">ベイシア楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12lx5個</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1263,15 +1304,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/onestep/cabinet/life/pet04/pec063_1.jpg?_ex=128x128" alt="『おひとり様2個まで』猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>7</span><span data-rank-badge style="display:none">7位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">『おひとり様2個まで』猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L</div>
-                <div class="shop-card-shop">よろずやマルシェ</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥79.0<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥948</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">『おひとり様2個まで』猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L</div>
+                <div class="shop-card-shop">よろずやマルシェ</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1302,15 +1343,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin3/1533456_00.jpg?_ex=128x128" alt="猫砂 ひのき 流せる 7L 6袋 猫 トイレ 砂 トイレ 砂 ネコ砂 ひのきの猫砂 7L×6袋セットPHKT-70 当店オリジナル ねこ砂 木の猫砂 燃やせる 脱臭 粉立ち少ない 猫トイレ アイリスオーヤマ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>8</span><span data-rank-badge style="display:none">8位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">7lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ひのき 流せる 7L 6袋 猫 トイレ 砂 トイレ 砂 ネコ砂 ひのきの猫砂 7L×6袋セットPHKT-70 当店オリジナル ねこ砂 木の猫砂 燃やせる 脱臭 粉立ち少ない 猫トイレ アイリスオーヤマ</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥82.9<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,480</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ひのき 流せる 7L 6袋 猫 トイレ 砂 トイレ 砂 ネコ砂 ひのきの猫砂 7L×6袋セットPHKT-70 当店オリジナル ねこ砂 木の猫砂 燃やせる 脱臭 粉立ち少ない 猫トイレ アイリスオーヤマ</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">7lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1341,15 +1382,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1533449.jpg?_ex=128x128" alt="猫砂 ひのき 流せる 8L 6袋 ひのきの猫砂 8L×6袋セット 当店オリジナル 木の猫砂 流せる 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 固まる猫砂" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>9</span><span data-rank-badge style="display:none">9位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">8lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ひのき 流せる 8L 6袋 ひのきの猫砂 8L×6袋セット 当店オリジナル 木の猫砂 流せる 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 固まる猫砂</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥82.9<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,980</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ひのき 流せる 8L 6袋 ひのきの猫砂 8L×6袋セット 当店オリジナル 木の猫砂 流せる 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 固まる猫砂</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">8lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1380,15 +1421,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/hcvalor-eshop/cabinet/475set/vh-2133902800008.jpg?_ex=128x128" alt="猫砂 紙の猫砂 白い猫砂 流せる 燃やせる 固まる 紙製の砂 13.5L 4袋 環境にやさしい 大容量 クリーンミュウ シーズイシハラ 日本製 ×4コ まとめ セット売り 国産" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>10</span><span data-rank-badge style="display:none">10位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">13.5l 4袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 紙の猫砂 白い猫砂 流せる 燃やせる 固まる 紙製の砂 13.5L 4袋 環境にやさしい 大容量 クリーンミュウ シーズイシハラ 日本製 ×4コ まとめ セット売り 国産</div>
-                <div class="shop-card-shop">ホームセンターバロー 楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥85.2<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥4,600</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 紙の猫砂 白い猫砂 流せる 燃やせる 固まる 紙製の砂 13.5L 4袋 環境にやさしい 大容量 クリーンミュウ シーズイシハラ 日本製 ×4コ まとめ セット売り 国産</div>
+                <div class="shop-card-shop">ホームセンターバロー 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">13.5l 4袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1419,15 +1460,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/stcraft/cabinet/pet/cat-pellet/pe-pe22/pe-pe22_01_______.jpg?_ex=128x128" alt="【■ポイント5倍■】30日0時から 【送料無料】猫砂 ペレット 猫 猫トイレ 消臭 脱臭 システムトイレ 木質ペレット 大粒 大きめ 大容量 木製 ホワイトペレット 天然 抗菌 固まらない 崩れるタイプ 国産 粉が舞わない 飛び散り防止 無香料 木質ペレット 猫の砂 33L 以上" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>11</span><span data-rank-badge style="display:none">11位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">【■ポイント5倍■】30日0時から 【送料無料】猫砂 ペレット 猫 猫トイレ 消臭 脱臭 システムトイレ 木質ペレット 大粒 大きめ 大容量 木製 ホワイトペレット 天然 抗菌 固まらない 崩れるタイプ 国産 粉が舞わない 飛び散り防止 無香料 木質ペレット 猫の砂 33L 以上</div>
-                <div class="shop-card-shop">石のことならSTクラフト</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥89.8<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,965</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">【■ポイント5倍■】30日0時から 【送料無料】猫砂 ペレット 猫 猫トイレ 消臭 脱臭 システムトイレ 木質ペレット 大粒 大きめ 大容量 木製 ホワイトペレット 天然 抗菌 固まらない 崩れるタイプ 国産 粉が舞わない 飛び散り防止 無香料 木質ペレット 猫の砂 33L 以上</div>
+                <div class="shop-card-shop">石のことならSTクラフト</div>
+                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1458,15 +1499,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1314970.jpg?_ex=128x128" alt="猫砂 鉱物 猫 トイレ 砂 ベントナイト 猫砂 固まる ウッディフレッシュ 16L×2袋セット WF-160 猫砂 鉱物系 小粒 猫砂 鉱物系 消臭 燃やせる 抗菌粒 木 猫砂 ベントナイト ネコ砂 トイレ 猫 トイレ砂" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>12</span><span data-rank-badge style="display:none">12位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">16lx2袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 鉱物 猫 トイレ 砂 ベントナイト 猫砂 固まる ウッディフレッシュ 16L×2袋セット WF-160 猫砂 鉱物系 小粒 猫砂 鉱物系 消臭 燃やせる 抗菌粒 木 猫砂 ベントナイト ネコ砂 トイレ 猫 トイレ砂</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥90.0<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,880</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 鉱物 猫 トイレ 砂 ベントナイト 猫砂 固まる ウッディフレッシュ 16L×2袋セット WF-160 猫砂 鉱物系 小粒 猫砂 鉱物系 消臭 燃やせる 抗菌粒 木 猫砂 ベントナイト ネコ砂 トイレ 猫 トイレ砂</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">16lx2袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1497,15 +1538,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/iseshop/cabinet/10676898/10852456/33l.jpg?_ex=128x128" alt="猫砂 ペレット ＼愛されて10周年 累計出荷数17万個突破／ 木質ペレット 崩れるタイプ 【強力消臭＆抗菌】ネコ砂 33L ( 20kg ) 箱入り 約330日分 システムトイレ 天然木 無添加 飛び散りにくい 木製猫砂 猫 うさぎ 大容量 猫トイレ ねこ砂 岩国再生エネルギー" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>13</span><span data-rank-badge style="display:none">13位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ペレット ＼愛されて10周年 累計出荷数17万個突破／ 木質ペレット 崩れるタイプ 【強力消臭＆抗菌】ネコ砂 33L ( 20kg ) 箱入り 約330日分 システムトイレ 天然木 無添加 飛び散りにくい 木製猫砂 猫 うさぎ 大容量 猫トイレ ねこ砂 岩国再生エネルギー</div>
-                <div class="shop-card-shop">猫砂ペレット 岩国再生エネルギー</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥90.3<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,980</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ペレット ＼愛されて10周年 累計出荷数17万個突破／ 木質ペレット 崩れるタイプ 【強力消臭＆抗菌】ネコ砂 33L ( 20kg ) 箱入り 約330日分 システムトイレ 天然木 無添加 飛び散りにくい 木製猫砂 猫 うさぎ 大容量 猫トイレ ねこ砂 岩国再生エネルギー</div>
+                <div class="shop-card-shop">猫砂ペレット 岩国再生エネルギー</div>
+                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1536,15 +1577,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin6/523574-e.jpg?_ex=128x128" alt="★ 猫 多頭飼いにおすすめ お徳用 猫砂 木の猫砂 7L×5袋 セット オリジナル送料無料 固まる 燃やせる ねこ砂 ネコ砂 猫の砂 木 ベントナイト 鉱物系 キャット 猫砂 固 脱臭 抗菌 燃 まとめ買い 7リットル×5個" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>14</span><span data-rank-badge style="display:none">14位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">7lx5袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">★ 猫 多頭飼いにおすすめ お徳用 猫砂 木の猫砂 7L×5袋 セット オリジナル送料無料 固まる 燃やせる ねこ砂 ネコ砂 猫の砂 木 ベントナイト 鉱物系 キャット 猫砂 固 脱臭 抗菌 燃 まとめ買い 7リットル×5個</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥90.9<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,180</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">★ 猫 多頭飼いにおすすめ お徳用 猫砂 木の猫砂 7L×5袋 セット オリジナル送料無料 固まる 燃やせる ねこ砂 ネコ砂 猫の砂 木 ベントナイト 鉱物系 キャット 猫砂 固 脱臭 抗菌 燃 まとめ買い 7リットル×5個</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">7lx5袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1575,15 +1616,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/11076425/11076426/523244_00.jpg?_ex=128x128" alt="猫砂 固まる ガッチリ 鉱物 アイリスオーヤマ ベントナイト 脱臭 抗菌 10L×3袋セット 猫 トイレ 砂 ネコ砂 ねこすな 鉱物系 多頭飼い がっちり固まる 飛び散り防止 大容量 お徳用 ケース オリジナル【R上】" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>15</span><span data-rank-badge style="display:none">15位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">10lx3袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 固まる ガッチリ 鉱物 アイリスオーヤマ ベントナイト 脱臭 抗菌 10L×3袋セット 猫 トイレ 砂 ネコ砂 ねこすな 鉱物系 多頭飼い がっちり固まる 飛び散り防止 大容量 お徳用 ケース オリジナル【R上】</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥92.7<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,780</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 固まる ガッチリ 鉱物 アイリスオーヤマ ベントナイト 脱臭 抗菌 10L×3袋セット 猫 トイレ 砂 ネコ砂 ねこすな 鉱物系 多頭飼い がっちり固まる 飛び散り防止 大容量 お徳用 ケース オリジナル【R上】</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">10lx3袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1614,15 +1655,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202606/s1/4522831785667.jpg?_ex=128x128" alt="猫砂 クリーンサンド 7L 鉱物系 ベントナイト 固まる 消臭 臭わない 抗菌 ペレットタイプ 崩れにくい 多頭飼い コスパ 安い 大容量 業務用 トイレ用品 ネコ砂 ねこ砂 LIFELEX コーナン" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>16</span><span data-rank-badge style="display:none">16位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 クリーンサンド 7L 鉱物系 ベントナイト 固まる 消臭 臭わない 抗菌 ペレットタイプ 崩れにくい 多頭飼い コスパ 安い 大容量 業務用 トイレ用品 ネコ砂 ねこ砂 LIFELEX コーナン</div>
-                <div class="shop-card-shop">コーナンeショップ 楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥93.9<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥657</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 クリーンサンド 7L 鉱物系 ベントナイト 固まる 消臭 臭わない 抗菌 ペレットタイプ 崩れにくい 多頭飼い コスパ 安い 大容量 業務用 トイレ用品 ネコ砂 ねこ砂 LIFELEX コーナン</div>
+                <div class="shop-card-shop">コーナンeショップ 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1653,15 +1694,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/11076425/11076426/a533439.jpg?_ex=128x128" alt="猫砂 紙 ネコ砂 固まる 燃やせる 流せる アイリスオーヤマ 7L 6袋 猫 トイレ 紙の猫砂 7L×6袋セット KMN-70N 猫砂 砂 紙製 消臭 猫トイレ トイレに流せる まとめ買い" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>17</span><span data-rank-badge style="display:none">17位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 紙 ネコ砂 固まる 燃やせる 流せる アイリスオーヤマ 7L 6袋 猫 トイレ 紙の猫砂 7L×6袋セット KMN-70N 猫砂 砂 紙製 消臭 猫トイレ トイレに流せる まとめ買い</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥94.8<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,980</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 紙 ネコ砂 固まる 燃やせる 流せる アイリスオーヤマ 7L 6袋 猫 トイレ 紙の猫砂 7L×6袋セット KMN-70N 猫砂 砂 紙製 消臭 猫トイレ トイレに流せる まとめ買い</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1692,15 +1733,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/petkanthum/1533438.jpg?_ex=128x128" alt="猫砂 おから 流せる 緑茶 7L 6袋 お茶 お茶の猫砂 7L×6袋セット OCN-70N 静岡県産茶葉配合 ねこ砂 ネコ砂 トイレに流せる 燃えるゴミ おから 香り 抗菌 消臭 7L×6個 まとめ買い 猫トイレ アイリスオーヤマ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>18</span><span data-rank-badge style="display:none">18位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 おから 流せる 緑茶 7L 6袋 お茶 お茶の猫砂 7L×6袋セット OCN-70N 静岡県産茶葉配合 ねこ砂 ネコ砂 トイレに流せる 燃えるゴミ おから 香り 抗菌 消臭 7L×6個 まとめ買い 猫トイレ アイリスオーヤマ</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥94.8<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,980</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 おから 流せる 緑茶 7L 6袋 お茶 お茶の猫砂 7L×6袋セット OCN-70N 静岡県産茶葉配合 ねこ砂 ネコ砂 トイレに流せる 燃えるゴミ おから 香り 抗菌 消臭 7L×6個 まとめ買い 猫トイレ アイリスオーヤマ</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1731,15 +1772,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1533445_00.jpg?_ex=128x128" alt="猫砂 ひのき 流せる 7L 6袋 ひのきでつくった猫砂 7L×6袋セット HKT-70 ねこ砂 木の猫砂 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 ネコトイレ 猫トイレ トイレ砂 アイリスオーヤマ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>19</span><span data-rank-badge style="display:none">19位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">7lx6袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ひのき 流せる 7L 6袋 ひのきでつくった猫砂 7L×6袋セット HKT-70 ねこ砂 木の猫砂 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 ネコトイレ 猫トイレ トイレ砂 アイリスオーヤマ</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥94.8<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,980</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ひのき 流せる 7L 6袋 ひのきでつくった猫砂 7L×6袋セット HKT-70 ねこ砂 木の猫砂 燃やせる 脱臭 粉立ちが少ない 檜 ひの木 ヒノキ ネコ砂 ネコトイレ 猫トイレ トイレ砂 アイリスオーヤマ</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">木・ひのき・パイン</span><span class="condition-tag">7lx6袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1770,15 +1811,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1890543.jpg?_ex=128x128" alt="猫砂 ベントナイト クリーン＆フレッシュ Ag+ 8L×2袋セット KFAG-80 8リットル 2個 ベントナイト ねこ砂 固まる 脱臭 消臭 ネコトイレ 猫トイレ 銀イオン ペット消耗品 まとめ買い アイリスオーヤマ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>20</span><span data-rank-badge style="display:none">20位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">8lx2袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ベントナイト クリーン＆フレッシュ Ag+ 8L×2袋セット KFAG-80 8リットル 2個 ベントナイト ねこ砂 固まる 脱臭 消臭 ネコトイレ 猫トイレ 銀イオン ペット消耗品 まとめ買い アイリスオーヤマ</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥98.8<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥1,580</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ベントナイト クリーン＆フレッシュ Ag+ 8L×2袋セット KFAG-80 8リットル 2個 ベントナイト ねこ砂 固まる 脱臭 消臭 ネコトイレ 猫トイレ 銀イオン ペット消耗品 まとめ買い アイリスオーヤマ</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">8lx2袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -1809,15 +1850,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202605/s1/4522831040452.jpg?_ex=128x128" alt="猫砂 紙製 流せる 固まる 消臭 ホワイト 20L 軽量 燃えるゴミ 可燃ごみ 再生パルプ 崩れにくい トイレに流せる猫砂 紙の猫砂 ネコ砂 キャットリッター 大容量 まとめ買い ストック ペット用品 猫用 室内飼い 清潔 簡単処理 掃除しやすい LIFELEX コーナン" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>21</span><span data-rank-badge style="display:none">21位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">20l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 紙製 流せる 固まる 消臭 ホワイト 20L 軽量 燃えるゴミ 可燃ごみ 再生パルプ 崩れにくい トイレに流せる猫砂 紙の猫砂 ネコ砂 キャットリッター 大容量 まとめ買い ストック ペット用品 猫用 室内飼い 清潔 簡単処理 掃除しやすい LIFELEX コーナン</div>
-                <div class="shop-card-shop">コーナンeショップ 楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥99.5<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥1,990</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 紙製 流せる 固まる 消臭 ホワイト 20L 軽量 燃えるゴミ 可燃ごみ 再生パルプ 崩れにくい トイレに流せる猫砂 紙の猫砂 ネコ砂 キャットリッター 大容量 まとめ買い ストック ペット用品 猫用 室内飼い 清潔 簡単処理 掃除しやすい LIFELEX コーナン</div>
+                <div class="shop-card-shop">コーナンeショップ 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">20l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1848,15 +1889,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/morinochikarakyoto/cabinet/09838159/compass1686558766.jpg?_ex=128x128" alt="木質ペレット20kg(10kg×2袋)】33L 大容量 京都ペレット (全木) 京都産 間伐材 天然木 100％ 国産 京都産スギ 無添加 安心・安全 環境に優しい 森の恵み ペレットストーブ　燃料　高い吸収力 消臭効果 崩れるタイプ 猫システムトイレ 猫砂にも" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>22</span><span data-rank-badge style="display:none">22位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">木質ペレット20kg(10kg×2袋)】33L 大容量 京都ペレット (全木) 京都産 間伐材 天然木 100％ 国産 京都産スギ 無添加 安心・安全 環境に優しい 森の恵み ペレットストーブ　燃料　高い吸収力 消臭効果 崩れるタイプ 猫システムトイレ 猫砂にも</div>
-                <div class="shop-card-shop">woodpelletshop森の力京都</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥100<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,300</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">木質ペレット20kg(10kg×2袋)】33L 大容量 京都ペレット (全木) 京都産 間伐材 天然木 100％ 国産 京都産スギ 無添加 安心・安全 環境に優しい 森の恵み ペレットストーブ　燃料　高い吸収力 消臭効果 崩れるタイプ 猫システムトイレ 猫砂にも</div>
+                <div class="shop-card-shop">woodpelletshop森の力京都</div>
+                <div class="shop-card-tags"><span class="condition-tag">システムトイレ用</span><span class="condition-tag">33l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1887,15 +1928,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/327/624327.jpg?_ex=128x128" alt="猫砂1番(7L×2セット)" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>23</span><span data-rank-badge style="display:none">23位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7lx2セット</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂1番(7L×2セット)</div>
-                <div class="shop-card-shop">楽天24</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥101<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥1,414</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂1番(7L×2セット)</div>
+                <div class="shop-card-shop">楽天24</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7lx2セット</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1926,15 +1967,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/314970.jpg?_ex=128x128" alt="猫砂 ベントナイト ひのき 消臭 ウッディフレッシュ 16L WF-160 固まる 消臭 燃やせる 抗菌粒 木 木の猫砂 ベントナイト ネコ砂 ねこ砂 ネコトイレ 猫トイレ 猫 トイレ トイレ砂 トイレタリー トイレ用品【R上】" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>24</span><span data-rank-badge style="display:none">24位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">16l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ベントナイト ひのき 消臭 ウッディフレッシュ 16L WF-160 固まる 消臭 燃やせる 抗菌粒 木 木の猫砂 ベントナイト ネコ砂 ねこ砂 ネコトイレ 猫トイレ 猫 トイレ トイレ砂 トイレタリー トイレ用品【R上】</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥102<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥1,630</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ベントナイト ひのき 消臭 ウッディフレッシュ 16L WF-160 固まる 消臭 燃やせる 抗菌粒 木 木の猫砂 ベントナイト ネコ砂 ねこ砂 ネコトイレ 猫トイレ 猫 トイレ トイレ砂 トイレタリー トイレ用品【R上】</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">16l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -1965,15 +2006,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1523533.jpg?_ex=128x128" alt="猫砂 鉱物 ネコ砂 消臭 ハイパーウッディフレッシュ 8L×3袋セット HWF-80 固まる 消臭 燃やせる 抗菌粒 木 ベントナイト ねこ砂 まとめ買い ネコトイレ 猫トイレ トイレ用品 【◆K】" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>25</span><span data-rank-badge style="display:none">25位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">8lx3袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 鉱物 ネコ砂 消臭 ハイパーウッディフレッシュ 8L×3袋セット HWF-80 固まる 消臭 燃やせる 抗菌粒 木 ベントナイト ねこ砂 まとめ買い ネコトイレ 猫トイレ トイレ用品 【◆K】</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥103<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,480</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 鉱物 ネコ砂 消臭 ハイパーウッディフレッシュ 8L×3袋セット HWF-80 固まる 消臭 燃やせる 抗菌粒 木 ベントナイト ねこ砂 まとめ買い ネコトイレ 猫トイレ トイレ用品 【◆K】</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">混合素材</span><span class="condition-tag">8lx3袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -2004,15 +2045,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/nyanzaq/cabinet/429/571429.jpg?_ex=128x128" alt="猫砂 ペパーレット チャップ(12L×4セット)" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>26</span><span data-rank-badge style="display:none">26位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12lx4セット</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ペパーレット チャップ(12L×4セット)</div>
-                <div class="shop-card-shop">楽天24 ペット館</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥105<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥5,030</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ペパーレット チャップ(12L×4セット)</div>
+                <div class="shop-card-shop">楽天24 ペット館</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">12lx4セット</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
@@ -2043,15 +2084,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1523849.jpg?_ex=128x128" alt="猫砂 ベントナイト ガッチリ固まる猫砂 Ag+ 8L×2袋セット GN-8 8リットル 2個 ねこ砂 ネコ砂 固まる 消臭 脱臭 しっかり固まる 銀イオン 猫トイレ トイレ砂 ペット消耗品 まとめ買い" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>27</span><span data-rank-badge style="display:none">27位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">8lx2袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 ベントナイト ガッチリ固まる猫砂 Ag+ 8L×2袋セット GN-8 8リットル 2個 ねこ砂 ネコ砂 固まる 消臭 脱臭 しっかり固まる 銀イオン 猫トイレ トイレ砂 ペット消耗品 まとめ買い</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥105<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥1,680</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 ベントナイト ガッチリ固まる猫砂 Ag+ 8L×2袋セット GN-8 8リットル 2個 ねこ砂 ネコ砂 固まる 消臭 脱臭 しっかり固まる 銀イオン 猫トイレ トイレ砂 ペット消耗品 まとめ買い</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">8lx2袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -2082,15 +2123,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin32/1527140-1.jpg?_ex=128x128" alt="猫砂 紙 脱臭 燃えるゴミ 紙の猫砂 脱臭ペーパーフレッシュ【7L×5袋】 猫砂 送料無料 ネコ砂 ねこ砂 流せる 燃やせる 炭配合 猫 トイレ 砂 DPF-70 猫砂 アイリスオーヤマ" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>28</span><span data-rank-badge style="display:none">28位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7lx5袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 紙 脱臭 燃えるゴミ 紙の猫砂 脱臭ペーパーフレッシュ【7L×5袋】 猫砂 送料無料 ネコ砂 ねこ砂 流せる 燃やせる 炭配合 猫 トイレ 砂 DPF-70 猫砂 アイリスオーヤマ</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥106<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥3,710</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 紙 脱臭 燃えるゴミ 紙の猫砂 脱臭ペーパーフレッシュ【7L×5袋】 猫砂 送料無料 ネコ砂 ねこ砂 流せる 燃やせる 炭配合 猫 トイレ 砂 DPF-70 猫砂 アイリスオーヤマ</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7lx5袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -2121,15 +2162,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin5/535454_00.jpg?_ex=128x128" alt="猫砂 おから 流せる 緑茶 7L×4袋セット 猫砂 おから お茶 おからの猫砂 静岡県産茶葉配合 当店オリジナル 4個 ネコトイレ砂 砂 ネコ砂 トイレに流せる 燃やせる 燃えるゴミ お茶 おから 香り 抗菌 消臭【R上】" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>29</span><span data-rank-badge style="display:none">29位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx4袋</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">猫砂 おから 流せる 緑茶 7L×4袋セット 猫砂 おから お茶 おからの猫砂 静岡県産茶葉配合 当店オリジナル 4個 ネコトイレ砂 砂 ネコ砂 トイレに流せる 燃やせる 燃えるゴミ お茶 おから 香り 抗菌 消臭【R上】</div>
-                <div class="shop-card-shop">Pet館〜ペット館〜</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥106<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥2,981</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">猫砂 おから 流せる 緑茶 7L×4袋セット 猫砂 おから お茶 おからの猫砂 静岡県産茶葉配合 当店オリジナル 4個 ネコトイレ砂 砂 ネコ砂 トイレに流せる 燃やせる 燃えるゴミ お茶 おから 香り 抗菌 消臭【R上】</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">おから</span><span class="condition-tag">7lx4袋</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
@@ -2160,15 +2201,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                 <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128" alt="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>30</span><span data-rank-badge style="display:none">30位</span></span>
               </div>
-              <div class="shop-card-head">
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7l</span></div>
-                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便</div>
-                <div class="shop-card-shop">charm 楽天市場店</div>
-              </div>
               <div class="shop-card-prices">
                 <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥107<small> / 1L</small></div></div>
                 <div class="shop-total"><span>購入総額</span><b>¥748</b></div>
+              </div>
+              <div class="shop-card-head">
+                <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
+                <div class="shop-card-title">ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便</div>
+                <div class="shop-card-shop">charm 楽天市場店</div>
+                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7l</span></div>
               </div>
               <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
               <div class="shop-card-action">
