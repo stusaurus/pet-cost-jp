@@ -424,6 +424,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-spotlight-link]');
+      if (!link) return;
+      send('daily_spotlight_click', {
+        category_id: link.dataset.categoryId || '',
+        price_gap_percent: Number(link.dataset.gapPercent || 0),
+        conversion_source: 'daily_price_gap'
+      });
+    });
+
+    document.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-affiliate-link]');
       if (!link) return;
       const data = {
