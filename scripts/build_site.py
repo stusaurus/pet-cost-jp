@@ -150,6 +150,18 @@ CSS += r'''
 @media(max-width:759px){.snapshot-section{padding:15px}.top3-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 5px}.top3-card{min-width:82%;scroll-snap-align:start}.deal-meter-head{align-items:flex-start;flex-direction:column;gap:3px}.deal-meter-head b{text-align:left}}
 '''
 
+CSS += r'''
+/* Objective comparison angles v6 */
+.angle-panel{margin:14px 0 16px;padding:15px;border-radius:18px;background:linear-gradient(135deg,#fffaf0,#fff 60%);border:1px solid #f0dfbd}
+.angle-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:10px}.angle-head h3{margin:0;font-size:17px}.angle-head p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+.angle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.angle-card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:158px;padding:13px;border-radius:15px;background:#fff;border:1px solid var(--line);text-decoration:none;box-shadow:0 7px 20px rgba(28,68,49,.045);transition:transform .16s ease,border-color .16s ease}.angle-card:hover{transform:translateY(-2px);border-color:#b9d6c7}
+.angle-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:21px;margin-bottom:8px}.angle-card[data-angle-role="unit"] .angle-icon{background:#e5f5eb}.angle-card[data-angle-role="total"] .angle-icon{background:#fff0ca}.angle-card[data-angle-role="bulk"] .angle-icon{background:#e4f3f7}
+.angle-label{font-size:11px;font-weight:900;color:#5a6b62}.angle-value{font-size:22px;font-weight:950;color:var(--accent-dark);line-height:1.15;margin-top:2px}.angle-name{font-size:11px;line-height:1.35;color:#53665c;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.angle-cta{margin-top:auto;padding-top:8px;font-size:11px;font-weight:850;color:var(--accent)}
+.angle-note{font-size:10px;color:var(--muted);margin-top:8px}
+@media(max-width:759px){.angle-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.angle-card{min-width:74%;scroll-snap-align:start}.angle-head{align-items:flex-start;flex-direction:column;gap:2px}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -197,6 +209,8 @@ def product_rows(items, category):
                 data-group="{esc(item['group'])}"
                 data-row-unit-price="{item['unit_price']}"
                 data-total-price="{item['price']}"
+                data-quantity="{item['quantity']}"
+                data-quantity-evidence="{esc(item['quantity_evidence'])}"
                 data-image="{image}"
                 data-item-id="{esc(item['product_id'])}"
                 data-item-name="{esc(item['name'])}"
@@ -327,6 +341,46 @@ def snapshot_cards(category, items):
     return ''.join(cards)
 
 
+def angle_picks(items):
+    if not items:
+        return []
+    return [
+        ("unit", "💰", "単価最安", min(items, key=lambda x: (x["unit_price"], x["price"]))),
+        ("total", "🧾", "支払総額が最小", min(items, key=lambda x: (x["price"], x["unit_price"]))),
+        ("bulk", "📦", "最大容量", max(items, key=lambda x: (x["quantity"], -x["unit_price"]))),
+    ]
+
+
+def angle_cards(category, items):
+    cards = []
+    for role, icon, label, item in angle_picks(items):
+        if role == "unit":
+            value = f"{yen(item['unit_price'])} / {category['metric_label']}"
+        elif role == "total":
+            value = yen(item["price"])
+        else:
+            value = item["quantity_evidence"]
+        cards.append(
+            f'''<a class="angle-card" data-angle-card data-angle-role="{role}" data-affiliate-link
+              data-merchant="rakuten"
+              data-category-id="{esc(category['id'])}"
+              data-item-id="{esc(item['product_id'])}"
+              data-item-name="{esc(item['name'])}"
+              data-metric="{esc(category['metric'])}"
+              data-unit-price="{item['unit_price']}"
+              data-position="0"
+              data-conversion-source="comparison_angle_{role}"
+              href="{esc(item['url'])}" target="_blank" rel="nofollow sponsored noopener">
+              <span class="angle-icon">{icon}</span>
+              <span class="angle-label">{label}</span>
+              <span class="angle-value">{esc(value)}</span>
+              <span class="angle-name">{esc(item['name'])}</span>
+              <span class="angle-cta">楽天で確認 →</span>
+            </a>'''
+        )
+    return ''.join(cards)
+
+
 def guide_html(category):
     items = ''.join(
         f'<div class="guide-item"><span class="guide-check">✓</span><span>{esc(text)}</span></div>'
@@ -402,6 +456,12 @@ def category_page(category, items, categories, updated):
           <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial_items)}</div>
           <div class="snapshot-note">※ 同じ条件内の現在掲載商品の単価を比較した目安です。過去価格との比較ではありません。</div>
         </section>
+
+        <div class="angle-panel">
+          <div class="angle-head"><div><h3>「安い」を3つの角度で見る</h3><p>単価・支払総額・容量を分けて表示します。</p></div></div>
+          <div class="angle-grid" data-angle-grid>{angle_cards(category, initial_items)}</div>
+          <div class="angle-note">※ 品質や性能のおすすめではなく、現在掲載データの数値だけで選んでいます。同じ商品が複数の条件に該当する場合があります。</div>
+        </div>
 
         <div class="kpi">
           <div class="kpi-card"><span>全掲載商品</span><b>{len(items)}件</b></div>
