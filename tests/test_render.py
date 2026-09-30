@@ -61,6 +61,10 @@ class RenderTests(unittest.TestCase):
         self.assertIn('comparison_angle_total', page)
         self.assertIn('comparison_angle_bulk', page)
         self.assertIn('data-group-button', page)
+        self.assertIn('brand-mark', page)
+        self.assertIn('mobile-dock', page)
+        self.assertIn('chip current', page)
+        self.assertIn('page-pet-sheets', page)
         self.assertIn('class="product-image"', page)
         self.assertIn('楽天で価格を見る', page)
         self.assertIn('Supported by Rakuten Developers', page)
@@ -94,6 +98,9 @@ class RenderTests(unittest.TestCase):
         self.assertIn("story-section", page)
         self.assertIn("trust-section", page)
         self.assertIn("store-section", page)
+        self.assertIn("PET COST CHECK", page)
+        self.assertIn("mobile-dock", page)
+        self.assertIn("page-home", page)
 
     def test_google_verification_file_is_copied_to_site(self):
         verification_files = list(ROOT.glob("google*.html"))
