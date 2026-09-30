@@ -346,6 +346,31 @@ CSS += r'''
 @media(max-width:759px){.value-badge{font-size:9px;padding:4px 6px}.value-badge-row{margin-top:5px}.shop-card.is-rank-1 .value-badge-row{padding-right:22px}}
 '''
 
+CSS += r'''
+/* Rank showcase v14 */
+.product-grid{align-items:start}
+.rank-showcase-label{display:none;position:absolute;z-index:3;left:13px;top:13px;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:950;letter-spacing:.08em;box-shadow:0 6px 16px rgba(23,49,38,.12)}
+.shop-card.is-rank-1{grid-column:1/-1;grid-template-columns:170px minmax(0,1fr) 190px;grid-template-areas:"image head price" "image meta price" "image action action";gap:10px 18px;min-height:205px;padding:18px;border:2px solid #e7bd49;background:radial-gradient(circle at 91% 10%,rgba(255,215,111,.24),transparent 25%),linear-gradient(145deg,#fffdf3,#fff 60%);box-shadow:0 22px 48px rgba(72,57,11,.14)}
+.shop-card.is-rank-1:before{content:"CURRENT BEST";right:-31px;top:18px;padding:5px 39px;background:#ffd76f;color:#674c00;font-size:9px}
+.shop-card.is-rank-1 .rank-showcase-label{display:inline-flex;background:#173126;color:#fff;left:183px;top:17px}
+.shop-card.is-rank-1 .shop-card-image-wrap{align-self:center;padding-top:8px}.shop-card.is-rank-1 .shop-card-image{width:150px;height:150px;border-radius:18px;box-shadow:0 12px 28px rgba(23,49,38,.08)}
+.shop-card.is-rank-1 .shop-card-rank{left:-8px;top:-7px;width:42px;height:42px;border-radius:14px;font-size:17px;background:#ffd76f;color:#654a00;box-shadow:0 8px 18px rgba(129,92,0,.22)}
+.shop-card.is-rank-1 .shop-card-rank:before{content:"♛";position:absolute;top:-18px;font-size:18px;color:#e8b935;text-shadow:0 1px 0 #6a4d00}
+.shop-card.is-rank-1 .shop-card-head{padding-top:30px}.shop-card.is-rank-1 .shop-card-title{font-size:17px;line-height:1.45;-webkit-line-clamp:2}.shop-card.is-rank-1 .shop-card-shop{font-size:11px}
+.shop-card.is-rank-1 .shop-card-prices{align-self:center;display:block;text-align:right;padding-top:24px}.shop-card.is-rank-1 .shop-unit{font-size:36px}.shop-card.is-rank-1 .shop-unit-label{font-size:11px}.shop-card.is-rank-1 .shop-total{margin-top:10px}.shop-card.is-rank-1 .shop-total b{font-size:18px}
+.shop-card.is-rank-1 .shop-card-meta{border-top:0;padding-top:0}.shop-card.is-rank-1 .shop-card-action{display:flex;justify-content:flex-end}.shop-card.is-rank-1 .shop-card-action .btn{width:auto;min-width:210px;padding:13px 18px;font-size:14px}
+.shop-card.is-rank-2,.shop-card.is-rank-3{border-width:2px;border-top-width:5px}.shop-card.is-rank-2{border-color:#c9d1ce;background:linear-gradient(145deg,#fbfdfc,#fff)}.shop-card.is-rank-3{border-color:#d5b18d;background:linear-gradient(145deg,#fffaf6,#fff)}
+.shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{display:inline-flex;left:48px;top:10px}.shop-card.is-rank-2 .rank-showcase-label{background:#e2e8e5;color:#50615a}.shop-card.is-rank-3 .rank-showcase-label{background:#e4c3a4;color:#68492f}
+.shop-card.is-rank-2 .shop-card-rank{background:#dce3e0;color:#4f6058}.shop-card.is-rank-3 .shop-card-rank{background:#d8b18b;color:#68492f}
+.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:104px;height:104px}.shop-card.is-rank-2,.shop-card.is-rank-3{grid-template-columns:104px minmax(0,1fr)}.shop-card.is-rank-2 .shop-card-title,.shop-card.is-rank-3 .shop-card-title{font-size:14px}
+@media(max-width:759px){
+  .shop-card.is-rank-1{grid-column:auto;grid-template-columns:110px minmax(0,1fr);grid-template-areas:"image head" "image price" "meta meta" "action action";gap:8px 12px;min-height:0;padding:14px}
+  .shop-card.is-rank-1 .shop-card-image{width:110px;height:110px}.shop-card.is-rank-1 .shop-card-head{padding-top:27px}.shop-card.is-rank-1 .shop-card-prices{display:flex;text-align:left;padding-top:0}.shop-card.is-rank-1 .shop-unit{font-size:27px}.shop-card.is-rank-1 .shop-total{margin-top:0}.shop-card.is-rank-1 .shop-card-action .btn{width:100%;min-width:0}
+  .shop-card.is-rank-1 .rank-showcase-label{left:126px;top:12px}.shop-card.is-rank-2 .rank-showcase-label,.shop-card.is-rank-3 .rank-showcase-label{left:44px;top:8px}
+  .shop-card.is-rank-2,.shop-card.is-rank-3{grid-template-columns:88px minmax(0,1fr)}.shop-card.is-rank-2 .shop-card-image,.shop-card.is-rank-3 .shop-card-image{width:88px;height:88px}
+}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -415,6 +440,7 @@ def product_rows(items, category):
                 data-item-name="{esc(item['name'])}"
                 data-shop="{esc(item.get('shop', ''))}"
                 data-url="{esc(item['url'])}">
+              <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
                 {image_html}
                 <span class="shop-card-rank"><span data-rank-cell>{idx}</span><span data-rank-badge style="display:none">{idx}位</span></span>
