@@ -320,7 +320,33 @@
     updateSummary(visibleRows, rankAll || group !== 'all');
   }
 
+  function setupRevealMotion() {
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nodes = [...document.querySelectorAll('.section, .category-card, .shop-card, .step, .angle-card')];
+    if (!nodes.length || reduced || !('IntersectionObserver' in window)) {
+      nodes.forEach((node) => node.classList.add('is-visible'));
+      return;
+    }
+
+    document.documentElement.classList.add('motion-ready');
+    nodes.forEach((node, index) => {
+      node.classList.add('reveal-item');
+      node.style.transitionDelay = Math.min(index % 5, 4) * 45 + 'ms';
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    nodes.forEach((node) => observer.observe(node));
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    setupRevealMotion();
     const category = document.body.dataset.categoryId || '';
     const activeButton = document.querySelector('[data-group-button][aria-pressed="true"]');
     if (activeButton) applyGroupFilter(activeButton.dataset.group || 'all');
