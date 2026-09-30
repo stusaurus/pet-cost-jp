@@ -81,6 +81,8 @@ class RenderTests(unittest.TestCase):
         self.assertIn('CURRENT BEST', build_site.CSS)
         self.assertIn('2nd PRICE', (ROOT / "scripts" / "analytics_runtime.js").read_text(encoding="utf-8"))
         self.assertIn('data-value-badges', page)
+        self.assertLess(page.index('class="shop-card-prices"'), page.index('class="shop-card-head"'))
+        self.assertIn('grid-template-areas:"image price" "image head"', build_site.CSS)
         self.assertIn('class="value-legend"', page)
         self.assertIn('単価最安', page)
         self.assertIn('中央値より安い', page)
