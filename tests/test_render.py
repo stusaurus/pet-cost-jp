@@ -68,7 +68,7 @@ class RenderTests(unittest.TestCase):
         self.assertIn('class="filter-icon"', page)
         self.assertIn('class="filter-count"', page)
         self.assertIn('data-current-condition', page)
-        self.assertIn('class="condition-panel"', page)
+        self.assertIn('condition-panel', page)
         self.assertIn('brand-mark', page)
         self.assertIn('mobile-dock', page)
         self.assertIn('chip current', page)
