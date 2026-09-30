@@ -53,6 +53,7 @@ function verify(p, category, items, group) {
   const scale = Math.max(middle, ...expected.slice(0, 3).map(x => x.unit_price), 1);
   top.forEach((link, index) => {
     assert.equal(Number(link.dataset.position), index + 1);
+    assert.equal(p.dom.window.getComputedStyle(link.querySelector('.bar-track')).display, 'block');
     assert.ok(Math.abs(parseFloat(link.querySelector('.bar-fill').style.getPropertyValue('--bar')) - expected[index].unit_price / scale * 100) < .01);
   });
   rows.forEach((row, index) => {
