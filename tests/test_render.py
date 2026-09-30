@@ -36,7 +36,7 @@ class RenderTests(unittest.TestCase):
     def render(self, items):
         return build_site.category_page(self.category, items, self.categories, '2026-09-30 07:00 JST')
 
-    def test_static_page_is_already_filtered_and_ranked_without_javascript(self):
+    def test_first_visit_requires_own_condition_with_honest_noscript_example(self):
         wide = dict(self.item, product_id='wide', group='wide', unit_price=5.0, price=1000)
         page = Page(self.render([wide, self.item]))
         rows = page.with_attr('data-product-row')
@@ -44,11 +44,13 @@ class RenderTests(unittest.TestCase):
         self.assertNotIn('hidden', rows[1])
         self.assertEqual(rows[1]['data-item-id'], 'abc123')
         buttons = page.with_attr('data-group-button')
-        self.assertEqual([b['data-group'] for b in buttons if b['aria-pressed'] == 'true'], ['regular'])
+        self.assertEqual([b['data-group'] for b in buttons if b['aria-pressed'] == 'true'], [])
         self.assertEqual([b['data-group'] for b in buttons], ['regular', 'wide'])
         featured = [x for x in page.with_attr('data-affiliate-link') if x.get('data-conversion-source') == 'featured_product'][0]
         self.assertEqual(featured['data-item-id'], 'abc123')
         self.assertEqual(featured['href'], self.item['url'])
+        self.assertIn('hidden', page.with_attr('data-comparison-results')[0])
+        self.assertIn('レギュラーの比較例', self.render([wide, self.item]))
 
     def test_even_median_and_reasons_use_current_condition(self):
         rows = [dict(self.item, product_id=str(i), unit_price=u, price=u * 200) for i, u in enumerate([4, 6, 10, 20])]
@@ -108,6 +110,9 @@ class RenderTests(unittest.TestCase):
         self.assertIn('この条件 8件', source)
         self.assertIn('現在掲載商品の最安と中央値の差', source)
         self.assertIn('WebSite', source)
+        self.assertLess(source.index('何を使っていますか？'), source.index('今日の価格差も見る'))
+        self.assertIn('data-pet-category="pet-sheets"', source)
+        self.assertNotIn('商品名から', source)
 
     def test_google_verification_file_and_assets_are_copied(self):
         original_site = build_site.SITE
