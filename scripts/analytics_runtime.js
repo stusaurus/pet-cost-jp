@@ -349,7 +349,11 @@
     setupRevealMotion();
     const category = document.body.dataset.categoryId || '';
     const activeButton = document.querySelector('[data-group-button][aria-pressed="true"]');
-    if (activeButton) applyGroupFilter(activeButton.dataset.group || 'all');
+    if (activeButton) {
+      const current = document.querySelector('[data-current-condition]');
+      if (current) current.textContent = activeButton.dataset.groupLabel || activeButton.textContent.trim();
+      applyGroupFilter(activeButton.dataset.group || 'all');
+    }
 
     if (category) {
       send('comparison_view', { category_id: category });
@@ -369,6 +373,8 @@
       });
 
       const group = button.dataset.group || 'all';
+      const current = document.querySelector('[data-current-condition]');
+      if (current) current.textContent = button.dataset.groupLabel || button.textContent.trim();
       applyGroupFilter(group);
       send('comparison_filter', {
         category_id: category,
