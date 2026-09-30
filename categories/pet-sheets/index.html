@@ -322,6 +322,26 @@
     });
   }
 
+  function updateStickySummary(visibleRows, median) {
+    const condition = document.querySelector('[data-sticky-condition]');
+    const minNode = document.querySelector('[data-sticky-min]');
+    const gapNode = document.querySelector('[data-sticky-gap]');
+    const countNode = document.querySelector('[data-sticky-count]');
+    const active = document.querySelector('[data-group-button][aria-pressed="true"]');
+    const metric = document.querySelector('a[data-affiliate-link]')?.dataset.metric === 'per_liter' ? '1L' : '1枚';
+
+    const prices = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0)
+      .sort((a, b) => a - b);
+    const cheapest = prices.length ? prices[0] : 0;
+
+    if (condition) condition.textContent = active?.dataset.groupLabel || '現在の条件';
+    if (minNode) minNode.textContent = cheapest > 0 ? formatYen(cheapest) + ' / ' + metric : '-';
+    if (gapNode) gapNode.textContent = cheapest > 0 && median > 0 ? relativeLabel(cheapest, median) : '-';
+    if (countNode) countNode.textContent = String(visibleRows.length) + '件';
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -344,6 +364,7 @@
       if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
     });
     updateValueBadges(visibleRows, middle);
+    updateStickySummary(visibleRows, middle);
 
     updateFeatured(
       visibleRows[0],
@@ -832,13 +853,28 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .shop-card.is-rank-1 .shop-card-rank{width:36px;height:36px;font-size:14px}
   .shop-card.is-rank-1 .shop-card-rank:before{top:-15px;font-size:15px}
 }
+
+/* Sticky comparison summary v16 */
+.comparison-sticky{position:sticky;top:54px;z-index:9;margin:10px 0 14px;border:1px solid color-mix(in srgb,var(--theme) 18%,#dce7e0);border-radius:18px;background:rgba(255,255,255,.93);box-shadow:0 12px 30px rgba(23,49,38,.10);backdrop-filter:blur(14px);overflow:hidden}
+.comparison-sticky-inner{display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(110px,.8fr) minmax(150px,1fr) 76px auto;align-items:center;gap:0}
+.sticky-cell{min-width:0;padding:10px 12px;border-right:1px solid var(--line)}.sticky-cell:last-of-type{border-right:0}
+.sticky-label{display:block;font-size:8px;font-weight:900;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}.sticky-value{display:block;margin-top:1px;font-size:13px;font-weight:950;color:#173126;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sticky-price .sticky-value{font-size:19px;color:var(--theme-dark);letter-spacing:-.025em}.sticky-gap .sticky-value{color:var(--theme-dark)}
+.sticky-count{text-align:center}.sticky-count .sticky-value{font-size:15px}
+.sticky-jump{display:flex;align-items:center;justify-content:center;align-self:stretch;min-width:104px;padding:0 12px;text-decoration:none;background:var(--theme);color:#fff;font-size:11px;font-weight:950;transition:background .16s ease}.sticky-jump:hover{background:var(--theme-dark)}
+.sticky-jump:after{content:"↓";margin-left:5px;font-size:12px}
+@media(max-width:759px){
+  .comparison-sticky{top:48px;margin:7px -4px 12px;border-radius:15px}
+  .comparison-sticky-inner{grid-template-columns:1.15fr 1fr .82fr auto}
+  .sticky-cell{padding:8px 8px}.sticky-label{font-size:7px}.sticky-value{font-size:10px}.sticky-price .sticky-value{font-size:17px}.sticky-gap{display:none}.sticky-count .sticky-value{font-size:12px}
+  .sticky-jump{min-width:49px;padding:0 8px;font-size:0}.sticky-jump:after{content:"↓";margin:0;font-size:16px}
+}
 </style></head><body data-category-id="pet-sheets" class="page-pet-sheets"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">ペットシーツ</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">レギュラー・ワイド・スーパーワイドを混ぜず、同じサイズだけを1枚あたりの価格で比較します。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 20:22 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:29 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="ペットシーツのイラスト">
           <ellipse cx="150" cy="143" rx="112" ry="9" fill="#8dbca1" opacity=".22"/>
@@ -853,6 +889,15 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
       <a class="chip current" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">🐶 ペットシーツ</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">🐱 猫砂</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">🧻 猫用システムトイレシート</a>
     </div></div>
     <main class="main"><div class="wrap">
+      <aside class="comparison-sticky" data-comparison-sticky aria-label="現在の比較条件">
+        <div class="comparison-sticky-inner">
+          <div class="sticky-cell"><span class="sticky-label">比較条件</span><strong class="sticky-value" data-sticky-condition>レギュラー</strong></div>
+          <div class="sticky-cell sticky-price"><span class="sticky-label">現在最安</span><strong class="sticky-value" data-sticky-min>¥4.10 / 1枚</strong></div>
+          <div class="sticky-cell sticky-gap"><span class="sticky-label">中央値との差</span><strong class="sticky-value" data-sticky-gap>中央値より51%安い</strong></div>
+          <div class="sticky-cell sticky-count"><span class="sticky-label">表示</span><strong class="sticky-value" data-sticky-count>7件</strong></div>
+          <a class="sticky-jump" href="#product-ranking" aria-label="商品ランキングへ移動">一覧へ</a>
+        </div>
+      </aside>
       <section class="section condition-panel">
         <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">サイズ・素材・互換性をそろえると、比較がもっと正確になります。</p><span class="condition-current" data-current-condition>レギュラー</span></div><strong data-visible-count>7件</strong></div>
         <div class="filter-wrap"><div class="filters" data-group-filter data-rank-all="0"><button type="button" class="filter-chip active"
@@ -1022,7 +1067,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="product-ranking">
         <div class="section-head"><div><h2>安い順に比較</h2><p class="section-sub">レギュラーから表示。画像・総額・単価に加えて、安さの理由も自動表示します。</p></div></div>
         <div class="value-legend" aria-label="安さの理由"><span><i class="u"></i>単価最安</span><span><i class="d"></i>中央値より安い</span><span><i class="t"></i>支払総額が最小</span><span><i class="b"></i>最大容量</span></div>
         <div class="product-grid" data-product-grid><article class="shop-card" data-product-row

@@ -322,6 +322,26 @@
     });
   }
 
+  function updateStickySummary(visibleRows, median) {
+    const condition = document.querySelector('[data-sticky-condition]');
+    const minNode = document.querySelector('[data-sticky-min]');
+    const gapNode = document.querySelector('[data-sticky-gap]');
+    const countNode = document.querySelector('[data-sticky-count]');
+    const active = document.querySelector('[data-group-button][aria-pressed="true"]');
+    const metric = document.querySelector('a[data-affiliate-link]')?.dataset.metric === 'per_liter' ? '1L' : '1枚';
+
+    const prices = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0)
+      .sort((a, b) => a - b);
+    const cheapest = prices.length ? prices[0] : 0;
+
+    if (condition) condition.textContent = active?.dataset.groupLabel || '現在の条件';
+    if (minNode) minNode.textContent = cheapest > 0 ? formatYen(cheapest) + ' / ' + metric : '-';
+    if (gapNode) gapNode.textContent = cheapest > 0 && median > 0 ? relativeLabel(cheapest, median) : '-';
+    if (countNode) countNode.textContent = String(visibleRows.length) + '件';
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -344,6 +364,7 @@
       if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
     });
     updateValueBadges(visibleRows, middle);
+    updateStickySummary(visibleRows, middle);
 
     updateFeatured(
       visibleRows[0],
@@ -832,6 +853,21 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .shop-card.is-rank-1 .shop-card-rank{width:36px;height:36px;font-size:14px}
   .shop-card.is-rank-1 .shop-card-rank:before{top:-15px;font-size:15px}
 }
+
+/* Sticky comparison summary v16 */
+.comparison-sticky{position:sticky;top:54px;z-index:9;margin:10px 0 14px;border:1px solid color-mix(in srgb,var(--theme) 18%,#dce7e0);border-radius:18px;background:rgba(255,255,255,.93);box-shadow:0 12px 30px rgba(23,49,38,.10);backdrop-filter:blur(14px);overflow:hidden}
+.comparison-sticky-inner{display:grid;grid-template-columns:minmax(145px,1.1fr) minmax(110px,.8fr) minmax(150px,1fr) 76px auto;align-items:center;gap:0}
+.sticky-cell{min-width:0;padding:10px 12px;border-right:1px solid var(--line)}.sticky-cell:last-of-type{border-right:0}
+.sticky-label{display:block;font-size:8px;font-weight:900;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}.sticky-value{display:block;margin-top:1px;font-size:13px;font-weight:950;color:#173126;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sticky-price .sticky-value{font-size:19px;color:var(--theme-dark);letter-spacing:-.025em}.sticky-gap .sticky-value{color:var(--theme-dark)}
+.sticky-count{text-align:center}.sticky-count .sticky-value{font-size:15px}
+.sticky-jump{display:flex;align-items:center;justify-content:center;align-self:stretch;min-width:104px;padding:0 12px;text-decoration:none;background:var(--theme);color:#fff;font-size:11px;font-weight:950;transition:background .16s ease}.sticky-jump:hover{background:var(--theme-dark)}
+.sticky-jump:after{content:"↓";margin-left:5px;font-size:12px}
+@media(max-width:759px){
+  .comparison-sticky{top:48px;margin:7px -4px 12px;border-radius:15px}
+  .comparison-sticky-inner{grid-template-columns:1.15fr 1fr .82fr auto}
+  .sticky-cell{padding:8px 8px}.sticky-label{font-size:7px}.sticky-value{font-size:10px}.sticky-price .sticky-value{font-size:17px}.sticky-gap{display:none}.sticky-count .sticky-value{font-size:12px}
+  .sticky-jump{min-width:49px;padding:0 8px;font-size:0}.sticky-jump:after{content:"↓";margin:0;font-size:16px}
+}
 </style></head><body data-category-id="" class="page-home"><header class="hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
@@ -839,7 +875,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
         <p class="lead">袋の値段ではなく、<span class="hero-lead-mark">1枚・1Lなど同じ単位</span>にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
         <div class="hero-proof"><div class="hero-proof-item"><b>1枚</b><span>シーツを比較</span></div><div class="hero-proof-item"><b>1L</b><span>猫砂を比較</span></div><div class="hero-proof-item"><b>毎朝</b><span>価格を更新</span></div></div>
         <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
-        <p class="updated">最終更新 2026-09-30 20:22 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:29 JST</p>
       </div>
       <div class="hero-art-shell photo-shell"><div class="hero-photo-wrap">
       <img class="hero-photo" src="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"
