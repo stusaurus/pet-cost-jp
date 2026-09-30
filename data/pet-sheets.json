@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01 00:34 JST",
+  "updated": "2026-10-01 06:53 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -226,25 +226,6 @@
       "unit_price": 15.29
     },
     {
-      "name": "ペット用品 業務用 ペットシーツ 超薄型 スーパーワイド 300枚(75枚×4) ペットライブラリー ペツトシ-ツチヨウウスガタSW300",
-      "price": 5170,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pukwo.7cx6me71.g00pukwo.7cx6n06c/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjism%2F4582439462469-73-30002835-n%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fjism%2Fi%2F14395222%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "Joshin web 家電とPCの大型専門店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/jism/cabinet/0449/4582439462469.jpg?_ex=128x128",
-      "review_average": 5.0,
-      "review_count": 2,
-      "postage_flag": 1,
-      "product_id": "8fe496bfbec6",
-      "category_id": "pet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 300.0,
-      "quantity_evidence": "75枚x4",
-      "confidence": 0.99,
-      "group": "super_wide",
-      "unit_price": 17.2333
-    },
-    {
       "name": "ハニーケア ペットシート 薄型 ワイドタイプ HND-100(100枚入)",
       "price": 1744,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00r136o.7cx6meef.g00r136o.7cx6n891/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4580639721003%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frakuten24%2Fi%2F11283286%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -262,6 +243,25 @@
       "confidence": 0.9,
       "group": "wide",
       "unit_price": 17.44
+    },
+    {
+      "name": "ペット用品 業務用 ペットシーツ 超薄型 スーパーワイド 300枚(75枚×4) ペットライブラリー ペツトシ-ツチヨウウスガタSW300",
+      "price": 5450,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pukwo.7cx6me71.g00pukwo.7cx6n06c/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjism%2F4582439462469-73-30002835-n%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fjism%2Fi%2F14395222%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "Joshin web 家電とPCの大型専門店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/jism/cabinet/0449/4582439462469.jpg?_ex=128x128",
+      "review_average": 5.0,
+      "review_count": 2,
+      "postage_flag": 1,
+      "product_id": "8fe496bfbec6",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 300.0,
+      "quantity_evidence": "75枚x4",
+      "confidence": 0.99,
+      "group": "super_wide",
+      "unit_price": 18.1667
     },
     {
       "name": "コスパがいいペットシーツ（1回使い捨てタイプ）　スーパーワイド　200枚入り　関東当日便",
