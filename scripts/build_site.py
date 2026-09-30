@@ -152,10 +152,16 @@ def group_counts(category, items):
     return counts
 
 
+def filter_label(label):
+    if label == 'スーパーワイド':
+        return '<span>スーパー</span><span>ワイド</span>'
+    return esc(label)
+
+
 def filter_buttons(category, items):
     counts, default = group_counts(category, items), category.get('default_group', 'all')
     hints = {'pet-sheets': '同じサイズ', 'cat-litter': '同じ素材・用途', 'system-toilet-sheets': '同じ対応シリーズ'}
-    return ''.join(f'''<button type="button" class="filter-chip{" active" if key == default else ""}" data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}" aria-pressed="{'true' if key == default else 'false'}"><span class="filter-label">{esc(label)}</span><span class="filter-meta">{hints[category['id']] if key != 'all' else '素材を問わず比較'}</span><span class="filter-count">{counts.get(key, 0)}件</span></button>''' for key, label in category.get('groups', {}).items() if counts.get(key, 0) > 0 or key == default)
+    return ''.join(f'''<button type="button" class="filter-chip{" active" if key == default else ""}" data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}" aria-pressed="{'true' if key == default else 'false'}"><span class="filter-label">{filter_label(label)}</span><span class="filter-meta">{hints[category['id']] if key != 'all' else '素材を問わず比較'}</span><span class="filter-count">{counts.get(key, 0)}件</span></button>''' for key, label in category.get('groups', {}).items() if counts.get(key, 0) > 0 or key == default)
 
 
 def reason_badges(item, items, middle):
@@ -244,7 +250,7 @@ def product_rows(items, category):
             reasons_html = f'<span class="value-badge">{esc(relative_price_label(item["unit_price"], middle)) if rank else ""}</span>'
         image = f'<img class="shop-card-image" src="{esc(item.get("image"))}" alt="" loading="lazy" width="64" height="64">' if item.get('image') else ''
         parts.append(f'''<article class="{classes}" id="product-{esc(item['product_id'])}" data-product-row data-group="{esc(item['group'])}" data-row-unit-price="{item['unit_price']}" data-total-price="{item['price']}" data-quantity="{item['quantity']}" data-quantity-evidence="{esc(item['quantity_evidence'])}" data-image="{esc(item.get('image'))}" data-item-id="{esc(item['product_id'])}" data-item-name="{esc(item['name'])}" data-display-name="{esc(display_name(item['name']))}" data-shop="{esc(item.get('shop'))}" data-shipping="{esc(shipping_label(item.get('postage_flag')))}" data-url="{esc(item['url'])}" {'hidden' if not rank else ''}>
-          <span class="shop-card-rank" data-rank-cell aria-label="単価順位">{rank}</span><div class="shop-card-image-wrap">{image}</div><div class="shop-card-prices"><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div><div class="value-badge-row" data-value-badges aria-label="安さの理由">{reasons_html}</div><div class="shop-card-head"><details class="product-name"><summary><span class="shop-card-title">{esc(display_name(item['name']))}</span><span class="name-toggle" aria-hidden="true"></span></summary><p class="original-name">楽天の商品名：{esc(item['name'])}</p></details><div class="shop-card-shop">{esc(item.get('shop'))}</div><div class="shop-card-tags">{quantity_text(category, item)} · {esc(item['quantity_evidence'])} · {esc(group_label(category, item['group']))}</div></div><div class="shop-card-meta"><div class="shop-total"><span>商品総額</span>{yen(item['price'])}</div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div><div class="shop-card-action"><a class="btn secondary" {affiliate_attrs(category, item, rank, 'comparison_card')}>楽天で確認</a></div></article>''')
+          <span class="shop-card-rank" data-rank-cell aria-label="単価順位">{rank}</span><div class="shop-card-image-wrap">{image}</div><div class="shop-card-prices"><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div><div class="value-badge-row" data-value-badges aria-label="安さの理由">{reasons_html}</div><div class="shop-card-head"><details class="product-name"><summary><span class="shop-card-title">{esc(display_name(item['name']))}</span><span class="name-toggle" aria-hidden="true"></span></summary><p class="original-name">楽天の商品名：{esc(item['name'])}</p></details><div class="shop-card-shop">{esc(item.get('shop'))}</div><div class="shop-card-tags">{quantity_text(category, item)} · {esc(item['quantity_evidence'])} · {esc(group_label(category, item['group']))}</div></div><div class="shop-checkout"><div class="shop-card-meta"><div class="shop-total"><span>商品総額</span>{yen(item['price'])}</div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div><div class="shop-card-action"><a class="btn secondary" {affiliate_attrs(category, item, rank, 'comparison_card')}>楽天で確認</a></div></div></article>''')
     return ''.join(parts)
 
 
