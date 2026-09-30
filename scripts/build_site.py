@@ -740,9 +740,9 @@ def daily_spotlight(categories, summaries):
           <div class="spotlight-gap"><b>{esc(gap_text)}</b><span>中央値より最安が低い</span></div>
           <div class="spotlight-price-row">
             <div class="spotlight-price"><span>現在の最安</span><b>{yen(summary['min'])} / {esc(category['metric_label'])}</b></div>
-            <div class="spotlight-price"><span>掲載中央値</span><b>{yen(summary['median'])} / {esc(category['metric_label'])}</b></div>
+            <div class="spotlight-price"><span>掲載中央値</span><b>{yen(summary.get('median'))} / {esc(category['metric_label'])}</b></div>
           </div>
-          <a class="spotlight-action" data-spotlight-link href="{BASE_URL}categories/{esc(category['id'])}/">この比較を見る →</a>
+          <a class="spotlight-action" data-spotlight-link data-category-id="{esc(category['id'])}" data-gap-percent="{gap}" href="{BASE_URL}categories/{esc(category['id'])}/">この比較を見る →</a>
           <div class="gap-strip">{''.join(chips)}</div>
           <div class="spotlight-note">※ 過去価格との比較ではなく、本日取得した現在掲載商品の中での最安値と中央値の差です。</div>
         </div>
