@@ -320,6 +320,26 @@
     });
   }
 
+  function updateStickySummary(visibleRows, median) {
+    const condition = document.querySelector('[data-sticky-condition]');
+    const minNode = document.querySelector('[data-sticky-min]');
+    const gapNode = document.querySelector('[data-sticky-gap]');
+    const countNode = document.querySelector('[data-sticky-count]');
+    const active = document.querySelector('[data-group-button][aria-pressed="true"]');
+    const metric = document.querySelector('a[data-affiliate-link]')?.dataset.metric === 'per_liter' ? '1L' : '1枚';
+
+    const prices = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0)
+      .sort((a, b) => a - b);
+    const cheapest = prices.length ? prices[0] : 0;
+
+    if (condition) condition.textContent = active?.dataset.groupLabel || '現在の条件';
+    if (minNode) minNode.textContent = cheapest > 0 ? formatYen(cheapest) + ' / ' + metric : '-';
+    if (gapNode) gapNode.textContent = cheapest > 0 && median > 0 ? relativeLabel(cheapest, median) : '-';
+    if (countNode) countNode.textContent = String(visibleRows.length) + '件';
+  }
+
   function updateSummary(visibleRows, rankAll) {
     const prices = visibleRows
       .map((row) => Number(row.dataset.rowUnitPrice || 0))
@@ -342,6 +362,7 @@
       if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
     });
     updateValueBadges(visibleRows, middle);
+    updateStickySummary(visibleRows, middle);
 
     updateFeatured(
       visibleRows[0],
