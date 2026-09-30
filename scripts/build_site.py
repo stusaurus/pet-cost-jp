@@ -162,6 +162,52 @@ CSS += r'''
 @media(max-width:759px){.angle-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.angle-card{min-width:74%;scroll-snap-align:start}.angle-head{align-items:flex-start;flex-direction:column;gap:2px}}
 '''
 
+CSS += r'''
+/* Brand system v7 */
+body{--theme:#197451;--theme-dark:#105c3f;--theme-soft:#e8f5ed;--theme-wash:#f2faf5}
+body[data-category-id="pet-sheets"]{--theme:#27845f;--theme-dark:#176548;--theme-soft:#dff6e9;--theme-wash:#f3fbf6}
+body[data-category-id="cat-litter"]{--theme:#ad7b27;--theme-dark:#805817;--theme-soft:#fff0cc;--theme-wash:#fffaf0}
+body[data-category-id="system-toilet-sheets"]{--theme:#438f9c;--theme-dark:#286d78;--theme-soft:#dff4f7;--theme-wash:#f2fafc}
+body[data-category-id] .hero.category-hero{background:radial-gradient(circle at 88% 12%,var(--theme-soft) 0,transparent 34%),linear-gradient(145deg,#fff,var(--theme-wash))}
+body[data-category-id] .hero-kicker{background:var(--theme-dark)}
+body[data-category-id] .filter-chip.active,body[data-category-id] .filter-chip[aria-pressed="true"]{background:var(--theme);border-color:var(--theme)}
+body[data-category-id] .btn{background:var(--theme)}body[data-category-id] .btn:hover{background:var(--theme-dark)}
+body[data-category-id] .unit,body[data-category-id] .featured-unit,body[data-category-id] .top3-unit,body[data-category-id] .angle-value{color:var(--theme-dark)}
+body[data-category-id] .featured-diff{background:var(--theme-soft);color:var(--theme-dark)}
+body[data-category-id] .kpi-card{background:var(--theme-soft)}
+body[data-category-id] .condition-tag{background:var(--theme-soft);color:var(--theme-dark)}
+body[data-category-id] .rank{color:var(--theme)}
+body[data-category-id] .rank-badge{background:var(--theme-soft);color:var(--theme-dark)}
+.brand{display:flex;align-items:center;gap:8px}.brand-mark{width:29px;height:29px;border-radius:10px;background:#173126;display:grid;place-items:center;box-shadow:0 5px 13px rgba(23,49,38,.14);position:relative;flex:0 0 29px}.brand-mark:before{content:"";width:14px;height:11px;border-radius:50% 50% 45% 45%;background:#ffd76f;transform:translateY(3px)}.brand-mark:after{content:"";position:absolute;top:5px;left:6px;width:5px;height:5px;border-radius:50%;background:#ffd76f;box-shadow:7px -1px 0 #ffd76f,3.5px -4px 0 -1px #ffd76f}
+.brand-name{font-weight:950;letter-spacing:-.03em}.brand-name small{display:block;font-size:8px;letter-spacing:.08em;color:var(--muted);line-height:1;margin-top:1px}
+.chip{transition:background .16s ease,border-color .16s ease,transform .16s ease}.chip:hover{transform:translateY(-1px)}.chip.current{background:#173126;border-color:#173126;color:#fff;box-shadow:0 5px 14px rgba(23,49,38,.12)}
+.section-head h2{display:flex;align-items:center;gap:9px}.section-head h2:before{content:"";width:24px;height:24px;flex:0 0 24px;border-radius:9px;background:
+radial-gradient(circle at 50% 65%,var(--theme) 0 5px,transparent 5.8px),
+radial-gradient(circle at 24% 31%,var(--theme) 0 3px,transparent 3.8px),
+radial-gradient(circle at 48% 20%,var(--theme) 0 3px,transparent 3.8px),
+radial-gradient(circle at 73% 31%,var(--theme) 0 3px,transparent 3.8px),
+var(--theme-soft);opacity:.95}
+.visual-section .section-head h2:before{background:
+radial-gradient(circle at 50% 65%,#197451 0 5px,transparent 5.8px),
+radial-gradient(circle at 24% 31%,#197451 0 3px,transparent 3.8px),
+radial-gradient(circle at 48% 20%,#197451 0 3px,transparent 3.8px),
+radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
+#e8f5ed}
+.section{position:relative}.section:not(.snapshot-section):not(.visual-section){overflow:hidden}.section:not(.snapshot-section):not(.visual-section):after{content:"";position:absolute;right:-38px;bottom:-44px;width:100px;height:100px;border-radius:50%;background:var(--theme-soft);opacity:.22;pointer-events:none}
+.top3-strip{align-items:stretch}.top3-card:first-child{transform:translateY(-5px);border:2px solid #f0c75d;box-shadow:0 14px 28px rgba(0,0,0,.16)}.top3-card:first-child:hover{transform:translateY(-7px)}.top3-card:first-child .top3-rank:after{content:"♛";position:absolute;transform:translate(12px,-13px);font-size:13px;color:#ffca4b;text-shadow:0 1px 0 #6d5200}.top3-rank{position:relative}
+.featured{border-left:5px solid var(--theme)}.featured:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;left:-42px;bottom:-48px;background:var(--theme-soft);opacity:.5}
+.angle-card{border-top:4px solid transparent}.angle-card[data-angle-role="unit"]{border-top-color:#55ad83}.angle-card[data-angle-role="total"]{border-top-color:#e2b94f}.angle-card[data-angle-role="bulk"]{border-top-color:#69adba}
+.footer{position:relative;padding-top:18px}.footer-brand{display:flex;align-items:center;gap:11px;margin-bottom:13px}.footer-brand .brand-mark{width:36px;height:36px;flex-basis:36px}.footer-brand strong{display:block;font-size:14px;color:var(--text)}.footer-brand span{font-size:11px;color:var(--muted)}
+.mobile-dock{display:none}
+@media(max-width:719px){
+  body{padding-bottom:72px}.topnav .wrap{padding:8px 0}.chip{font-size:12px;padding:7px 9px}
+  .mobile-dock{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;z-index:30;left:10px;right:10px;bottom:max(8px,env(safe-area-inset-bottom));background:rgba(255,255,255,.94);border:1px solid rgba(205,222,212,.9);border-radius:18px;box-shadow:0 12px 34px rgba(23,49,38,.18);backdrop-filter:blur(14px);padding:6px}
+  .dock-link{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;min-height:49px;border-radius:12px;font-size:9px;font-weight:850;color:#66776e;line-height:1.15;gap:2px}.dock-link .dock-icon{font-size:18px;line-height:1}.dock-link.current{background:var(--theme-soft);color:var(--theme-dark)}
+  .top3-card:first-child{transform:none}.top3-card:first-child:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+'''
+
 
 def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
@@ -170,15 +216,30 @@ def schema_script(data):
 def shell(title, description, body, category_id="", schema=None):
     page_url = f"{BASE_URL}{'categories/'+category_id+'/' if category_id else ''}"
     schema_html = schema_script(schema) if schema else ""
-    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(page_url)}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(page_url)}">{schema_html}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}">{body}</body></html>'''
+    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(page_url)}"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(page_url)}">{schema_html}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" class="page-{esc(category_id or 'home')}">{body}</body></html>'''
 
 
-def nav(categories):
+def nav(categories, current=""):
     links = ''.join(
-        f'<a class="chip" href="{BASE_URL}categories/{esc(c["id"])}/">{esc(c["emoji"])} {esc(c["name"])}</a>'
+        f'<a class="chip{" current" if c["id"] == current else ""}" href="{BASE_URL}categories/{esc(c["id"])}/">{esc(c["emoji"])} {esc(c["name"])}</a>'
         for c in categories
     )
-    return f'<div class="topnav"><div class="wrap"><a class="brand" href="{BASE_URL}">{SITE_NAME}</a>{links}</div></div>'
+    return f'''<div class="topnav"><div class="wrap">
+      <a class="brand" href="{BASE_URL}"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ペット用品コスパ比較<small>PET COST CHECK</small></span></a>
+      {links}
+    </div></div>'''
+
+
+def mobile_dock(categories, current=""):
+    home_class = " current" if not current else ""
+    links = [f'<a class="dock-link{home_class}" href="{BASE_URL}"><span class="dock-icon">⌂</span><span>トップ</span></a>']
+    for c in categories:
+        active = " current" if c["id"] == current else ""
+        links.append(
+            f'<a class="dock-link{active}" href="{BASE_URL}categories/{esc(c["id"])}/">'
+            f'<span class="dock-icon">{esc(c["emoji"])}</span><span>{esc(c["name"]).replace("猫用","")}</span></a>'
+        )
+    return '<nav class="mobile-dock" aria-label="モバイルナビ">' + ''.join(links) + '</nav>'
 
 
 def group_label(category, group):
@@ -399,6 +460,7 @@ def faq_html(category):
 
 def footer():
     return f'''<footer class="footer"><div class="wrap footer-box">
+      <div class="footer-brand"><span class="brand-mark" aria-hidden="true"></span><div><strong>ペット用品コスパ比較</strong><span>同じ単位で、迷わず比べる。</span></div></div>
       <div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div>
       <div class="rakuten-credit">
         <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
@@ -439,7 +501,7 @@ def category_page(category, items, categories, updated):
       </div>
       <div class="hero-art-shell"><div class="hero-art">{category_illustration(category['id'])}</div></div>
     </div></header>
-    {nav(categories)}
+    {nav(categories, category['id'])}
     <main class="main"><div class="wrap">
       <section class="section">
         <div class="section-head"><div><h2>条件を選ぶ</h2><p class="section-sub">いま選んでいる条件だけで順位・最安値を更新します。</p></div><strong data-visible-count>{len(initial_items)}件</strong></div>
@@ -513,7 +575,8 @@ def category_page(category, items, categories, updated):
         {faq_html(category)}
       </section>
     </div></main>
-    {footer()}'''
+    {footer()}
+    {mobile_dock(categories, category['id'])}'''
 
     title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
     desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
@@ -588,7 +651,8 @@ def homepage(categories, summaries, updated):
         <p class="method">各比較ページには単価計算機があります。ホームセンターで「これ安い？」と思ったとき、価格と枚数・容量を入れれば、現在の楽天候補と同じ単位で比べられます。</p>
       </section>
     </div></main>
-    {footer()}'''
+    {footer()}
+    {mobile_dock(categories)}'''
 
     return shell(
         f"{SITE_NAME} | 1枚・1Lあたりで安さを比較",
