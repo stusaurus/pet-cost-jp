@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://stusaurus.github.io/pet-cost-jp/sitemap.xml

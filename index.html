@@ -1,0 +1,644 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#197451"><title>ペット用品コスパ比較 | 1枚・1Lあたりで安さを比較</title><meta name="description" content="ペットシーツ、猫砂、猫用システムトイレシートを1枚・1Lあたりの単価に揃えて比較。数量が曖昧な商品は除外し、条件別に安い商品を確認できます。"><meta name="robots" content="index,follow"><link rel="canonical" href="https://stusaurus.github.io/pet-cost-jp/"><meta property="og:type" content="website"><meta property="og:title" content="ペット用品コスパ比較 | 1枚・1Lあたりで安さを比較"><meta property="og:description" content="ペットシーツ、猫砂、猫用システムトイレシートを1枚・1Lあたりの単価に揃えて比較。数量が曖昧な商品は除外し、条件別に安い商品を確認できます。"><meta property="og:url" content="https://stusaurus.github.io/pet-cost-jp/"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "ペット用品コスパ比較", "url": "https://stusaurus.github.io/pet-cost-jp/", "description": "ペット用品を1枚・1Lなど同じ単位に揃えて比較するサイト"}</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-GFVSZ8YDQ5"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','G-GFVSZ8YDQ5');</script>
+<script>(() => {
+  const TEST_KEY = 'pet_cost_operator_test_v1';
+  const params = new URLSearchParams(location.search);
+  let operator = false;
+  try { operator = localStorage.getItem(TEST_KEY) === '1'; } catch (_) {}
+  if (params.get('test') === '1' || params.get('test') === '0') {
+    operator = params.get('test') === '1';
+    try {
+      if (operator) localStorage.setItem(TEST_KEY, '1');
+      else localStorage.removeItem(TEST_KEY);
+    } catch (_) {}
+    const url = new URL(location.href);
+    url.searchParams.delete('test');
+    try { history.replaceState(history.state, '', url.href); } catch (_) {}
+  }
+
+  const send = (name, data = {}) => {
+    if (typeof window.gtag !== 'function') return;
+    const payload = { site_id: 'pet-cost-jp', ...data };
+    if (operator) payload.operator_test = '1';
+    window.gtag('event', name, payload);
+  };
+
+  window.petCostTrack = send;
+
+  const formatYen = (value) => {
+    if (!(value > 0)) return '-';
+    if (value < 10) return '¥' + value.toFixed(2);
+    if (value < 100) return '¥' + value.toFixed(1);
+    return '¥' + Math.round(value).toLocaleString('ja-JP');
+  };
+
+  const relativeLabel = (value, median) => {
+    if (!(value > 0) || !(median > 0)) return '';
+    const diff = ((value - median) / median) * 100;
+    if (Math.abs(diff) < 2) return '中央値付近';
+    return diff < 0
+      ? '中央値より' + Math.abs(diff).toFixed(0) + '%安い'
+      : '中央値より' + diff.toFixed(0) + '%高い';
+  };
+
+  const currentRows = () => [...document.querySelectorAll('[data-product-row]')];
+
+  function updateFeatured(row, rankText, median) {
+    const box = document.querySelector('[data-featured-box]');
+    if (!box) return;
+    if (!row) {
+      box.hidden = true;
+      return;
+    }
+    box.hidden = false;
+    const img = box.querySelector('[data-featured-image]');
+    const title = box.querySelector('[data-featured-title]');
+    const shop = box.querySelector('[data-featured-shop]');
+    const unit = box.querySelector('[data-featured-unit]');
+    const total = box.querySelector('[data-featured-total]');
+    const badge = box.querySelector('[data-featured-badge]');
+    const diff = box.querySelector('[data-featured-diff]');
+    const link = box.querySelector('[data-affiliate-link]');
+
+    if (img) {
+      if (row.dataset.image) {
+        img.src = row.dataset.image;
+        img.alt = row.dataset.itemName || '商品画像';
+        img.hidden = false;
+      } else {
+        img.removeAttribute('src');
+        img.hidden = true;
+      }
+    }
+    if (title) title.textContent = row.dataset.itemName || '';
+    if (shop) shop.textContent = row.dataset.shop || '';
+    if (unit) unit.textContent = formatYen(Number(row.dataset.rowUnitPrice || 0));
+    if (total) total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
+    if (badge) badge.textContent = rankText || '表示中の最安';
+    if (diff) diff.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), median);
+
+    if (link) {
+      link.href = row.dataset.url || '#';
+      link.dataset.itemId = row.dataset.itemId || '';
+      link.dataset.itemName = row.dataset.itemName || '';
+      link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+      link.dataset.position = '1';
+    }
+  }
+
+  function updateSnapshot(visibleRows, median) {
+    const strip = document.querySelector('[data-top3-strip]');
+    const message = document.querySelector('[data-deal-message]');
+    const dot = document.querySelector('[data-deal-dot]');
+    const topRows = visibleRows.slice(0, 3);
+
+    if (strip) {
+      strip.innerHTML = '';
+      topRows.forEach((row, index) => {
+        const link = document.createElement('a');
+        link.className = 'top3-card';
+        link.href = row.dataset.url || '#';
+        link.target = '_blank';
+        link.rel = 'nofollow sponsored noopener';
+        link.dataset.top3Card = '1';
+        link.dataset.affiliateLink = '1';
+        link.dataset.merchant = 'rakuten';
+        link.dataset.categoryId = document.body.dataset.categoryId || '';
+        const sourceLink = row.querySelector('a[data-affiliate-link]');
+        link.dataset.metric = sourceLink?.dataset.metric || '';
+        link.dataset.itemId = row.dataset.itemId || '';
+        link.dataset.itemName = row.dataset.itemName || '';
+        link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+        link.dataset.position = String(index + 1);
+        link.dataset.conversionSource = 'top3_snapshot';
+
+        const rank = document.createElement('span');
+        rank.className = 'top3-rank';
+        rank.textContent = String(index + 1);
+        link.appendChild(rank);
+
+        if (row.dataset.image) {
+          const img = document.createElement('img');
+          img.className = 'top3-img';
+          img.src = row.dataset.image;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.width = 50;
+          img.height = 50;
+          link.appendChild(img);
+        }
+
+        const copy = document.createElement('span');
+        copy.className = 'top3-copy';
+
+        const name = document.createElement('span');
+        name.className = 'top3-name';
+        name.textContent = row.dataset.itemName || '';
+        copy.appendChild(name);
+
+        const unit = document.createElement('span');
+        unit.className = 'top3-unit';
+        unit.textContent = formatYen(Number(row.dataset.rowUnitPrice || 0));
+        const small = document.createElement('small');
+        const metricLabel = sourceLink?.dataset.metric === 'per_liter' ? ' / 1L' : ' / 1枚';
+        small.textContent = metricLabel;
+        unit.appendChild(small);
+        copy.appendChild(unit);
+
+        const total = document.createElement('span');
+        total.className = 'top3-total';
+        total.textContent = '総額 ' + formatYen(Number(row.dataset.totalPrice || 0));
+        copy.appendChild(total);
+
+        link.appendChild(copy);
+        strip.appendChild(link);
+      });
+    }
+
+    const cheapest = topRows.length ? Number(topRows[0].dataset.rowUnitPrice || 0) : 0;
+    if (message) {
+      message.textContent = cheapest > 0 && median > 0
+        ? relativeLabel(cheapest, median)
+        : '比較できる商品がありません';
+    }
+    if (dot) {
+      let position = 50;
+      if (cheapest > 0 && median > 0) {
+        const diff = ((cheapest - median) / median) * 100;
+        position = Math.max(5, Math.min(95, 50 + diff * 1.25));
+      }
+      dot.style.left = position.toFixed(1) + '%';
+    }
+  }
+
+  function updateAngles(visibleRows) {
+    const grid = document.querySelector('[data-angle-grid]');
+    if (!grid || !visibleRows.length) return;
+
+    const picks = [
+      {
+        role: 'unit',
+        icon: '💰',
+        label: '単価最安',
+        row: [...visibleRows].sort((a, b) =>
+          Number(a.dataset.rowUnitPrice || 0) - Number(b.dataset.rowUnitPrice || 0)
+        )[0],
+        value: (row) => {
+          const sourceLink = row.querySelector('a[data-affiliate-link]');
+          const suffix = sourceLink?.dataset.metric === 'per_liter' ? ' / 1L' : ' / 1枚';
+          return formatYen(Number(row.dataset.rowUnitPrice || 0)) + suffix;
+        }
+      },
+      {
+        role: 'total',
+        icon: '🧾',
+        label: '支払総額が最小',
+        row: [...visibleRows].sort((a, b) =>
+          Number(a.dataset.totalPrice || 0) - Number(b.dataset.totalPrice || 0)
+        )[0],
+        value: (row) => formatYen(Number(row.dataset.totalPrice || 0))
+      },
+      {
+        role: 'bulk',
+        icon: '📦',
+        label: '最大容量',
+        row: [...visibleRows].sort((a, b) =>
+          Number(b.dataset.quantity || 0) - Number(a.dataset.quantity || 0)
+        )[0],
+        value: (row) => row.dataset.quantityEvidence || String(row.dataset.quantity || '')
+      }
+    ];
+
+    grid.innerHTML = '';
+    picks.forEach((pick) => {
+      const row = pick.row;
+      if (!row) return;
+      const sourceLink = row.querySelector('a[data-affiliate-link]');
+      const link = document.createElement('a');
+      link.className = 'angle-card';
+      link.href = row.dataset.url || '#';
+      link.target = '_blank';
+      link.rel = 'nofollow sponsored noopener';
+      link.dataset.angleCard = '1';
+      link.dataset.angleRole = pick.role;
+      link.dataset.affiliateLink = '1';
+      link.dataset.merchant = 'rakuten';
+      link.dataset.categoryId = document.body.dataset.categoryId || '';
+      link.dataset.metric = sourceLink?.dataset.metric || '';
+      link.dataset.itemId = row.dataset.itemId || '';
+      link.dataset.itemName = row.dataset.itemName || '';
+      link.dataset.unitPrice = row.dataset.rowUnitPrice || '0';
+      link.dataset.position = '0';
+      link.dataset.conversionSource = 'comparison_angle_' + pick.role;
+
+      const icon = document.createElement('span');
+      icon.className = 'angle-icon';
+      icon.textContent = pick.icon;
+      link.appendChild(icon);
+
+      const label = document.createElement('span');
+      label.className = 'angle-label';
+      label.textContent = pick.label;
+      link.appendChild(label);
+
+      const value = document.createElement('span');
+      value.className = 'angle-value';
+      value.textContent = pick.value(row);
+      link.appendChild(value);
+
+      const name = document.createElement('span');
+      name.className = 'angle-name';
+      name.textContent = row.dataset.itemName || '';
+      link.appendChild(name);
+
+      const cta = document.createElement('span');
+      cta.className = 'angle-cta';
+      cta.textContent = '楽天で確認 →';
+      link.appendChild(cta);
+
+      grid.appendChild(link);
+    });
+  }
+
+  function updateSummary(visibleRows, rankAll) {
+    const prices = visibleRows
+      .map((row) => Number(row.dataset.rowUnitPrice || 0))
+      .filter((x) => x > 0)
+      .sort((a, b) => a - b);
+
+    const countNode = document.querySelector('[data-stat-count]');
+    const minNode = document.querySelector('[data-stat-min]');
+    const medianNode = document.querySelector('[data-stat-median]');
+    const visibleNode = document.querySelector('[data-visible-count]');
+
+    if (countNode) countNode.textContent = String(visibleRows.length) + '件';
+    if (visibleNode) visibleNode.textContent = String(visibleRows.length) + '件';
+    if (minNode) minNode.textContent = prices.length ? formatYen(prices[0]) : '-';
+    const middle = prices.length ? prices[Math.floor(prices.length / 2)] : 0;
+    if (medianNode) medianNode.textContent = prices.length ? formatYen(middle) : '-';
+
+    visibleRows.forEach((row) => {
+      const node = row.querySelector('[data-price-diff]');
+      if (node) node.textContent = relativeLabel(Number(row.dataset.rowUnitPrice || 0), middle);
+    });
+
+    updateFeatured(
+      visibleRows[0],
+      rankAll ? '表示中の1位' : 'この条件の1位',
+      middle
+    );
+    updateSnapshot(visibleRows, middle);
+    updateAngles(visibleRows);
+  }
+
+  function applyGroupFilter(group) {
+    const container = document.querySelector('[data-group-filter]');
+    if (!container) return;
+    const rankAll = container.dataset.rankAll === '1';
+    let visibleRank = 0;
+    const visibleRows = [];
+
+    currentRows().forEach((row) => {
+      const visible = group === 'all' || row.dataset.group === group;
+      row.hidden = !visible;
+      const rank = row.querySelector('[data-rank-cell]');
+      const rankBadge = row.querySelector('[data-rank-badge]');
+      row.classList.remove('is-rank-1', 'is-rank-2', 'is-rank-3');
+      if (!visible) return;
+
+      visibleRows.push(row);
+      const visualRank = visibleRows.length;
+      if (visualRank <= 3) row.classList.add('is-rank-' + visualRank);
+      if (group === 'all' && !rankAll) {
+        if (rank) rank.textContent = '—';
+        if (rankBadge) rankBadge.textContent = '条件別';
+      } else {
+        visibleRank += 1;
+        if (rank) rank.textContent = String(visibleRank);
+        if (rankBadge) rankBadge.textContent = visibleRank === 1 ? '最安' : visibleRank + '位';
+      }
+    });
+
+    updateSummary(visibleRows, rankAll || group !== 'all');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const category = document.body.dataset.categoryId || '';
+    const activeButton = document.querySelector('[data-group-button][aria-pressed="true"]');
+    if (activeButton) applyGroupFilter(activeButton.dataset.group || 'all');
+
+    if (category) {
+      send('comparison_view', { category_id: category });
+      send('view_item_list', { item_list_id: category, item_list_name: category });
+    }
+
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-group-button]');
+      if (!button) return;
+      const container = button.closest('[data-group-filter]');
+      if (!container) return;
+
+      container.querySelectorAll('[data-group-button]').forEach((node) => {
+        const active = node === button;
+        node.setAttribute('aria-pressed', active ? 'true' : 'false');
+        node.classList.toggle('active', active);
+      });
+
+      const group = button.dataset.group || 'all';
+      applyGroupFilter(group);
+      send('comparison_filter', {
+        category_id: category,
+        filter_type: 'group',
+        filter_value: group
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-calc-button]');
+      if (!button) return;
+      const section = button.closest('.section');
+      const price = Number(section.querySelector('[data-calc-price]')?.value || 0);
+      const qty = Number(section.querySelector('[data-calc-qty]')?.value || 0);
+      const result = section.querySelector('[data-calc-result]');
+      if (!(price > 0) || !(qty > 0) || !result) return;
+
+      const unitPrice = price / qty;
+      const visible = currentRows()
+        .filter((row) => !row.hidden)
+        .map((row) => Number(row.dataset.rowUnitPrice || 0))
+        .filter((x) => x > 0);
+      const benchmark = visible.length ? Math.min(...visible) : 0;
+
+      let verdict = 'benchmark_unavailable';
+      let text = '入力価格は ' + formatYen(unitPrice) + ' / 単位です。';
+      if (benchmark > 0) {
+        const diff = ((unitPrice - benchmark) / benchmark) * 100;
+        if (diff <= -2) verdict = 'store_cheaper';
+        else if (diff >= 2) verdict = 'online_cheaper';
+        else verdict = 'roughly_same';
+
+        text += diff <= -2
+          ? ' 表示中の最安候補より約 ' + Math.abs(diff).toFixed(0) + '% 安い価格です。'
+          : diff >= 2
+            ? ' 表示中の最安候補より約 ' + diff.toFixed(0) + '% 高い価格です。'
+            : ' 表示中の最安候補とほぼ同水準です。';
+      }
+
+      result.textContent = text;
+      result.style.display = 'block';
+      const group = document.querySelector('[data-group-button][aria-pressed="true"]')?.dataset.group || 'all';
+
+      send('unit_calculator_use', {
+        category_id: category,
+        filter_value: group,
+        input_price: price,
+        input_quantity: qty,
+        calculated_unit_price: Number(unitPrice.toFixed(4)),
+        benchmark_unit_price: Number(benchmark.toFixed(4)),
+        comparison_result: verdict
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-affiliate-link]');
+      if (!link) return;
+      const data = {
+        merchant: link.dataset.merchant || 'rakuten',
+        category_id: link.dataset.categoryId || category,
+        item_id: link.dataset.itemId || '',
+        item_name: link.dataset.itemName || '',
+        unit_metric: link.dataset.metric || '',
+        unit_price: Number(link.dataset.unitPrice || 0),
+        position: Number(link.dataset.position || 0),
+        conversion_source: link.dataset.conversionSource || 'comparison_table'
+      };
+      send('affiliate_click', data);
+      send('product_result_click', data);
+      send('select_item', {
+        item_list_id: data.category_id,
+        item_list_name: data.category_id,
+        items: [{
+          item_id: data.item_id,
+          item_name: data.item_name,
+          index: data.position,
+          affiliation: data.merchant
+        }]
+      });
+    });
+  });
+})();
+</script><style>
+:root{--bg:#f5f8f6;--card:#fff;--text:#173126;--muted:#66776e;--line:#dce7e0;--accent:#197451;--accent-dark:#105c3f;--accent-soft:#e8f5ed;--cream:#fffaf0;--warn:#7b5c19;--shadow:0 10px 30px rgba(28,68,49,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}a{color:inherit}.wrap{width:min(1060px,calc(100% - 28px));margin:auto}
+.hero{padding:34px 0 28px;background:radial-gradient(circle at 90% 10%,#dff3e7 0,transparent 35%),linear-gradient(145deg,#fff,#eef8f2);border-bottom:1px solid var(--line)}.eyebrow{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--accent);box-shadow:0 3px 12px rgba(28,68,49,.04)}h1{font-size:clamp(30px,7vw,48px);line-height:1.16;letter-spacing:-.025em;margin:14px 0 10px}.lead{margin:0;max-width:760px;color:#3f564a;font-size:clamp(15px,3.8vw,18px)}.trust-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}.trust-pill{font-size:12px;font-weight:700;color:#496055;background:rgba(255,255,255,.85);border:1px solid var(--line);padding:6px 9px;border-radius:999px}.updated{font-size:12px;color:var(--muted);margin-top:12px}
+.topnav{background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}.topnav .wrap{display:flex;align-items:center;gap:8px;overflow:auto;padding:9px 0}.brand{font-weight:850;text-decoration:none;white-space:nowrap;margin-right:4px}.chip{white-space:nowrap;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:#fff;font-size:13px}.chip:hover,.chip:focus-visible{border-color:#a9caba;background:var(--accent-soft)}
+.main{padding:18px 0 54px}.section{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin:14px 0;box-shadow:0 4px 18px rgba(28,68,49,.035)}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}.section h2{margin:0;font-size:clamp(20px,5vw,25px);letter-spacing:-.015em}.section-sub{font-size:13px;color:var(--muted);margin:3px 0 0}
+.home-grid{display:grid;gap:12px}.category-card{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;text-decoration:none;box-shadow:var(--shadow);transition:transform .15s ease,border-color .15s ease}.category-card:hover{transform:translateY(-2px);border-color:#b9d6c7}.category-thumb{width:72px;height:72px;border-radius:15px;object-fit:contain;background:#f7faf8}.category-icon{width:72px;height:72px;border-radius:15px;background:var(--accent-soft);display:grid;place-items:center;font-size:34px}.card-kicker{display:block;font-size:11px;font-weight:800;color:var(--accent);margin-bottom:2px}.category-card strong{font-size:18px;line-height:1.35}.category-price{font-size:22px;font-weight:900;color:var(--accent-dark);margin-top:4px}.category-meta{color:var(--muted);font-size:12px;margin-top:2px}
+.steps{display:grid;gap:9px}.step{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:11px;border-radius:14px;background:#f8fbf9}.step-num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-weight:900;font-size:13px}.step b{display:block}.step span{font-size:13px;color:var(--muted)}
+.kpi{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.kpi-card{background:var(--accent-soft);border-radius:14px;padding:12px}.kpi-card span{display:block;font-size:11px;color:#557064;font-weight:700}.kpi-card b{display:block;font-size:21px;line-height:1.25;margin-top:3px}
+.filter-wrap{margin:4px -4px 14px;overflow:auto;padding:4px}.filters{display:flex;gap:8px;min-width:max-content}.filter-chip{appearance:none;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:999px;padding:9px 12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer}.filter-chip.active,.filter-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}.filter-chip:focus-visible{outline:3px solid #afd8c5;outline-offset:2px}
+.featured{display:grid;grid-template-columns:86px 1fr;gap:14px;align-items:center;background:linear-gradient(145deg,#eff9f3,#fff);border:1px solid #cfe6d8;border-radius:18px;padding:14px;margin:12px 0 17px}.featured-img{width:86px;height:86px;object-fit:contain;border-radius:13px;background:#fff;border:1px solid var(--line)}.featured-badge{display:inline-flex;background:var(--accent);color:#fff;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900}.featured-title{font-weight:800;line-height:1.42;margin:6px 0 2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.featured-shop{font-size:12px;color:var(--muted)}.featured-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:5px}.featured-unit{font-size:26px;font-weight:950;color:var(--accent-dark)}.featured-total{font-size:12px;color:var(--muted)}.featured-diff{font-size:12px;font-weight:850;color:var(--accent);margin-top:3px}.featured .btn{margin-top:9px}
+.table-wrap{overflow-x:auto}.compare{width:100%;border-collapse:collapse;min-width:760px}.compare th,.compare td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:left}.compare th{font-size:11px;color:var(--muted);position:sticky;top:50px;background:#fff;z-index:2}.compare tr:last-child td{border-bottom:0}.rank{font-weight:900;color:var(--accent);text-align:center!important;white-space:nowrap}.rank-badge{display:none}.product-image{width:64px;height:64px;object-fit:contain;border-radius:10px;border:1px solid var(--line);background:#fff}.product{min-width:260px}.product-title{font-weight:750;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.meta{font-size:11px;color:var(--muted);margin-top:4px}.condition-tag{display:inline-flex;align-items:center;background:#f0f5f2;color:#496055;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:800;margin-right:4px}.total{white-space:nowrap;font-weight:700}.unit{font-weight:900;font-size:18px;white-space:nowrap;color:var(--accent-dark)}.unit .meta{font-weight:500}.price-diff{font-size:10px;font-weight:750;color:var(--muted);margin-top:2px}.btn{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;background:var(--accent);color:#fff;padding:10px 13px;border-radius:11px;font-weight:850;font-size:13px;white-space:nowrap;border:0;cursor:pointer}.btn:hover{background:var(--accent-dark)}.btn.secondary{background:var(--text)}.shipping{font-size:10px;color:var(--muted);margin-top:4px}
+.guide-grid{display:grid;gap:8px}.guide-item{display:flex;gap:9px;align-items:flex-start;padding:10px 11px;background:#f8fbf9;border-radius:12px;font-size:13px}.guide-check{color:var(--accent);font-weight:900}.calculator{display:grid;gap:8px}.calc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.input{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:16px;color:var(--text)}.input:focus{outline:3px solid #d3eadf;border-color:#9fc8b4}.note{background:var(--cream);border:1px solid #f0dfb8;border-radius:12px;padding:12px;font-size:13px;color:#66542a}.method{font-size:14px;color:#485d51}.method-list{margin:8px 0 0;padding-left:20px}.faq{border-top:1px solid var(--line)}.faq details{border-bottom:1px solid var(--line);padding:11px 0}.faq summary{cursor:pointer;font-weight:800}.faq p{margin:7px 0 0;color:#53665c;font-size:13px}
+.footer{padding:6px 0 42px;color:var(--muted);font-size:12px}.footer-box{border-top:1px solid var(--line);padding-top:20px}.footer a{color:#395c4a}.rakuten-credit{margin-top:10px}.empty{padding:20px;text-align:center;color:var(--muted)}
+@media(min-width:720px){.home-grid{grid-template-columns:repeat(3,1fr)}.category-card{grid-template-columns:1fr}.category-thumb,.category-icon{width:100%;height:130px}.kpi{grid-template-columns:repeat(4,1fr)}.steps{grid-template-columns:repeat(3,1fr)}.featured{grid-template-columns:120px 1fr auto}.featured-img{width:120px;height:120px}.featured .btn{margin-top:0}.guide-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:719px){.brand{display:none}.section{padding:15px;border-radius:17px}.table-wrap{overflow:visible}.compare{min-width:0;display:block}.compare thead{display:none}.compare tbody{display:grid;gap:11px}.compare tr{display:grid;grid-template-columns:66px minmax(0,1fr);gap:5px 11px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 5px 18px rgba(28,68,49,.04)}.compare td{display:block;border:0;padding:0}.compare .rank{grid-column:1;grid-row:1;text-align:left!important}.rank-badge{display:inline-flex;background:var(--accent-soft);color:var(--accent-dark);border-radius:999px;padding:4px 8px;font-size:11px}.rank-number{display:none}.compare .image-cell{grid-column:1;grid-row:2/5}.product-image{width:66px;height:66px}.compare .product{grid-column:2;grid-row:1/3;min-width:0}.compare .total{grid-column:2;grid-row:3;font-size:12px;color:var(--muted)}.compare .unit{grid-column:2;grid-row:4}.compare .action{grid-column:1/-1;grid-row:5;margin-top:5px}.compare .action .btn{width:100%;padding:12px}.shipping{text-align:center}.featured{grid-template-columns:74px 1fr}.featured-img{width:74px;height:74px}.featured .featured-action{grid-column:1/-1}.featured .btn{width:100%}.calc-inputs{grid-template-columns:1fr}.category-card{grid-template-columns:62px 1fr}.category-thumb,.category-icon{width:62px;height:62px}.category-icon{font-size:29px}}
+
+/* Visual identity v3 */
+body{background:#f4f7f2;background-image:radial-gradient(circle at 12% 8%,rgba(255,206,102,.10) 0 90px,transparent 91px),radial-gradient(circle at 88% 18%,rgba(82,174,145,.09) 0 120px,transparent 121px)}
+.hero{position:relative;overflow:hidden;padding:34px 0 30px;background:linear-gradient(135deg,#f7fff9 0%,#eef9f3 44%,#fff8e8 100%)}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none}.hero:before{width:260px;height:260px;right:-90px;top:-120px;background:rgba(255,211,110,.18)}.hero:after{width:180px;height:180px;left:-80px;bottom:-110px;background:rgba(61,160,125,.10)}
+.hero-inner{position:relative;z-index:1;display:grid;gap:22px;align-items:center}.hero-copy{min-width:0}.hero-art-shell{position:relative;min-height:250px;border-radius:28px;background:linear-gradient(145deg,#ffffff 0%,#f8fff9 52%,#fff5d9 100%);border:1px solid rgba(44,111,82,.13);box-shadow:0 20px 50px rgba(28,68,49,.10);overflow:hidden;padding:10px}.hero-art-shell:before{content:"";position:absolute;inset:auto -30px -50px auto;width:170px;height:170px;border-radius:50%;background:rgba(255,201,74,.16)}.hero-art{display:block;width:100%;height:100%;min-height:230px}
+.hero-copy h1{max-width:650px}.hero-kicker{display:inline-flex;gap:7px;align-items:center;background:#173126;color:#fff;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:850;letter-spacing:.02em}.hero-kicker .dot{width:7px;height:7px;border-radius:50%;background:#ffd66e;box-shadow:0 0 0 4px rgba(255,214,110,.16)}
+.visual-section{background:transparent;border:0;box-shadow:none;padding:4px 0 8px}.visual-section .section-head{padding:0 2px 2px}
+.home-grid{gap:14px}.category-card{position:relative;overflow:hidden;border:0;min-height:220px;padding:0;grid-template-columns:1fr;align-content:start;box-shadow:0 16px 36px rgba(31,65,49,.09);transition:transform .2s ease,box-shadow .2s ease}.category-card:hover{transform:translateY(-4px);box-shadow:0 20px 44px rgba(31,65,49,.14)}.category-card.theme-sheet{background:linear-gradient(145deg,#dff6e9,#f6fffa)}.category-card.theme-litter{background:linear-gradient(145deg,#fff0cc,#fffaf0)}.category-card.theme-system{background:linear-gradient(145deg,#dff4f7,#f3fbfd)}.category-card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-35px;top:-42px;background:rgba(255,255,255,.46)}.category-visual{height:126px;padding:11px 14px 0;position:relative;z-index:1}.category-visual svg{width:100%;height:100%;display:block}.category-card-copy{padding:4px 16px 17px;position:relative;z-index:1}.category-card strong{font-size:19px}.category-price{font-size:27px;letter-spacing:-.02em}.category-price small{font-size:12px;font-weight:750}.category-arrow{position:absolute;right:15px;bottom:15px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(23,49,38,.90);color:#fff;font-weight:900}
+.price-ribbon{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900;background:#fff;color:#b06a00;box-shadow:0 5px 14px rgba(128,88,10,.08)}
+.steps{gap:12px}.step{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);padding:14px;border-radius:18px;box-shadow:0 8px 24px rgba(28,68,49,.045)}.step-illu{width:72px;height:56px;margin:-3px 0 6px}.step-illu svg{width:100%;height:100%}.step-num{position:absolute;right:11px;top:11px;background:#173126}
+.featured{position:relative;overflow:hidden;background:linear-gradient(135deg,#f2fff6 0%,#ffffff 64%,#fff5cf 100%);border:1px solid #c9e5d5;box-shadow:0 16px 34px rgba(28,68,49,.07);padding-top:18px}.featured:before{content:"BEST";position:absolute;right:-23px;top:13px;transform:rotate(38deg);background:#ffd76f;color:#745100;font-size:10px;font-weight:950;padding:5px 29px;letter-spacing:.08em}.featured-crown{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:10px;background:#ffd76f;margin-right:6px;vertical-align:middle;box-shadow:0 4px 12px rgba(160,112,0,.14)}.featured-badge{background:#173126}.featured-unit{font-size:30px}.featured-diff{display:inline-flex;margin-top:6px;border-radius:999px;padding:4px 8px;background:#e8f5ed;color:#126142}
+.category-hero .hero-art-shell{min-height:210px}.category-hero .hero-art{min-height:190px}.category-hero h1{font-size:clamp(30px,7vw,46px)}
+@media(min-width:760px){.hero-inner{grid-template-columns:minmax(0,1.05fr) minmax(330px,.75fr);gap:32px}.hero-art-shell{min-height:315px}.hero-art{min-height:295px}.category-hero .hero-art-shell{min-height:250px}.category-hero .hero-art{min-height:230px}.category-card{min-height:300px}.category-visual{height:165px}}
+@media(max-width:759px){.hero{padding-top:24px}.hero-inner{grid-template-columns:1fr}.hero-art-shell{min-height:220px;margin-top:3px}.hero-art{min-height:200px}.category-hero .hero-art-shell{min-height:185px}.category-hero .hero-art{min-height:165px}.category-card{min-height:206px}.category-visual{height:112px}.home-grid{grid-template-columns:1fr}.category-card-copy{padding-top:0}}
+
+/* Visual identity v4 */
+.photo-shell{padding:0;background:#fff;border-color:#eadfca;box-shadow:0 22px 56px rgba(54,73,61,.14)}
+.photo-shell:before{display:none}
+.hero-photo-wrap{position:relative;height:100%;min-height:250px;display:grid;place-items:center;overflow:hidden;border-radius:27px;background:#fff}
+.hero-photo{display:block;width:100%;height:100%;min-height:250px;object-fit:cover;object-position:center}
+.hero-photo-label{position:absolute;left:15px;bottom:14px;display:flex;align-items:center;gap:8px;background:rgba(23,49,38,.92);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 11px;box-shadow:0 7px 20px rgba(23,49,38,.18);backdrop-filter:blur(8px)}
+.hero-photo-label span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#ffd978}.hero-photo-label b{font-size:12px}
+.story-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#fff8e7,#fff 60%);border-color:#f0dfba}.story-section:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-65px;bottom:-72px;background:rgba(255,207,98,.15);pointer-events:none}
+.trust-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#edf9f2,#fff 64%);border-color:#d6ebdf}.trust-section:after{content:"";position:absolute;right:16px;top:14px;width:70px;height:70px;opacity:.09;background:radial-gradient(circle at 25% 25%,#237a57 0 8px,transparent 9px),radial-gradient(circle at 75% 25%,#237a57 0 8px,transparent 9px),radial-gradient(circle at 50% 72%,#237a57 0 18px,transparent 19px)}
+.store-section{background:linear-gradient(135deg,#eef8fb,#fff 62%);border-color:#d7ebef}
+.visual-section .section-sub{max-width:620px}
+.category-card-copy strong{display:block;margin-top:9px}
+@media(min-width:760px){.photo-shell,.hero-photo-wrap,.hero-photo{min-height:330px}.hero-photo{object-fit:cover}.story-section,.trust-section,.store-section{padding:24px}}
+@media(max-width:759px){.photo-shell,.hero-photo-wrap,.hero-photo{min-height:220px}.hero-photo{object-fit:cover}.hero-photo-label{left:10px;bottom:10px;padding:6px 9px}.hero-photo-label b{font-size:11px}}
+
+/* Comparison snapshot v5 */
+.snapshot-section{background:linear-gradient(135deg,#173126 0%,#214c39 58%,#2d6b4f 100%);color:#fff;border:0;box-shadow:0 18px 42px rgba(23,49,38,.16);overflow:hidden;position:relative}
+.snapshot-section:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-90px;top:-110px;background:rgba(255,215,111,.10)}
+.snapshot-section .section-sub{color:rgba(255,255,255,.72)}.snapshot-section h2{color:#fff}
+.deal-meter{position:relative;z-index:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:14px;margin-bottom:13px;backdrop-filter:blur(6px)}
+.deal-meter-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.deal-meter-head span{font-size:12px;color:rgba(255,255,255,.74);font-weight:750}.deal-meter-head b{font-size:15px;color:#ffe08a;text-align:right}
+.deal-track{height:12px;border-radius:999px;background:linear-gradient(90deg,#6dd0a4 0%,#dbe8df 50%,#ffc978 100%);position:relative;margin:13px 0 5px;box-shadow:inset 0 1px 2px rgba(0,0,0,.16)}
+.deal-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#fff;border:5px solid #ffd76f;box-shadow:0 4px 12px rgba(0,0,0,.22);transform:translate(-50%,-50%);left:50%;transition:left .22s ease}
+.deal-scale{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.65)}
+.top3-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;position:relative;z-index:1}.top3-card{display:flex;gap:10px;align-items:center;min-width:0;background:#fff;color:var(--text);border-radius:16px;padding:10px;text-decoration:none;box-shadow:0 9px 22px rgba(0,0,0,.12);transition:transform .16s ease}.top3-card:hover{transform:translateY(-2px)}
+.top3-rank{width:28px;height:28px;flex:0 0 28px;border-radius:9px;display:grid;place-items:center;background:#173126;color:#fff;font-weight:950;font-size:12px}.top3-card:first-child .top3-rank{background:#ffd76f;color:#694d00}
+.top3-img{width:50px;height:50px;flex:0 0 50px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--line)}.top3-copy{min-width:0}.top3-name{font-size:11px;font-weight:800;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top3-unit{font-size:18px;font-weight:950;color:var(--accent-dark);line-height:1.2}.top3-total{font-size:10px;color:var(--muted)}
+.snapshot-note{position:relative;z-index:1;margin-top:10px;font-size:11px;color:rgba(255,255,255,.66)}
+@media(max-width:759px){.snapshot-section{padding:15px}.top3-strip{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 5px}.top3-card{min-width:82%;scroll-snap-align:start}.deal-meter-head{align-items:flex-start;flex-direction:column;gap:3px}.deal-meter-head b{text-align:left}}
+
+/* Objective comparison angles v6 */
+.angle-panel{margin:14px 0 16px;padding:15px;border-radius:18px;background:linear-gradient(135deg,#fffaf0,#fff 60%);border:1px solid #f0dfbd}
+.angle-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:10px}.angle-head h3{margin:0;font-size:17px}.angle-head p{margin:2px 0 0;font-size:11px;color:var(--muted)}
+.angle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.angle-card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:158px;padding:13px;border-radius:15px;background:#fff;border:1px solid var(--line);text-decoration:none;box-shadow:0 7px 20px rgba(28,68,49,.045);transition:transform .16s ease,border-color .16s ease}.angle-card:hover{transform:translateY(-2px);border-color:#b9d6c7}
+.angle-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:21px;margin-bottom:8px}.angle-card[data-angle-role="unit"] .angle-icon{background:#e5f5eb}.angle-card[data-angle-role="total"] .angle-icon{background:#fff0ca}.angle-card[data-angle-role="bulk"] .angle-icon{background:#e4f3f7}
+.angle-label{font-size:11px;font-weight:900;color:#5a6b62}.angle-value{font-size:22px;font-weight:950;color:var(--accent-dark);line-height:1.15;margin-top:2px}.angle-name{font-size:11px;line-height:1.35;color:#53665c;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.angle-cta{margin-top:auto;padding-top:8px;font-size:11px;font-weight:850;color:var(--accent)}
+.angle-note{font-size:10px;color:var(--muted);margin-top:8px}
+@media(max-width:759px){.angle-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.angle-card{min-width:74%;scroll-snap-align:start}.angle-head{align-items:flex-start;flex-direction:column;gap:2px}}
+
+/* Brand system v7 */
+body{--theme:#197451;--theme-dark:#105c3f;--theme-soft:#e8f5ed;--theme-wash:#f2faf5}
+body[data-category-id="pet-sheets"]{--theme:#27845f;--theme-dark:#176548;--theme-soft:#dff6e9;--theme-wash:#f3fbf6}
+body[data-category-id="cat-litter"]{--theme:#ad7b27;--theme-dark:#805817;--theme-soft:#fff0cc;--theme-wash:#fffaf0}
+body[data-category-id="system-toilet-sheets"]{--theme:#438f9c;--theme-dark:#286d78;--theme-soft:#dff4f7;--theme-wash:#f2fafc}
+body[data-category-id] .hero.category-hero{background:radial-gradient(circle at 88% 12%,var(--theme-soft) 0,transparent 34%),linear-gradient(145deg,#fff,var(--theme-wash))}
+body[data-category-id] .hero-kicker{background:var(--theme-dark)}
+body[data-category-id] .filter-chip.active,body[data-category-id] .filter-chip[aria-pressed="true"]{background:var(--theme);border-color:var(--theme)}
+body[data-category-id] .btn{background:var(--theme)}body[data-category-id] .btn:hover{background:var(--theme-dark)}
+body[data-category-id] .unit,body[data-category-id] .featured-unit,body[data-category-id] .top3-unit,body[data-category-id] .angle-value{color:var(--theme-dark)}
+body[data-category-id] .featured-diff{background:var(--theme-soft);color:var(--theme-dark)}
+body[data-category-id] .kpi-card{background:var(--theme-soft)}
+body[data-category-id] .condition-tag{background:var(--theme-soft);color:var(--theme-dark)}
+body[data-category-id] .rank{color:var(--theme)}
+body[data-category-id] .rank-badge{background:var(--theme-soft);color:var(--theme-dark)}
+.brand{display:flex;align-items:center;gap:8px}.brand-mark{width:29px;height:29px;border-radius:10px;background:#173126;display:grid;place-items:center;box-shadow:0 5px 13px rgba(23,49,38,.14);position:relative;flex:0 0 29px}.brand-mark:before{content:"";width:14px;height:11px;border-radius:50% 50% 45% 45%;background:#ffd76f;transform:translateY(3px)}.brand-mark:after{content:"";position:absolute;top:5px;left:6px;width:5px;height:5px;border-radius:50%;background:#ffd76f;box-shadow:7px -1px 0 #ffd76f,3.5px -4px 0 -1px #ffd76f}
+.brand-name{font-weight:950;letter-spacing:-.03em}.brand-name small{display:block;font-size:8px;letter-spacing:.08em;color:var(--muted);line-height:1;margin-top:1px}
+.chip{transition:background .16s ease,border-color .16s ease,transform .16s ease}.chip:hover{transform:translateY(-1px)}.chip.current{background:#173126;border-color:#173126;color:#fff;box-shadow:0 5px 14px rgba(23,49,38,.12)}
+.section-head h2{display:flex;align-items:center;gap:9px}.section-head h2:before{content:"";width:24px;height:24px;flex:0 0 24px;border-radius:9px;background:
+radial-gradient(circle at 50% 65%,var(--theme) 0 5px,transparent 5.8px),
+radial-gradient(circle at 24% 31%,var(--theme) 0 3px,transparent 3.8px),
+radial-gradient(circle at 48% 20%,var(--theme) 0 3px,transparent 3.8px),
+radial-gradient(circle at 73% 31%,var(--theme) 0 3px,transparent 3.8px),
+var(--theme-soft);opacity:.95}
+.visual-section .section-head h2:before{background:
+radial-gradient(circle at 50% 65%,#197451 0 5px,transparent 5.8px),
+radial-gradient(circle at 24% 31%,#197451 0 3px,transparent 3.8px),
+radial-gradient(circle at 48% 20%,#197451 0 3px,transparent 3.8px),
+radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
+#e8f5ed}
+.section{position:relative}.section:not(.snapshot-section):not(.visual-section){overflow:hidden}.section:not(.snapshot-section):not(.visual-section):after{content:"";position:absolute;right:-38px;bottom:-44px;width:100px;height:100px;border-radius:50%;background:var(--theme-soft);opacity:.22;pointer-events:none}
+.top3-strip{align-items:stretch}.top3-card:first-child{transform:translateY(-5px);border:2px solid #f0c75d;box-shadow:0 14px 28px rgba(0,0,0,.16)}.top3-card:first-child:hover{transform:translateY(-7px)}.top3-card:first-child .top3-rank:after{content:"♛";position:absolute;transform:translate(12px,-13px);font-size:13px;color:#ffca4b;text-shadow:0 1px 0 #6d5200}.top3-rank{position:relative}
+.featured{border-left:5px solid var(--theme)}.featured:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;left:-42px;bottom:-48px;background:var(--theme-soft);opacity:.5}
+.angle-card{border-top:4px solid transparent}.angle-card[data-angle-role="unit"]{border-top-color:#55ad83}.angle-card[data-angle-role="total"]{border-top-color:#e2b94f}.angle-card[data-angle-role="bulk"]{border-top-color:#69adba}
+.footer{position:relative;padding-top:18px}.footer-brand{display:flex;align-items:center;gap:11px;margin-bottom:13px}.footer-brand .brand-mark{width:36px;height:36px;flex-basis:36px}.footer-brand strong{display:block;font-size:14px;color:var(--text)}.footer-brand span{font-size:11px;color:var(--muted)}
+.mobile-dock{display:none}
+@media(max-width:719px){
+  body{padding-bottom:72px}.topnav .wrap{padding:8px 0}.chip{font-size:12px;padding:7px 9px}
+  .mobile-dock{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;z-index:30;left:10px;right:10px;bottom:max(8px,env(safe-area-inset-bottom));background:rgba(255,255,255,.94);border:1px solid rgba(205,222,212,.9);border-radius:18px;box-shadow:0 12px 34px rgba(23,49,38,.18);backdrop-filter:blur(14px);padding:6px}
+  .dock-link{display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;min-height:49px;border-radius:12px;font-size:9px;font-weight:850;color:#66776e;line-height:1.15;gap:2px}.dock-link .dock-icon{font-size:18px;line-height:1}.dock-link.current{background:var(--theme-soft);color:var(--theme-dark)}
+  .top3-card:first-child{transform:none}.top3-card:first-child:hover{transform:none}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Product cards v8 */
+.product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.shop-card{position:relative;display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-areas:"image head" "image price" "meta meta" "action action";gap:8px 12px;background:#fff;border:1px solid var(--line);border-radius:19px;padding:13px;box-shadow:0 8px 24px rgba(28,68,49,.055);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.shop-card:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(28,68,49,.10);border-color:#bdd6c8}.shop-card[hidden]{display:none!important}
+.shop-card.is-rank-1{border:2px solid #eac45a;background:linear-gradient(145deg,#fffdf5,#fff 48%)}.shop-card.is-rank-2{border-color:#cfd8d3}.shop-card.is-rank-3{border-color:#dfc6ae}
+.shop-card.is-rank-1:before{content:"BEST";position:absolute;right:-23px;top:12px;transform:rotate(40deg);background:#ffd76f;color:#6b4d00;font-size:9px;font-weight:950;padding:4px 29px;letter-spacing:.08em}
+.shop-card-image-wrap{grid-area:image;position:relative;align-self:start}.shop-card-image{width:92px;height:92px;object-fit:contain;border-radius:14px;background:#fff;border:1px solid var(--line)}
+.shop-card-rank{position:absolute;left:-5px;top:-5px;min-width:31px;height:31px;padding:0 7px;border-radius:10px;display:grid;place-items:center;background:#173126;color:#fff;font-size:12px;font-weight:950;box-shadow:0 5px 12px rgba(23,49,38,.19)}.shop-card.is-rank-1 .shop-card-rank{background:#ffd76f;color:#684c00}
+.shop-card-head{grid-area:head;min-width:0}.shop-card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}.shop-card-title{font-size:13px;font-weight:850;line-height:1.38;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.shop-card-shop{font-size:10px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shop-card-prices{grid-area:price;display:flex;align-items:end;justify-content:space-between;gap:9px}.shop-unit-wrap{min-width:0}.shop-unit-label{font-size:10px;font-weight:800;color:var(--muted)}.shop-unit{font-size:25px;font-weight:950;line-height:1;color:var(--theme-dark)}.shop-unit small{font-size:10px;font-weight:750;color:var(--muted)}.shop-total{text-align:right}.shop-total span{display:block;font-size:9px;color:var(--muted)}.shop-total b{font-size:14px}
+.shop-card-meta{grid-area:meta;display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px dashed var(--line);padding-top:8px}.shop-card-meta .price-diff{font-size:11px;color:var(--theme-dark);font-weight:850}.shop-card-meta .shipping{margin:0}
+.shop-card-action{grid-area:action}.shop-card-action .btn{width:100%;padding:11px 13px;border-radius:12px}.shop-card-action .btn:after{content:"↗";margin-left:5px;font-size:12px}
+.product-empty{grid-column:1/-1;padding:28px;text-align:center;color:var(--muted);background:#f8fbf9;border-radius:16px}
+@media(max-width:759px){.product-grid{grid-template-columns:1fr}.shop-card{grid-template-columns:82px minmax(0,1fr);padding:12px}.shop-card-image{width:82px;height:82px}.shop-unit{font-size:23px}.shop-card-title{font-size:13px}}
+</style></head><body data-category-id="" class="page-home"><header class="hero"><div class="wrap hero-inner">
+      <div class="hero-copy">
+        <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
+        <h1>ペット用品の<br>「ほんとの安さ」を、<br>ひと目で。</h1>
+        <p class="lead">袋の値段ではなく、1枚・1Lなど同じ単位にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
+        <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
+        <p class="updated">最終更新 2026-09-30 19:20 JST</p>
+      </div>
+      <div class="hero-art-shell photo-shell"><div class="hero-photo-wrap">
+      <img class="hero-photo" src="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"
+        alt="犬と猫、ペットシーツ・猫砂・システムトイレ用品を天秤で比較するイメージ"
+        width="480" height="320" fetchpriority="high">
+      <div class="hero-photo-label"><span>PRICE CHECK</span><b>同じ単位で比較</b></div>
+    </div></div>
+    </div></header>
+    <div class="topnav"><div class="wrap">
+      <a class="brand" href="https://stusaurus.github.io/pet-cost-jp/"><span class="brand-mark" aria-hidden="true"></span><span class="brand-name">ペット用品コスパ比較<small>PET COST CHECK</small></span></a>
+      <a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">🐶 ペットシーツ</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">🐱 猫砂</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">🧻 猫用システムトイレシート</a>
+    </div></div>
+    <main class="main"><div class="wrap">
+      <section class="section visual-section">
+        <div class="section-head"><div><h2>いま比較できるもの</h2><p class="section-sub">最初は消耗品に絞って、比較精度を優先しています。</p></div></div>
+        <div class="home-grid"><a class="category-card theme-sheet" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">
+              <div class="category-visual"><svg viewBox="0 0 300 150" role="img" aria-label="ペットシーツのイラスト"><ellipse cx="151" cy="131" rx="112" ry="10" fill="#bddfca" opacity=".45"/><rect x="66" y="72" width="170" height="58" rx="16" fill="#fff" stroke="#93c9ac" stroke-width="3"/><path d="M88 91h126M88 106h98" stroke="#d7ebe0" stroke-width="7" stroke-linecap="round"/><g transform="translate(104 16)"><circle cx="47" cy="42" r="35" fill="#e9b17f"/><path d="M18 22 6 2l31 13M76 22 89 2 59 14" fill="#b8754a"/><circle cx="35" cy="38" r="4" fill="#173126"/><circle cx="59" cy="38" r="4" fill="#173126"/><ellipse cx="47" cy="49" rx="5" ry="4" fill="#173126"/></g><circle cx="236" cy="54" r="27" fill="#ffcf62"/><path d="m236 35 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="#fff5d6"/></svg></div>
+              <div class="category-card-copy">
+                <span class="price-ribbon">👑 レギュラーの現在最安</span>
+                <strong>ペットシーツ</strong>
+                <div class="category-price">¥4.10<small> / 1枚</small></div>
+                <div class="category-meta">掲載 23件・条件別に比較</div>
+              </div>
+              <span class="category-arrow" aria-hidden="true">→</span>
+            </a><a class="category-card theme-litter" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">
+              <div class="category-visual"><svg viewBox="0 0 300 150" role="img" aria-label="猫砂のイラスト"><ellipse cx="151" cy="132" rx="105" ry="10" fill="#e8d7ad" opacity=".55"/><path d="M68 79q0-22 22-22h123q22 0 22 22v38H68z" fill="#fff" stroke="#d8bd78" stroke-width="3"/><path d="M83 84h137l-10 31H93z" fill="#ead7aa"/><g fill="#c6a85d"><circle cx="107" cy="96" r="4"/><circle cx="128" cy="105" r="4"/><circle cx="153" cy="94" r="4"/><circle cx="180" cy="105" r="4"/><circle cx="201" cy="96" r="4"/></g><g transform="translate(112 12)"><circle cx="40" cy="40" r="34" fill="#9eb8be"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#708e97"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><rect x="218" y="37" width="48" height="28" rx="8" fill="#ffce62"/><text x="232" y="56" font-size="15" font-family="sans-serif" font-weight="900" fill="#6d5200">1L</text></svg></div>
+              <div class="category-card-copy">
+                <span class="price-ribbon">👑 すべての現在最安</span>
+                <strong>猫砂</strong>
+                <div class="category-price">¥59.5<small> / 1L</small></div>
+                <div class="category-meta">掲載 30件・条件別に比較</div>
+              </div>
+              <span class="category-arrow" aria-hidden="true">→</span>
+            </a><a class="category-card theme-system" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">
+              <div class="category-visual"><svg viewBox="0 0 300 150" role="img" aria-label="システムトイレシートのイラスト"><ellipse cx="150" cy="132" rx="106" ry="10" fill="#bcdde3" opacity=".55"/><rect x="65" y="66" width="170" height="62" rx="18" fill="#fff" stroke="#8cc7d0" stroke-width="3"/><rect x="78" y="83" width="144" height="29" rx="9" fill="#dff3f6"/><path d="M93 97h113" stroke="#9ed5dc" stroke-width="5" stroke-linecap="round"/><g transform="translate(112 9)"><circle cx="40" cy="40" r="34" fill="#98b6bd"/><path d="M13 20 17 0l20 15M67 20 64 0 44 15" fill="#6e8e96"/><circle cx="29" cy="37" r="4" fill="#173126"/><circle cx="52" cy="37" r="4" fill="#173126"/><path d="m40 46-5 4h10z" fill="#e59a95"/></g><circle cx="238" cy="52" r="27" fill="#5db7c4"/><path d="m226 53 8 8 16-19" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div class="category-card-copy">
+                <span class="price-ribbon">👑 デオトイレ系の現在最安</span>
+                <strong>猫用システムトイレシート</strong>
+                <div class="category-price">¥87.5<small> / 1枚</small></div>
+                <div class="category-meta">掲載 10件・条件別に比較</div>
+              </div>
+              <span class="category-arrow" aria-hidden="true">→</span>
+            </a></div>
+      </section>
+
+      <section class="section story-section">
+        <div class="section-head"><div><h2>使い方は3ステップ</h2></div></div>
+        <div class="steps">
+          <div class="step"><div class="step-illu"><svg viewBox="0 0 100 70"><rect x="9" y="11" width="30" height="45" rx="8" fill="#dff3e7"/><rect x="35" y="19" width="26" height="37" rx="7" fill="#ffe7ad"/><rect x="58" y="8" width="32" height="48" rx="8" fill="#dff2f5"/><circle cx="24" cy="34" r="7" fill="#237a57"/><circle cx="48" cy="37" r="6" fill="#d59b35"/><circle cx="74" cy="32" r="7" fill="#56aeb8"/></svg></div><div class="step-num">1</div><div><b>用品を選ぶ</b><span>ペットシーツ・猫砂・システムトイレシートから選択。</span></div></div>
+          <div class="step"><div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="15" width="76" height="42" rx="11" fill="#fff" stroke="#cfe2d7" stroke-width="3"/><path d="M28 27h45M28 37h34M28 47h51" stroke="#237a57" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="27" r="4" fill="#ffd064"/><circle cx="18" cy="37" r="4" fill="#ffd064"/><circle cx="18" cy="47" r="4" fill="#ffd064"/></svg></div><div class="step-num">2</div><div><b>条件をそろえる</b><span>サイズ・素材・互換性を選び、同じ条件だけを見る。</span></div></div>
+          <div class="step"><div class="step-illu"><svg viewBox="0 0 100 70"><rect x="12" y="18" width="76" height="38" rx="10" fill="#173126"/><path d="M29 44V34M45 44V27M61 44V22M77 44V16" stroke="#74caa5" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="22" r="12" fill="#ffd064"/><path d="M16 22h8M20 18v8" stroke="#725400" stroke-width="3" stroke-linecap="round"/></svg></div><div class="step-num">3</div><div><b>単価と総額を見る</b><span>最安単価だけでなく、実際に払う総額も一緒に確認。</span></div></div>
+        </div>
+      </section>
+
+      <section class="section trust-section">
+        <div class="section-head"><div><h2>「安い」を雑に作らない</h2><p class="section-sub">件数より、間違った1位を出さないことを優先します。</p></div></div>
+        <div class="guide-grid">
+          <div class="guide-item"><span class="guide-check">✓</span><span>選択式で数量が確定しない商品は除外します。</span></div>
+          <div class="guide-item"><span class="guide-check">✓</span><span>別カテゴリ・中古・訳あり・定期便などはランキング対象外です。</span></div>
+          <div class="guide-item"><span class="guide-check">✓</span><span>毎回の更新後に単価・分類・URL・重複を自動監査してから公開します。</span></div>
+        </div>
+      </section>
+
+      <section class="section store-section">
+        <div class="section-head"><div><h2>店頭でも使える</h2></div></div>
+        <p class="method">各比較ページには単価計算機があります。ホームセンターで「これ安い？」と思ったとき、価格と枚数・容量を入れれば、現在の楽天候補と同じ単位で比べられます。</p>
+      </section>
+    </div></main>
+    <footer class="footer"><div class="wrap footer-box">
+      <div class="footer-brand"><span class="brand-mark" aria-hidden="true"></span><div><strong>ペット用品コスパ比較</strong><span>同じ単位で、迷わず比べる。</span></div></div>
+      <div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div>
+      <div class="rakuten-credit">
+        <!-- Rakuten Web Services Attribution Snippet FROM HERE -->
+        <a href="https://developers.rakuten.com/" target="_blank">Supported by Rakuten Developers</a>
+        <!-- Rakuten Web Services Attribution Snippet TO HERE -->
+      </div>
+    </div></footer>
+    <nav class="mobile-dock" aria-label="モバイルナビ"><a class="dock-link current" href="https://stusaurus.github.io/pet-cost-jp/"><span class="dock-icon">⌂</span><span>トップ</span></a><a class="dock-link" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/"><span class="dock-icon">🐶</span><span>ペットシーツ</span></a><a class="dock-link" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"><span class="dock-icon">🐱</span><span>猫砂</span></a><a class="dock-link" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/"><span class="dock-icon">🧻</span><span>システムトイレシート</span></a></nav></body></html>
