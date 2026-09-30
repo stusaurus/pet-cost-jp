@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30 20:29 JST",
+  "updated": "2026-09-30 20:59 JST",
   "category": {
     "id": "cat-litter",
     "name": "猫砂",
@@ -239,7 +239,7 @@
       "shop": "ホームセンターバロー 楽天市場店",
       "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/hcvalor-eshop/cabinet/475set/vh-2133902800008.jpg?_ex=128x128",
       "review_average": 4.82,
-      "review_count": 430,
+      "review_count": 431,
       "postage_flag": 0,
       "product_id": "270c4018b6a4",
       "category_id": "cat-litter",
@@ -613,23 +613,23 @@
       "unit_price": 106.4643
     },
     {
-      "name": "ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便",
-      "price": 748,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F65529%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10831908%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "charm 楽天市場店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128",
-      "review_average": 0.0,
-      "review_count": 0,
-      "postage_flag": 1,
-      "product_id": "d19d0f8454eb",
+      "name": "猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品",
+      "price": 2981,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "Pet館〜ペット館〜",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128",
+      "review_average": 3.31,
+      "review_count": 13,
+      "postage_flag": 0,
+      "product_id": "896700596acc",
       "category_id": "cat-litter",
       "metric": "per_liter",
       "metric_label": "1L",
-      "quantity": 7.0,
-      "quantity_evidence": "7l",
-      "confidence": 0.9,
-      "group": "paper",
-      "unit_price": 106.8571
+      "quantity": 28.0,
+      "quantity_evidence": "7lx4袋",
+      "confidence": 0.99,
+      "group": "mineral",
+      "unit_price": 106.4643
     }
   ]
 }

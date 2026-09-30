@@ -529,6 +529,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-editorial-category]');
+      if (!link) return;
+      send('homepage_editorial_click', {
+        category_id: link.dataset.editorialCategory || '',
+        editorial_position: Number(link.dataset.editorialPosition || 0),
+        conversion_source: 'homepage_editorial'
+      });
+    });
+
+    document.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-spotlight-link]');
       if (!link) return;
       send('daily_spotlight_click', {
@@ -868,6 +878,32 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .sticky-cell{padding:8px 8px}.sticky-label{font-size:7px}.sticky-value{font-size:10px}.sticky-price .sticky-value{font-size:17px}.sticky-gap{display:none}.sticky-count .sticky-value{font-size:12px}
   .sticky-jump{min-width:49px;padding:0 8px;font-size:0}.sticky-jump:after{content:"↓";margin:0;font-size:16px}
 }
+
+/* Editorial homepage v17 */
+.editorial-section{position:relative;overflow:hidden;padding:24px;border-radius:30px;background:#f7f3e9;border:1px solid #e9dfc9;box-shadow:0 20px 48px rgba(77,58,20,.08)}
+.editorial-section:before{content:"PET COST JOURNAL";position:absolute;right:-8px;top:12px;font-size:10px;font-weight:950;letter-spacing:.18em;color:rgba(91,71,30,.22);transform:rotate(1deg)}
+.editorial-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;padding-bottom:13px;border-bottom:2px solid #173126}
+.editorial-head h2{margin:0;font-size:clamp(28px,5vw,36px);letter-spacing:-.04em}.editorial-head h2:before{display:none}
+.editorial-head-copy{max-width:610px}.editorial-eyebrow{display:block;margin-bottom:4px;font-size:9px;font-weight:950;letter-spacing:.16em;color:#8d6d2d}.editorial-date{flex:0 0 auto;text-align:right;font-size:9px;font-weight:850;color:#7d7464;line-height:1.5}
+.editorial-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.85fr);gap:14px}
+.editorial-lead{position:relative;min-height:360px;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.9fr);align-items:stretch;overflow:hidden;text-decoration:none;color:#173126;border-radius:24px;border:1px solid color-mix(in srgb,var(--theme) 20%,#e4ddd0);background:linear-gradient(145deg,#fff,var(--theme-wash));box-shadow:0 18px 42px rgba(23,49,38,.10)}
+.editorial-lead-copy{position:relative;z-index:2;padding:28px 10px 26px 27px;display:flex;flex-direction:column;justify-content:center}
+.editorial-index{display:inline-flex;width:max-content;border:1px solid currentColor;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950;letter-spacing:.12em;color:var(--theme-dark)}
+.editorial-lead h3{margin:13px 0 5px;font-size:clamp(31px,5vw,45px);line-height:1.02;letter-spacing:-.055em}.editorial-lead-sub{font-size:12px;font-weight:800;color:#5f7168}
+.editorial-price-block{margin-top:22px}.editorial-price-caption{display:block;font-size:9px;font-weight:900;color:#6f7b74}.editorial-price{display:block;margin-top:2px;font-size:clamp(38px,6vw,54px);font-weight:950;line-height:.95;letter-spacing:-.06em;color:var(--theme-dark)}.editorial-price small{font-size:12px;letter-spacing:0}
+.editorial-gap{display:inline-flex;width:max-content;margin-top:10px;border-radius:999px;padding:6px 9px;background:#173126;color:#fff;font-size:10px;font-weight:900}.editorial-gap b{color:#ffd66e;margin-right:3px}
+.editorial-lead-art{position:relative;display:grid;place-items:center;min-width:0;padding:22px;background:radial-gradient(circle at 52% 44%,rgba(255,255,255,.95),rgba(255,255,255,.3) 47%,transparent 68%)}.editorial-lead-art svg{width:100%;height:auto;max-height:260px}.editorial-lead-art:after{content:"TODAY'S FEATURE";position:absolute;right:12px;bottom:11px;font-size:8px;font-weight:950;letter-spacing:.14em;color:color-mix(in srgb,var(--theme-dark) 55%,transparent)}
+.editorial-arrow{position:absolute;right:18px;top:18px;z-index:4;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#173126;color:#fff;font-size:19px;box-shadow:0 8px 18px rgba(23,49,38,.16);transition:transform .18s ease}.editorial-lead:hover .editorial-arrow{transform:translate(3px,-2px)}
+.editorial-side{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}.editorial-side-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 105px;align-items:center;overflow:hidden;text-decoration:none;color:#173126;border-radius:21px;border:1px solid color-mix(in srgb,var(--theme) 18%,#e7dfcf);background:linear-gradient(145deg,#fff,var(--theme-wash));padding:17px;box-shadow:0 12px 28px rgba(23,49,38,.07);transition:transform .18s ease,box-shadow .18s ease}.editorial-side-card:hover{transform:translateY(-3px);box-shadow:0 17px 34px rgba(23,49,38,.11)}
+.editorial-side-card h3{margin:6px 0 5px;font-size:19px;line-height:1.1;letter-spacing:-.035em}.editorial-side-price{font-size:27px;font-weight:950;line-height:1;letter-spacing:-.045em;color:var(--theme-dark)}.editorial-side-price small{font-size:9px;letter-spacing:0}.editorial-side-meta{margin-top:7px;font-size:9px;font-weight:800;color:#6d796f}.editorial-side-art{height:105px;display:grid;place-items:center}.editorial-side-art svg{width:115px;max-width:100%;height:100%}
+.editorial-folio{position:absolute;right:10px;top:8px;font-size:8px;font-weight:950;letter-spacing:.1em;color:rgba(23,49,38,.38)}
+.editorial-footerline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px;padding-top:11px;border-top:1px solid #dfd5c2;font-size:9px;color:#796f5f}.editorial-footerline strong{color:#173126}
+@media(max-width:759px){
+  .editorial-section{padding:16px;border-radius:22px}.editorial-section:before{font-size:7px;right:4px}.editorial-head{align-items:flex-start}.editorial-date{display:none}
+  .editorial-grid{grid-template-columns:1fr}.editorial-lead{min-height:0;grid-template-columns:1fr 126px}.editorial-lead-copy{padding:20px 4px 19px 18px}.editorial-lead h3{font-size:29px}.editorial-lead-art{padding:8px}.editorial-lead-art svg{max-height:170px}.editorial-price{font-size:38px}.editorial-price-block{margin-top:16px}.editorial-arrow{width:34px;height:34px;right:9px;top:9px}
+  .editorial-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.editorial-side-card{display:block;padding:13px;min-height:190px}.editorial-side-card h3{font-size:15px;padding-right:14px}.editorial-side-price{font-size:24px}.editorial-side-art{height:83px;margin-top:4px}.editorial-side-art svg{width:100%;height:100%}.editorial-side-meta{font-size:8px}
+  .editorial-footerline{display:block;line-height:1.6}
+}
 </style></head><body data-category-id="" class="page-home"><header class="hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>毎日更新・登録不要</span>
@@ -875,7 +911,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
         <p class="lead">袋の値段ではなく、<span class="hero-lead-mark">1枚・1Lなど同じ単位</span>にそろえて比較。犬と猫の毎日に、迷わない価格比較を。</p>
         <div class="hero-proof"><div class="hero-proof-item"><b>1枚</b><span>シーツを比較</span></div><div class="hero-proof-item"><b>1L</b><span>猫砂を比較</span></div><div class="hero-proof-item"><b>毎朝</b><span>価格を更新</span></div></div>
         <div class="trust-row"><span class="trust-pill">✓ サイズ別</span><span class="trust-pill">✓ 推測換算なし</span><span class="trust-pill">✓ 曖昧商品は除外</span></div>
-        <p class="updated">最終更新 2026-09-30 20:29 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:59 JST</p>
       </div>
       <div class="hero-art-shell photo-shell"><div class="hero-photo-wrap">
       <img class="hero-photo" src="https://stusaurus.github.io/pet-cost-jp/assets/hero-pet-comparison.webp"
@@ -889,27 +925,41 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
       <a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">🐶 ペットシーツ</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">🐱 猫砂</a><a class="chip" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">🧻 猫用システムトイレシート</a>
     </div></div>
     <main class="main"><div class="wrap">
-      <section class="section visual-section">
-        <div class="section-head"><div><h2>いま比較できるもの</h2><p class="section-sub">最初は消耗品に絞って、比較精度を優先しています。</p></div></div>
-        <div class="home-grid"><a class="category-card theme-sheet" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">
-              <span class="category-card-number"><b>01</b>CATEGORY</span>
-              <div class="category-visual"><svg viewBox="0 0 300 160" role="img" aria-label="ペットシーツのイラスト">
+      <section class="section editorial-section">
+        <div class="editorial-head">
+          <div class="editorial-head-copy"><span class="editorial-eyebrow">TODAY'S PET COST EDITION</span><h2>今日、まず見る3つ。</h2><p class="section-sub">現在掲載中の商品だけで比較し、平均との差が大きいカテゴリを主役にしています。</p></div>
+          <div class="editorial-date">DAILY PRICE EDITION<br>2026-09-30 20:59 JST</div>
+        </div>
+        <div class="editorial-grid">
+          <a class="editorial-lead theme-sheet" data-editorial-category="pet-sheets" data-editorial-position="1" href="https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/">
+          <div class="editorial-lead-copy">
+            <span class="editorial-index">01 / TODAY'S LEAD</span>
+            <h3>ペットシーツ</h3>
+            <div class="editorial-lead-sub">レギュラーを同じ単位で比較 ・ 掲載 24件</div>
+            <div class="editorial-price-block">
+              <span class="editorial-price-caption">レギュラーの現在最安</span>
+              <strong class="editorial-price">¥4.10<small> / 1枚</small></strong>
+              <span class="editorial-gap">中央値より51%安い</span>
+            </div>
+          </div>
+          <div class="editorial-lead-art"><svg viewBox="0 0 300 160" role="img" aria-label="ペットシーツのイラスト">
           <ellipse cx="150" cy="143" rx="112" ry="9" fill="#8dbca1" opacity=".22"/>
           <path d="M36 121c21-29 45-39 75-31 19 5 29 17 47 20 31 5 54-10 104-24v44H36z" fill="#cfeedd"/>
           <g transform="translate(36 41)"><rect x="0" y="31" width="88" height="61" rx="14" fill="#fff" stroke="#75b997" stroke-width="3"/><path d="M12 49h64M12 64h46" stroke="#d8eee2" stroke-width="7" stroke-linecap="round"/><rect x="58" y="9" width="54" height="36" rx="10" fill="#2d7f5d"/><path d="M68 20h34M68 30h24" stroke="#d9f1e4" stroke-width="5" stroke-linecap="round"/></g>
           <g transform="translate(144 12)"><circle cx="50" cy="45" r="38" fill="#e7ab75"/><path d="M20 23 7 3l33 14M80 22 94 2 61 16" fill="#b8754a"/><ellipse cx="50" cy="55" rx="23" ry="18" fill="#f7d0a4"/><circle cx="37" cy="41" r="4.5" fill="#173126"/><circle cx="64" cy="41" r="4.5" fill="#173126"/><ellipse cx="50" cy="52" rx="5" ry="4" fill="#173126"/><path d="M42 62q8 7 16 0" fill="none" stroke="#173126" stroke-width="2.7" stroke-linecap="round"/></g>
           <g transform="translate(202 86) rotate(-4)"><path d="M0 0h64l12 16-12 16H0z" fill="#ffd66e"/><circle cx="63" cy="16" r="3" fill="#fff4d0"/><text x="9" y="13" class="scene-label" font-family="sans-serif" fill="#6b4c00">PRICE</text><text x="9" y="26" class="scene-price" font-family="sans-serif" fill="#6b4c00">1枚</text></g>
         </svg></div>
-              <div class="category-card-copy">
-                <span class="price-ribbon">👑 レギュラーの現在最安</span>
-                <strong>ペットシーツ</strong>
-                <div class="category-price">¥4.10<small> / 1枚</small></div>
-                <div class="category-meta">掲載 24件・条件別に比較</div>
+          <span class="editorial-arrow" aria-hidden="true">→</span>
+        </a>
+          <div class="editorial-side"><a class="editorial-side-card theme-litter" data-editorial-category="cat-litter" data-editorial-position="2" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">
+              <span class="editorial-folio">02</span>
+              <div>
+                <span class="editorial-index">すべて</span>
+                <h3>猫砂</h3>
+                <div class="editorial-side-price">¥59.5<small> / 1L</small></div>
+                <div class="editorial-side-meta">中央値より37%安い ・ 掲載30件</div>
               </div>
-              <span class="category-arrow" aria-hidden="true">→</span>
-            </a><a class="category-card theme-litter" href="https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/">
-              <span class="category-card-number"><b>02</b>CATEGORY</span>
-              <div class="category-visual"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
+              <div class="editorial-side-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
           <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
           <path d="M45 78q0-20 20-20h143q20 0 20 20v47H45z" fill="#fff" stroke="#d4b773" stroke-width="3"/><path d="M59 84h155l-11 35H70z" fill="#ead6a6"/>
           <g fill="#c3a35a"><circle cx="88" cy="99" r="4"/><circle cx="111" cy="110" r="4"/><circle cx="137" cy="96" r="4"/><circle cx="163" cy="109" r="4"/><circle cx="191" cy="98" r="4"/></g>
@@ -917,30 +967,24 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
           <g transform="translate(220 31)"><rect width="57" height="45" rx="12" fill="#fff0c8" stroke="#e1bd66"/><text x="10" y="16" class="scene-label" font-family="sans-serif" fill="#806018">COMPARE</text><text x="13" y="34" class="scene-price" font-family="sans-serif" fill="#806018">1L</text></g>
           <path d="M29 112c9-9 14-21 15-34M31 110c-10-5-16-11-19-20M30 105c13-4 20-10 26-18" stroke="#8aaf6d" stroke-width="5" stroke-linecap="round"/>
         </svg></div>
-              <div class="category-card-copy">
-                <span class="price-ribbon">👑 すべての現在最安</span>
-                <strong>猫砂</strong>
-                <div class="category-price">¥59.5<small> / 1L</small></div>
-                <div class="category-meta">掲載 30件・条件別に比較</div>
+            </a><a class="editorial-side-card theme-system" data-editorial-category="system-toilet-sheets" data-editorial-position="3" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">
+              <span class="editorial-folio">03</span>
+              <div>
+                <span class="editorial-index">デオトイレ系</span>
+                <h3>猫用システムトイレシート</h3>
+                <div class="editorial-side-price">¥87.5<small> / 1枚</small></div>
+                <div class="editorial-side-meta">中央値より11%安い ・ 掲載10件</div>
               </div>
-              <span class="category-arrow" aria-hidden="true">→</span>
-            </a><a class="category-card theme-system" href="https://stusaurus.github.io/pet-cost-jp/categories/system-toilet-sheets/">
-              <span class="category-card-number"><b>03</b>CATEGORY</span>
-              <div class="category-visual"><svg viewBox="0 0 300 160" role="img" aria-label="システムトイレシートのイラスト">
+              <div class="editorial-side-art"><svg viewBox="0 0 300 160" role="img" aria-label="システムトイレシートのイラスト">
       <ellipse cx="150" cy="143" rx="111" ry="9" fill="#78b8c2" opacity=".24"/>
       <rect x="44" y="80" width="173" height="52" rx="17" fill="#fff" stroke="#78bcc7" stroke-width="3"/><rect x="58" y="94" width="145" height="24" rx="8" fill="#ddf1f4"/><path d="M75 106h112" stroke="#9ad1d8" stroke-width="5" stroke-linecap="round"/>
       <g transform="translate(107 7)"><circle cx="43" cy="42" r="36" fill="#9bb7be"/><path d="M15 22 18 0l22 16M71 22 68 0 46 16" fill="#6f8e96"/><circle cx="31" cy="39" r="4.3" fill="#173126"/><circle cx="56" cy="39" r="4.3" fill="#173126"/><path d="m43 48-5 4h10z" fill="#e59a95"/><path d="M34 58q9 6 18 0" fill="none" stroke="#173126" stroke-width="2.4" stroke-linecap="round"/></g>
       <g transform="translate(213 38)"><circle cx="29" cy="29" r="28" fill="#4da9b6"/><path d="m16 30 9 9 18-21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></g>
       <g transform="translate(216 100)"><path d="M0 0h61l10 14-10 14H0z" fill="#ffd66e"/><text x="8" y="18" class="scene-label" font-family="sans-serif" fill="#6b4c00">FIT CHECK</text></g>
     </svg></div>
-              <div class="category-card-copy">
-                <span class="price-ribbon">👑 デオトイレ系の現在最安</span>
-                <strong>猫用システムトイレシート</strong>
-                <div class="category-price">¥87.5<small> / 1枚</small></div>
-                <div class="category-meta">掲載 10件・条件別に比較</div>
-              </div>
-              <span class="category-arrow" aria-hidden="true">→</span>
             </a></div>
+        </div>
+        <div class="editorial-footerline"><span><strong>編集ルール：</strong>過去価格ではなく、同じ条件の現在掲載商品内で比較。</span><span>数量が曖昧な商品は掲載しません。</span></div>
       </section>
 
       <section class="section daily-spotlight" data-daily-spotlight>

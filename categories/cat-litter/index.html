@@ -529,6 +529,16 @@
     });
 
     document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[data-editorial-category]');
+      if (!link) return;
+      send('homepage_editorial_click', {
+        category_id: link.dataset.editorialCategory || '',
+        editorial_position: Number(link.dataset.editorialPosition || 0),
+        conversion_source: 'homepage_editorial'
+      });
+    });
+
+    document.addEventListener('click', (event) => {
       const link = event.target.closest('a[data-spotlight-link]');
       if (!link) return;
       send('daily_spotlight_click', {
@@ -868,13 +878,39 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
   .sticky-cell{padding:8px 8px}.sticky-label{font-size:7px}.sticky-value{font-size:10px}.sticky-price .sticky-value{font-size:17px}.sticky-gap{display:none}.sticky-count .sticky-value{font-size:12px}
   .sticky-jump{min-width:49px;padding:0 8px;font-size:0}.sticky-jump:after{content:"↓";margin:0;font-size:16px}
 }
+
+/* Editorial homepage v17 */
+.editorial-section{position:relative;overflow:hidden;padding:24px;border-radius:30px;background:#f7f3e9;border:1px solid #e9dfc9;box-shadow:0 20px 48px rgba(77,58,20,.08)}
+.editorial-section:before{content:"PET COST JOURNAL";position:absolute;right:-8px;top:12px;font-size:10px;font-weight:950;letter-spacing:.18em;color:rgba(91,71,30,.22);transform:rotate(1deg)}
+.editorial-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:18px;padding-bottom:13px;border-bottom:2px solid #173126}
+.editorial-head h2{margin:0;font-size:clamp(28px,5vw,36px);letter-spacing:-.04em}.editorial-head h2:before{display:none}
+.editorial-head-copy{max-width:610px}.editorial-eyebrow{display:block;margin-bottom:4px;font-size:9px;font-weight:950;letter-spacing:.16em;color:#8d6d2d}.editorial-date{flex:0 0 auto;text-align:right;font-size:9px;font-weight:850;color:#7d7464;line-height:1.5}
+.editorial-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.85fr);gap:14px}
+.editorial-lead{position:relative;min-height:360px;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,.9fr);align-items:stretch;overflow:hidden;text-decoration:none;color:#173126;border-radius:24px;border:1px solid color-mix(in srgb,var(--theme) 20%,#e4ddd0);background:linear-gradient(145deg,#fff,var(--theme-wash));box-shadow:0 18px 42px rgba(23,49,38,.10)}
+.editorial-lead-copy{position:relative;z-index:2;padding:28px 10px 26px 27px;display:flex;flex-direction:column;justify-content:center}
+.editorial-index{display:inline-flex;width:max-content;border:1px solid currentColor;border-radius:999px;padding:5px 8px;font-size:8px;font-weight:950;letter-spacing:.12em;color:var(--theme-dark)}
+.editorial-lead h3{margin:13px 0 5px;font-size:clamp(31px,5vw,45px);line-height:1.02;letter-spacing:-.055em}.editorial-lead-sub{font-size:12px;font-weight:800;color:#5f7168}
+.editorial-price-block{margin-top:22px}.editorial-price-caption{display:block;font-size:9px;font-weight:900;color:#6f7b74}.editorial-price{display:block;margin-top:2px;font-size:clamp(38px,6vw,54px);font-weight:950;line-height:.95;letter-spacing:-.06em;color:var(--theme-dark)}.editorial-price small{font-size:12px;letter-spacing:0}
+.editorial-gap{display:inline-flex;width:max-content;margin-top:10px;border-radius:999px;padding:6px 9px;background:#173126;color:#fff;font-size:10px;font-weight:900}.editorial-gap b{color:#ffd66e;margin-right:3px}
+.editorial-lead-art{position:relative;display:grid;place-items:center;min-width:0;padding:22px;background:radial-gradient(circle at 52% 44%,rgba(255,255,255,.95),rgba(255,255,255,.3) 47%,transparent 68%)}.editorial-lead-art svg{width:100%;height:auto;max-height:260px}.editorial-lead-art:after{content:"TODAY'S FEATURE";position:absolute;right:12px;bottom:11px;font-size:8px;font-weight:950;letter-spacing:.14em;color:color-mix(in srgb,var(--theme-dark) 55%,transparent)}
+.editorial-arrow{position:absolute;right:18px;top:18px;z-index:4;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#173126;color:#fff;font-size:19px;box-shadow:0 8px 18px rgba(23,49,38,.16);transition:transform .18s ease}.editorial-lead:hover .editorial-arrow{transform:translate(3px,-2px)}
+.editorial-side{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:14px}.editorial-side-card{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 105px;align-items:center;overflow:hidden;text-decoration:none;color:#173126;border-radius:21px;border:1px solid color-mix(in srgb,var(--theme) 18%,#e7dfcf);background:linear-gradient(145deg,#fff,var(--theme-wash));padding:17px;box-shadow:0 12px 28px rgba(23,49,38,.07);transition:transform .18s ease,box-shadow .18s ease}.editorial-side-card:hover{transform:translateY(-3px);box-shadow:0 17px 34px rgba(23,49,38,.11)}
+.editorial-side-card h3{margin:6px 0 5px;font-size:19px;line-height:1.1;letter-spacing:-.035em}.editorial-side-price{font-size:27px;font-weight:950;line-height:1;letter-spacing:-.045em;color:var(--theme-dark)}.editorial-side-price small{font-size:9px;letter-spacing:0}.editorial-side-meta{margin-top:7px;font-size:9px;font-weight:800;color:#6d796f}.editorial-side-art{height:105px;display:grid;place-items:center}.editorial-side-art svg{width:115px;max-width:100%;height:100%}
+.editorial-folio{position:absolute;right:10px;top:8px;font-size:8px;font-weight:950;letter-spacing:.1em;color:rgba(23,49,38,.38)}
+.editorial-footerline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:15px;padding-top:11px;border-top:1px solid #dfd5c2;font-size:9px;color:#796f5f}.editorial-footerline strong{color:#173126}
+@media(max-width:759px){
+  .editorial-section{padding:16px;border-radius:22px}.editorial-section:before{font-size:7px;right:4px}.editorial-head{align-items:flex-start}.editorial-date{display:none}
+  .editorial-grid{grid-template-columns:1fr}.editorial-lead{min-height:0;grid-template-columns:1fr 126px}.editorial-lead-copy{padding:20px 4px 19px 18px}.editorial-lead h3{font-size:29px}.editorial-lead-art{padding:8px}.editorial-lead-art svg{max-height:170px}.editorial-price{font-size:38px}.editorial-price-block{margin-top:16px}.editorial-arrow{width:34px;height:34px;right:9px;top:9px}
+  .editorial-side{grid-template-rows:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.editorial-side-card{display:block;padding:13px;min-height:190px}.editorial-side-card h3{font-size:15px;padding-right:14px}.editorial-side-price{font-size:24px}.editorial-side-art{height:83px;margin-top:4px}.editorial-side-art svg{width:100%;height:100%}.editorial-side-meta{font-size:8px}
+  .editorial-footerline{display:block;line-height:1.6}
+}
 </style></head><body data-category-id="cat-litter" class="page-cat-litter"><header class="hero category-hero"><div class="wrap hero-inner">
       <div class="hero-copy">
         <span class="hero-kicker"><span class="dot"></span>条件が曖昧な商品は載せない</span>
         <h1 class="category-hero-title"><span class="category-name">猫砂</span><span class="category-question">いま安いのは？</span></h1>
         <p class="lead">L表記を確認できる猫砂だけを1Lあたりに換算。kgしかない商品を推測でL換算しません。</p>
         <div class="trust-row"><span class="trust-pill">毎朝自動更新</span><span class="trust-pill">数量根拠つき</span><span class="trust-pill">公開前に自動監査</span></div>
-        <p class="updated">最終更新 2026-09-30 20:29 JST</p>
+        <p class="updated">最終更新 2026-09-30 20:59 JST</p>
       </div>
       <div class="hero-art-shell"><div class="hero-art"><svg viewBox="0 0 300 160" role="img" aria-label="猫砂のイラスト">
           <ellipse cx="151" cy="143" rx="111" ry="9" fill="#c4aa70" opacity=".25"/>
@@ -914,7 +950,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
               <span class="filter-icon" aria-hidden="true">▤</span>
               <span class="filter-label">紙</span>
               <span class="filter-meta">紙系</span>
-              <span class="filter-count">10件</span>
+              <span class="filter-count">9件</span>
             </button><button type="button" class="filter-chip"
               data-group-button data-group="okara" data-group-label="おから"
               aria-pressed="false">
@@ -935,7 +971,7 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
               <span class="filter-icon" aria-hidden="true">◆</span>
               <span class="filter-label">鉱物・ベントナイト</span>
               <span class="filter-meta">鉱物系</span>
-              <span class="filter-count">5件</span>
+              <span class="filter-count">6件</span>
             </button><button type="button" class="filter-chip"
               data-group-button data-group="mixed" data-group-label="混合素材"
               aria-pressed="false">
@@ -2231,43 +2267,43 @@ radial-gradient(circle at 73% 31%,#197451 0 3px,transparent 3.8px),
                   href="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F535454%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10183479%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
               </div>
             </article><article class="shop-card" data-product-row
-                data-group="paper"
-                data-row-unit-price="106.8571"
-                data-total-price="748"
-                data-quantity="7.0"
-                data-quantity-evidence="7l"
-                data-image="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128"
-                data-item-id="d19d0f8454eb"
-                data-item-name="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便"
-                data-shop="charm 楽天市場店"
-                data-url="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F65529%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10831908%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
+                data-group="mineral"
+                data-row-unit-price="106.4643"
+                data-total-price="2981"
+                data-quantity="28.0"
+                data-quantity-evidence="7lx4袋"
+                data-image="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128"
+                data-item-id="896700596acc"
+                data-item-name="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品"
+                data-shop="Pet館〜ペット館〜"
+                data-url="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e">
               <div class="rank-showcase-label" data-rank-showcase-label hidden></div>
               <div class="shop-card-image-wrap">
-                <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/657/65529-1.jpg?_ex=128x128" alt="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便" loading="lazy" width="92" height="92">
+                <img class="shop-card-image" src="https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128" alt="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品" loading="lazy" width="92" height="92">
                 <span class="shop-card-rank"><span data-rank-cell>30</span><span data-rank-badge style="display:none">30位</span></span>
               </div>
               <div class="shop-card-prices">
-                <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥107<small> / 1L</small></div></div>
-                <div class="shop-total"><span>購入総額</span><b>¥748</b></div>
+                <div class="shop-unit-wrap"><div class="shop-unit-label">1Lあたり</div><div class="shop-unit">¥106<small> / 1L</small></div></div>
+                <div class="shop-total"><span>購入総額</span><b>¥2,981</b></div>
               </div>
               <div class="shop-card-head">
                 <div class="value-badge-row" data-value-badges aria-label="価格特徴"></div>
-                <div class="shop-card-title">ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便</div>
-                <div class="shop-card-shop">charm 楽天市場店</div>
-                <div class="shop-card-tags"><span class="condition-tag">紙</span><span class="condition-tag">7l</span></div>
+                <div class="shop-card-title">猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品</div>
+                <div class="shop-card-shop">Pet館〜ペット館〜</div>
+                <div class="shop-card-tags"><span class="condition-tag">鉱物・ベントナイト</span><span class="condition-tag">7lx4袋</span></div>
               </div>
-              <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料別</div></div>
+              <div class="shop-card-meta"><div class="price-diff" data-price-diff></div><div class="shipping">送料込み</div></div>
               <div class="shop-card-action">
                 <a class="btn" data-affiliate-link
                   data-merchant="rakuten"
                   data-category-id="cat-litter"
-                  data-item-id="d19d0f8454eb"
-                  data-item-name="ココサンド　7L　猫砂　紙　固まる　燃やせる　関東当日便"
+                  data-item-id="896700596acc"
+                  data-item-name="猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品"
                   data-metric="per_liter"
-                  data-unit-price="106.8571"
+                  data-unit-price="106.4643"
                   data-position="30"
                   data-conversion-source="comparison_card"
-                  href="https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F65529%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10831908%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
+                  href="https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&amp;m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&amp;rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e" target="_blank" rel="nofollow sponsored noopener">楽天で価格を見る</a>
               </div>
             </article></div>
       </section>
