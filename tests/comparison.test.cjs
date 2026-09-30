@@ -17,6 +17,8 @@ async function open(html, id = '', options = {}) {
       window.dataLayer = [];
       window.dataLayer.push = args => events.push([...args]);
       window.matchMedia = () => ({ matches: !!options.reduced });
+      if (options.household) window.localStorage.setItem('pet_cost_household_v1', JSON.stringify(options.household));
+      if (options.storageError) Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage disabled'); } });
     }
   });
   await new Promise(resolve => dom.window.document.addEventListener('DOMContentLoaded', resolve));
@@ -89,6 +91,9 @@ for (const { category, items } of payloads) {
     try {
       assert.equal(events(p, 'comparison_view').length, 1);
       assert.equal(events(p, 'view_item_list').length, 1);
+      assert.ok(get(p, '[data-comparison-results]').hidden);
+      assert.equal(all(p, '[data-group-button][aria-pressed="true"]').length, 0);
+      get(p, `[data-group-button][data-group="${category.default_group}"]`).click();
       verify(p, category, items, category.default_group);
       for (const button of all(p, '[data-group-button]')) {
         button.click();
@@ -125,6 +130,7 @@ for (const { category, items } of payloads) {
   test(`${category.id}: store comparison accepts decimals, rejects invalid input and refreshes benchmark on filter change`, async () => {
     const p = await open(fs.readFileSync(path.join(root, `site/categories/${category.id}/index.html`), 'utf8'), category.id);
     try {
+      get(p, `[data-group-button][data-group="${category.default_group}"]`).click();
       const price = get(p, '[data-calc-price]'), qty = get(p, '[data-calc-qty]'), submit = get(p, '[data-calc-button]');
       for (const [a, b] of [['', '100'], ['0', '100'], ['-1', '100'], ['1e3', '100'], ['1000', '0'], ['1,00', '10']]) {
         price.value = a; qty.value = b; submit.click();
@@ -163,6 +169,7 @@ test('tied minima, even median, one-item and empty groups have honest states', a
   const items = [4, 4, 10, 20].map((u, i) => ({ ...base, product_id: `tie-${i}`, group: 'regular', unit_price: u, price: u * 100, quantity: 100 })).concat([{ ...base, product_id: 'one', group: 'wide', unit_price: 8, price: 800, quantity: 100 }]);
   const p = await open(render(category, items), category.id);
   try {
+    get(p, '[data-group-button][data-group="regular"]').click();
     verify(p, category, items, 'regular');
     assert.equal(text(p, '[data-answer-median-value]'), '¥7.00');
     assert.ok(text(p, '[data-featured-badge]').includes('同単価 2件'));
@@ -173,6 +180,7 @@ test('tied minima, even median, one-item and empty groups have honest states', a
   const emptyCategory = { ...category, default_group: 'super_wide' };
   const empty = await open(render(emptyCategory, items), category.id);
   try {
+    get(empty, '[data-group-button][data-group="super_wide"]').click();
     verify(empty, emptyCategory, items, 'super_wide');
     get(empty, '[data-calc-price]').value = '1000'; get(empty, '[data-calc-qty]').value = '100'; get(empty, '[data-calc-button]').click();
     assert.equal(events(empty, 'unit_calculator_use').at(-1).comparison_result, 'benchmark_unavailable');
@@ -198,5 +206,101 @@ test('reduced motion still updates immediately without result animation', async 
     get(p, '[data-group-button][data-group="wide"]').click();
     assert.equal(all(p, '.result-changed').length, 0);
     assert.equal(text(p, '[data-sticky-condition]'), 'ワイド');
+  } finally { p.close(); }
+});
+
+const usageExamples = [
+  { index: 0, group: 'regular', qty: 800, price: 3280, rate: '5', supply: '約160日分', monthly: '約¥615', days: '約160日', smallSupply: '約40日分', otherMonthly: '約¥923' },
+  { index: 1, group: 'paper', qty: 42, price: 2499, rate: '10', supply: '約4.2か月分', monthly: '約¥595', days: '約126日', smallSupply: '約1.1か月分', otherMonthly: '約¥893' },
+  { index: 2, group: 'deotoilet', qty: 20, price: 1750, rate: '1', supply: '約20週間分', monthly: '約¥375', days: '約140日', smallSupply: '約5週間分', otherMonthly: '約¥563' }
+];
+for (const example of usageExamples) {
+  test(`${categories[example.index].id}: optional usage translates supply and 30-day cost across all comparison surfaces`, async () => {
+    const c = categories[example.index], base = payloads[example.index].items[0];
+    const item = { ...base, product_id: 'usage-example', group: example.group, quantity: example.qty, price: example.price, unit_price: example.price / example.qty };
+    const small = { ...item, product_id: 'small-pack', quantity: example.qty / 4, price: example.price / 3, unit_price: example.price / 3 / (example.qty / 4) };
+    const otherGroup = Object.keys(c.groups).find(g => g !== example.group && g !== 'all');
+    const other = { ...item, product_id: 'other-group', group: otherGroup, quantity: example.qty / 2, price: example.price * .75, unit_price: example.price * .75 / (example.qty / 2) };
+    const p = await open(render(c, [item, small, other]), c.id);
+    try {
+      assert.ok(get(p, '[data-comparison-results]').hidden);
+      get(p, `[data-group-button][data-group="${example.group}"]`).click();
+      assert.ok(!get(p, '[data-comparison-results]').hidden);
+      assert.ok(get(p, '[data-featured-usage]').hidden);
+      assert.equal(get(p, '[data-usage-input]').value, '');
+      const input = get(p, '[data-usage-input]');
+      input.value = example.rate;
+      input.dispatchEvent(new p.dom.window.Event('input', { bubbles: true }));
+      assert.ok(text(p, '[data-featured-usage]').includes(example.supply));
+      assert.ok(text(p, '[data-featured-usage]').includes(example.monthly));
+      assert.ok(text(p, '[data-featured-usage]').includes(example.days));
+      assert.ok(text(p, '[data-top3-card] [data-top3-usage]').includes(example.supply));
+      assert.ok(text(p, '[data-product-row]:not([hidden]) [data-row-usage]').includes(example.supply));
+      assert.equal(events(p, 'pet_usage_change').length, 0);
+      input.dispatchEvent(new p.dom.window.Event('change', { bubbles: true }));
+      get(p, '[data-usage-form] button[type="submit"]').click();
+      assert.equal(events(p, 'pet_usage_change').length, 1);
+      assert.equal(events(p, 'pet_usage_change')[0].usage_enabled, true);
+      for (const role of ['unit', 'total', 'bulk']) {
+        const button = get(p, `[data-angle-role="${role}"]`);
+        assert.ok(!button.querySelector('[data-angle-lifetime]').hidden);
+        button.click();
+        const smallChosen = get(p, '[data-angle-link]').dataset.itemId === small.product_id;
+        assert.ok(text(p, '[data-angle-usage]').includes(smallChosen ? example.smallSupply : example.supply));
+      }
+      const before = events(p, 'pet_usage_change').length;
+      get(p, `[data-group-button][data-group="${otherGroup}"]`).click();
+      assert.equal(events(p, 'pet_usage_change').length, before);
+      assert.equal(input.value, example.rate);
+      assert.ok(!get(p, '[data-featured-usage]').hidden);
+      assert.ok(text(p, '[data-featured-usage]').includes(example.otherMonthly));
+      for (const value of ['0', '-1', '1e3', '1,00', 'abc']) {
+        input.value = value; input.dispatchEvent(new p.dom.window.Event('input', { bubbles: true }));
+        assert.ok(!get(p, '[data-usage-error]').hidden);
+        assert.ok(get(p, '[data-featured-usage]').hidden);
+        assert.ok(get(p, '[data-angle-usage]').hidden);
+        assert.equal(all(p, '[data-row-usage]:not([hidden])').length, 0);
+      }
+      input.value = '２．５'; input.dispatchEvent(new p.dom.window.Event('change', { bubbles: true }));
+      assert.ok(!get(p, '[data-featured-usage]').hidden);
+      assert.ok(get(p, '[data-usage-error]').hidden);
+      get(p, '[data-usage-clear]').click();
+      assert.ok(get(p, '[data-featured-usage]').hidden);
+      assert.equal(input.value, '');
+      assert.equal(events(p, 'pet_usage_change').at(-1).usage_enabled, false);
+      assert.deepEqual(JSON.parse(p.dom.window.localStorage.getItem('pet_cost_household_v1'))[c.id], { group: otherGroup, usage: null });
+      assert.deepEqual(p.errors, []);
+    } finally { p.close(); }
+  });
+}
+test('remembered household conditions restore per category; unavailable groups and blocked storage stay usable', async () => {
+  const html = fs.readFileSync(path.join(root, 'site/categories/pet-sheets/index.html'), 'utf8');
+  const p = await open(html, 'pet-sheets', { household: { 'pet-sheets': { group: 'wide', usage: 5 }, 'cat-litter': { group: 'paper', usage: 10 } } });
+  try {
+    assert.ok(!get(p, '[data-comparison-results]').hidden);
+    assert.equal(text(p, '[data-sticky-condition]'), 'ワイド');
+    assert.equal(get(p, '[data-usage-input]').value, '5');
+    assert.ok(!get(p, '[data-featured-usage]').hidden);
+    assert.equal(events(p, 'pet_usage_change').length, 0);
+    assert.equal(events(p, 'comparison_filter').length, 0);
+  } finally { p.close(); }
+  for (const options of [{ household: { 'pet-sheets': { group: 'unavailable', usage: 5 } } }, { storageError: true }]) {
+    const p = await open(html, 'pet-sheets', options);
+    try {
+      assert.ok(get(p, '[data-comparison-results]').hidden);
+      get(p, '[data-group-button][data-group="regular"]').click();
+      assert.ok(!get(p, '[data-comparison-results]').hidden);
+      assert.deepEqual(p.errors, []);
+    } finally { p.close(); }
+  }
+});
+test('homepage starts with household choices and keeps price-gap analytics on the secondary disclosure', async () => {
+  const p = await open(fs.readFileSync(path.join(root, 'site/index.html'), 'utf8'), '', { household: { 'cat-litter': { group: 'paper', usage: 10 } } });
+  try {
+    assert.ok(text(p, '[data-pet-category="cat-litter"] [data-saved-condition]').includes('前回の条件：紙'));
+    for (const link of all(p, '[data-pet-category]')) link.click();
+    assert.equal(events(p, 'pet_category_select').length, 3);
+    assert.equal(events(p, 'daily_spotlight_click').length, 0);
+    assert.ok(!get(p, '.home-price-details').open);
   } finally { p.close(); }
 });

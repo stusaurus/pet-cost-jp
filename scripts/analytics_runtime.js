@@ -57,16 +57,97 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const category = document.body.dataset.categoryId || '';
+    const HOME_KEY = 'pet_cost_household_v1';
+    let household = {};
+    try { const stored = JSON.parse(localStorage.getItem(HOME_KEY) || '{}'); if (stored && typeof stored === 'object' && !Array.isArray(stored)) household = stored; } catch (_) {}
     const metric = $('[data-metric]')?.dataset.metric || 'per_sheet';
     const metricLabel = $('[data-metric-label]')?.dataset.metricLabel || '1枚';
     const quantityLabel = row => quantity(row).toLocaleString('ja-JP', { maximumFractionDigits: 6 }) + (metric === 'per_liter' ? 'L' : '枚');
     const allRows = $$('[data-product-row]').sort((a, b) => unit(a) - unit(b));
     let visibleRows = [];
-    let activeGroup = $('[data-group-filter]')?.dataset.defaultGroup || 'all';
+    let activeGroup = '';
     let activeLabel = '';
     let angleRole = 'unit';
     let stats = { min: 0, median: 0, minTotal: 0, maxQuantity: 0 };
     let calcActive = false;
+    const usagePeriod = $('[data-usage-form]')?.dataset.usagePeriod || 'day';
+    const periodDays = { day: 1, week: 7, month: 30 }[usagePeriod];
+    const periodLabel = { day: '1日', week: '1週間', month: '1か月' }[usagePeriod];
+    let usage = null;
+    let lastUsageEvent = 'null';
+    const decimal = value => value.toLocaleString('ja-JP', { maximumFractionDigits: 1 });
+    const daysText = value => value < 1 ? '1日未満' : decimal(value) + '日';
+    const monthlyYen = value => '¥' + Math.round(value).toLocaleString('ja-JP');
+    function saveHome() {
+      if (!category || !activeGroup) return;
+      household[category] = { group: activeGroup, usage };
+      try { localStorage.setItem(HOME_KEY, JSON.stringify(household)); } catch (_) {}
+    }
+    function usageValues(row) {
+      if (!usage || !row) return null;
+      const duration = quantity(row) / usage;
+      const days = duration * periodDays;
+      const span = duration < .1 ? '0.1未満' : decimal(duration);
+      const supply = usagePeriod === 'month' ? (duration < .1 ? '0.1か月未満' : '約' + span + 'か月分') : usagePeriod === 'week' ? (duration < .1 ? '0.1週間未満' : '約' + span + '週間分') : days < 1 ? '1日未満' : '約' + daysText(days) + '分';
+      return { days, supply, monthly: unit(row) * usage * 30 / periodDays };
+    }
+    function renderUsage(mount, row) {
+      if (!mount) return;
+      const values = usageValues(row);
+      mount.hidden = !values;
+      mount.replaceChildren();
+      if (!values) return;
+      mount.appendChild(element('p', 'usage-equation', quantityLabel(row) + ' ÷ ' + periodLabel + usage.toLocaleString('ja-JP') + (metric === 'per_liter' ? 'L' : '枚')));
+      const metrics = element('div', 'usage-metrics');
+      const supply = element('div', 'usage-metric'); supply.appendChild(element('span', '', 'うちの使用量なら')); supply.appendChild(element('b', '', values.supply)); metrics.appendChild(supply);
+      const cost = element('div', 'usage-metric'); cost.appendChild(element('span', '', '月の費用（30日分）')); cost.appendChild(element('b', '', '約' + monthlyYen(values.monthly))); metrics.appendChild(cost);
+      mount.appendChild(metrics);
+      mount.appendChild(element('p', 'usage-footnote', '新品を使い始めてから' + (values.days < 1 ? '1日未満' : '約' + daysText(values.days)) + 'で使い切る計算。送料別の送料は未加算。'));
+    }
+    function updateUsage() {
+      const note = $('[data-usage-scale-note]'); if (note) note.hidden = !usage;
+      text('[data-usage-teaser]', usage ? periodLabel + usage.toLocaleString('ja-JP') + (metric === 'per_liter' ? 'L' : '枚') + 'で比較中' : '任意 · どのくらい持つ？');
+      renderUsage($('[data-featured-usage]'), visibleRows[0]);
+      const picks = anglePicks();
+      renderUsage($('[data-angle-usage]'), picks[angleRole]);
+      allRows.forEach(row => {
+        const mount = $('[data-row-usage]', row), values = usageValues(row);
+        if (mount) { mount.hidden = !values; mount.textContent = values ? values.supply + ' · 30日分 約' + monthlyYen(values.monthly) : ''; }
+      });
+      $$('[data-top3-card]').forEach((link, i) => {
+        let mount = $('[data-top3-usage]', link);
+        if (!mount) { mount = element('span', 'top3-usage'); mount.dataset.top3Usage = '1'; $('.top3-copy', link)?.appendChild(mount); }
+        const values = usageValues(visibleRows[i]);
+        mount.hidden = !values; mount.textContent = values ? values.supply + ' · 30日分 約' + monthlyYen(values.monthly) : '';
+      });
+      const maxDays = Math.max(...Object.values(picks).map(row => usageValues(row)?.days || 0), 1);
+      $$('[data-angle-card]').forEach(button => {
+        const values = usageValues(picks[button.dataset.angleRole]);
+        let mount = $('[data-angle-lifetime]', button);
+        if (!mount) { mount = element('span', 'angle-lifetime'); mount.dataset.angleLifetime = '1'; button.appendChild(mount); }
+        mount.hidden = !values; mount.replaceChildren();
+        if (values) {
+          mount.appendChild(element('span', '', values.supply));
+          const track = element('span', 'bar-track'); const bar = element('i', 'bar-fill'); setBar(bar, values.days, maxDays); track.appendChild(bar); mount.appendChild(track);
+        }
+      });
+    }
+    function setUsage(emit = false, clear = false) {
+      const input = $('[data-usage-input]'), error = $('[data-usage-error]');
+      if (!input) return;
+      if (clear) input.value = '';
+      const empty = !input.value.trim();
+      const value = empty ? null : readInput('[data-usage-input]');
+      usage = value;
+      input.setAttribute('aria-invalid', String(!empty && value === null));
+      if (error) { error.hidden = empty || value !== null; error.textContent = '0より大きい、いつもの使用量を入力してください。'; }
+      saveHome(); updateUsage();
+      if (emit && (empty || value !== null) && lastUsageEvent !== String(value)) {
+        lastUsageEvent = String(value);
+        send('pet_usage_change', { category_id: category, filter_value: activeGroup, usage_period: usagePeriod, usage_enabled: value !== null });
+      }
+      if (!empty && value !== null) respond($('[data-featured-usage]'));
+    }
 
     function affiliate(link, row, position, source) {
       if (!link || !row) return;
@@ -101,9 +182,9 @@
       const row = visibleRows[0];
       box.hidden = !row;
       if (!row) return;
-      text('[data-featured-condition]', activeLabel + ' · ' + visibleRows.length + '件を比較');
+      text('[data-featured-condition]', (activeGroup === 'all' ? '素材を問わず：' : 'あなたの条件：') + activeLabel + ' · ' + visibleRows.length + '件を比較');
       const tied = visibleRows.filter(r => Math.abs(unit(r) - stats.min) < 1e-9).length;
-      text('[data-featured-badge]', tied > 1 ? '現在最安（同単価 ' + tied + '件）' : activeGroup === 'all' && category === 'cat-litter' ? '素材を問わず比較した最安' : 'この条件の最安');
+      text('[data-featured-badge]', tied > 1 ? '現在最安（同単価 ' + tied + '件）' : activeGroup === 'all' && category === 'cat-litter' ? '素材を問わず比較した最安' : 'うちの条件なら、現在最安');
       text('[data-featured-unit]', formatYen(unit(row)));
       text('[data-featured-diff]', relativeLabel(unit(row), stats.median));
       text('[data-featured-gap-amount]', formatYen(stats.median - unit(row)) + ' / ' + metricLabel + 'の差');
@@ -185,7 +266,7 @@
       if (!visibleRows.length) return;
       const picks = anglePicks();
       if (!grid.children.length) {
-        [['unit', '単価重視', '単価最安'], ['total', '初期支出重視', '支払総額が最小'], ['bulk', 'まとめ買い重視', '最大容量']].forEach(([role, label, sub]) => {
+        [['unit', '長く使って安く', '単価重視'], ['total', '今日は出費を抑える', '支払総額重視'], ['bulk', '買い足す回数を減らす', 'まとめ買い重視']].forEach(([role, label, sub]) => {
           const button = element('button', 'angle-card');
           button.type = 'button'; button.dataset.angleCard = '1'; button.dataset.angleRole = role;
           button.appendChild(element('span', 'angle-label', label)); button.appendChild(element('span', 'angle-sub', sub));
@@ -212,6 +293,12 @@
       activeGroup = group;
       const active = $('[data-group-button][data-group="' + group + '"]');
       activeLabel = active?.dataset.groupLabel || '現在の条件';
+      $$('[data-group-button]').forEach(button => { const selected = button === active; button.setAttribute('aria-pressed', String(selected)); button.classList.toggle('active', selected); });
+      if (active?.closest('[data-other-conditions]')) active.closest('[data-other-conditions]').open = true;
+      const results = $('[data-comparison-results]'), start = $('[data-condition-start]'), usagePanel = $('[data-usage-panel]');
+      if (results) results.hidden = false;
+      if (start) start.hidden = true;
+      if (usagePanel) usagePanel.hidden = false;
       visibleRows = allRows.filter(row => group === 'all' || row.dataset.group === group);
       const prices = visibleRows.map(unit).filter(x => x > 0).sort((a, b) => a - b);
       const length = prices.length, middle = Math.floor(length / 2);
@@ -228,14 +315,15 @@
         }
       });
       text('[data-sticky-condition]', activeLabel);
+      text('[data-sticky-condition-title]', group === 'all' ? '素材指定なし' : 'あなたの条件');
       text('[data-sticky-min]', stats.min > 0 ? formatYen(stats.min) + ' / ' + metricLabel : '比較対象なし');
       text('[data-sticky-gap]', relativeLabel(stats.min, stats.median));
       text('[data-sticky-count]', visibleRows.length + '件');
-      text('[data-result-status]', activeLabel + ' · ' + visibleRows.length + '件の結果' + (feedback ? 'を更新しました' : ''));
+      text('[data-result-status]', (group === 'all' ? '素材指定なし：' : 'あなたの条件：') + activeLabel + ' · ' + visibleRows.length + '件' + (feedback ? 'に更新しました' : 'を比較中'));
       text('[data-list-context]', activeLabel + ' · ' + visibleRows.length + '件 · ' + metricLabel + 'あたり');
       text('[data-calc-condition]', activeLabel);
       $$('[data-empty-result], [data-list-empty]').forEach(node => { node.hidden = !!visibleRows.length; });
-      updateFeatured(); updateTop3(); updateAngles();
+      updateFeatured(); updateTop3(); updateAngles(); updateUsage(); saveHome();
       if (calcActive) calculate(false);
       if (feedback) { respond($('[data-featured-box]')); respond($('[data-top3-strip]')); respond($('[data-angle-detail]')); }
     }
@@ -289,7 +377,18 @@
       }
     }
     const filter = $('[data-group-filter]');
-    if (filter) applyGroup($('[data-group-button][aria-pressed="true"]')?.dataset.group || activeGroup);
+    const saved = household[category];
+    if (filter && saved && typeof saved.group === 'string' && $$('[data-group-button]').some(b => b.dataset.group === saved.group)) {
+      usage = typeof saved.usage === 'number' && Number.isFinite(saved.usage) && saved.usage > 0 && saved.usage <= 1e12 ? saved.usage : null;
+      if (usage) $('[data-usage-input]').value = String(usage);
+      lastUsageEvent = String(usage);
+      applyGroup(saved.group);
+    }
+    $$('[data-pet-category]').forEach(link => {
+      const previous = household[link.dataset.petCategory];
+      const labels = { regular: 'レギュラー', wide: 'ワイド', super_wide: 'スーパーワイド', paper: '紙', okara: 'おから', wood: '木', mineral: '鉱物', silica: 'シリカ', mixed: '混合素材', system: 'システムトイレ用', all: '素材指定なし', deotoilet: 'デオトイレ系', nyantomo: 'ニャンとも系', iris: 'アイリス系', universal: '各社共通・汎用', unknown: '素材不明' };
+      if (previous && labels[previous.group]) text('[data-saved-condition]', '前回の条件：' + labels[previous.group], link);
+    });
     const panel = $('[data-condition-panel]'), sticky = $('[data-comparison-sticky]');
     if (panel && sticky) {
       let queued = false;
@@ -299,21 +398,27 @@
       compact();
     }
     $('[data-calculator]')?.addEventListener('submit', event => { event.preventDefault(); calculate(true); });
+    $('[data-usage-form]')?.addEventListener('submit', event => { event.preventDefault(); setUsage(true); });
+    $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
+    $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
     if (category) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {
       const groupButton = event.target.closest('[data-group-button]');
       if (groupButton) {
         if (groupButton.getAttribute('aria-pressed') === 'true') return;
-        $$('[data-group-button]').forEach(button => { const active = button === groupButton; button.setAttribute('aria-pressed', String(active)); button.classList.toggle('active', active); });
         applyGroup(groupButton.dataset.group || 'all', true);
         send('comparison_filter', { category_id: category, filter_type: 'group', filter_value: activeGroup, result_count: visibleRows.length, min_unit_price: stats.min, median_unit_price: stats.median });
       }
       const angle = event.target.closest('[data-angle-card]');
       if (angle && angleRole !== angle.dataset.angleRole) {
-        angleRole = angle.dataset.angleRole; updateAngles(); respond($('[data-angle-detail]'));
+        angleRole = angle.dataset.angleRole; updateAngles(); updateUsage(); respond($('[data-angle-detail]'));
         send('comparison_angle_select', { category_id: category, filter_value: activeGroup, angle_role: angleRole, item_id: anglePicks()[angleRole]?.dataset.itemId || '' });
       }
+      if (event.target.closest('[data-usage-clear]')) setUsage(true, true);
+      if (event.target.closest('[data-open-usage]')) { const usagePanel = $('[data-usage-panel]'); if (usagePanel) usagePanel.open = true; }
+      const care = event.target.closest('[data-pet-category]');
+      if (care) send('pet_category_select', { category_id: care.dataset.petCategory, conversion_source: 'household_start' });
       const editorial = event.target.closest('a[data-editorial-category]');
       if (editorial) send('homepage_editorial_click', { category_id: editorial.dataset.editorialCategory || '', editorial_position: Number(editorial.dataset.editorialPosition || 0), conversion_source: 'homepage_editorial' });
       const spotlight = event.target.closest('a[data-spotlight-link]');

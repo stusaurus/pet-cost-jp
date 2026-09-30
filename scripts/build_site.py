@@ -67,7 +67,7 @@ def schema_script(data):
 
 def shell(title, description, body, category_id='', schema=None):
     url = f"{BASE_URL}{'categories/'+category_id+'/' if category_id else ''}"
-    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08735e"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(url)}"><link rel="icon" href="{BASE_URL}assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="{BASE_URL}assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(url)}"><meta property="og:image" content="{BASE_URL}assets/hero-pet-comparison.webp"><meta property="og:image:alt" content="犬と猫がペット用品を比較するビジュアル"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{BASE_URL}assets/hero-pet-comparison.webp">{schema_script(schema) if schema else ''}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" data-ui-version="comparison-workbench-1" class="page-{esc(category_id or 'home')}"><a class="skip-link" href="#main">比較へ進む</a>{body}</body></html>'''
+    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08735e"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(url)}"><link rel="icon" href="{BASE_URL}assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="{BASE_URL}assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(url)}"><meta property="og:image" content="{BASE_URL}assets/hero-pet-comparison.webp"><meta property="og:image:alt" content="犬と猫がペット用品を比較するビジュアル"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{BASE_URL}assets/hero-pet-comparison.webp">{schema_script(schema) if schema else ''}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" data-ui-version="pet-household-2" class="page-{esc(category_id or 'home')}"><a class="skip-link" href="#main">比較へ進む</a>{body}</body></html>'''
 
 
 def icon(kind):
@@ -90,7 +90,7 @@ def short_name(category):
 
 def nav(categories, current=''):
     links = ''.join(f'<a class="chip{" current" if c["id"] == current else ""}" href="{BASE_URL}categories/{esc(c["id"])}/" {"aria-current=page" if c["id"] == current else ""}><span class="nav-icon">{icon(c["id"])}</span>{esc(short_name(c))}</a>' for c in categories)
-    tool = '<a class="nav-tool" href="#store-calculator">店頭で比べる</a>' if current else '<a class="nav-tool" href="#categories">用品を選ぶ</a>'
+    tool = '<a class="nav-tool" href="#comparison-conditions">うちの条件</a>' if current else '<a class="nav-tool" href="#categories">用品を選ぶ</a>'
     return f'<nav class="topnav" aria-label="メインナビ"><div class="wrap"><a class="brand" href="{BASE_URL}" aria-label="ペット用品コスパ比較 トップ"><img class="brand-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="204" height="40"></a><div class="category-nav">{links}</div>{tool}</div></nav>'
 
 
@@ -161,7 +161,21 @@ def filter_label(label):
 def filter_buttons(category, items):
     counts, default = group_counts(category, items), category.get('default_group', 'all')
     hints = {'pet-sheets': '同じサイズ', 'cat-litter': '同じ素材・用途', 'system-toilet-sheets': '同じ対応シリーズ'}
-    return ''.join(f'''<button type="button" class="filter-chip{" active" if key == default else ""}" data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}" aria-pressed="{'true' if key == default else 'false'}"><span class="filter-label">{filter_label(label)}</span><span class="filter-meta">{hints[category['id']] if key != 'all' else '素材を問わず比較'}</span><span class="filter-count">{counts.get(key, 0)}件</span></button>''' for key, label in category.get('groups', {}).items() if counts.get(key, 0) > 0 or key == default)
+    def buttons(keys):
+        return ''.join(f'''<button type="button" class="filter-chip" data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}" aria-pressed="false"><span class="filter-label">{filter_label(label) if key != 'all' else '素材を問わず'}</span><span class="filter-meta">{hints[category['id']] if key != 'all' else '価格の目安・適合は未指定'}</span><span class="filter-count">{counts.get(key, 0)}件</span></button>''' for key, label in category.get('groups', {}).items() if key in keys and (counts.get(key, 0) > 0 or key == default))
+    if category['id'] == 'cat-litter':
+        primary = ['paper', 'okara', 'wood', 'mineral']
+        return '<div class="filters">' + buttons(primary) + '</div><details class="other-conditions" data-other-conditions><summary>その他の素材・用途 / 素材を問わず</summary><div class="filters">' + buttons([k for k in category['groups'] if k not in primary]) + '</div><p class="condition-note">素材を問わず見る場合は、用途・相性が違う商品も含む価格の目安です。</p></details>'
+    return '<div class="filters">' + buttons(category.get('groups', {})) + '</div>'
+
+
+def usage_panel(category):
+    period, label, suffix, example = {
+        'pet-sheets': ('day', '1日に何枚使いますか？', '枚 / 日', '5'),
+        'cat-litter': ('month', '1か月に何L使いますか？', 'L / 月', '10'),
+        'system-toilet-sheets': ('week', '1週間に何枚交換しますか？', '枚 / 週', '1'),
+    }[category['id']]
+    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>うちの使用量で見る</span><span class="usage-teaser" data-usage-teaser>任意 · どのくらい持つ？</span></summary><form data-usage-form data-usage-period="{period}" novalidate><div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p><p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の費用が分かります。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
 
 
 def reason_badges(item, items, middle):
@@ -205,7 +219,7 @@ def featured_box(category, item, items=None):
         {price_chart(item['unit_price'] if item else 0, middle, category['metric_label'], 'answer')}
         <p class="chart-note">選択中の条件で、現在掲載中の商品を比較しています。</p>
         <div class="answer-reasons"><p class="reason-title">なぜ、この単価になる？</p><p class="reason-formula" data-featured-formula>{yen(item['price']) + ' ÷ ' + quantity_text(category, item) if item else '-'} = {yen(item['unit_price']) if item else '-'}</p><p class="reason-copy">商品価格を、商品名で確認できた総数量で割っています。</p><div class="cover-reasons" data-featured-reasons aria-label="安さの理由">{reason_html}</div></div>
-      </div><div class="answer-product">{image}<div><h3 class="featured-title" data-featured-title>{esc(display_name(item['name'])) if item else ''}</h3><p class="featured-shop" data-featured-shop>{esc(item.get('shop')) if item else ''}</p></div>
+      <div class="usage-outcome" data-featured-usage hidden></div></div><div class="answer-product">{image}<div><h3 class="featured-title" data-featured-title>{esc(display_name(item['name'])) if item else ''}</h3><p class="featured-shop" data-featured-shop>{esc(item.get('shop')) if item else ''}</p></div>
         <div class="answer-checkout"><p class="featured-total" data-featured-total>商品総額 {yen(item['price']) if item else '-'}</p><p class="featured-quantity" data-featured-quantity>{quantity_text(category, item) + ' · ' + esc(item['quantity_evidence']) if item else ''}</p><p class="shipping" data-featured-shipping>{shipping_label(item.get('postage_flag')) if item else ''}</p><div class="featured-action"><a class="btn" {attrs}>楽天で確認</a></div></div>
       </div></div><p class="answer-caveat">単価の比較です。品質・吸収力・相性の順位ではありません。送料別の商品は送料を加算していません。</p></div>'''
 
@@ -224,17 +238,17 @@ def snapshot_cards(category, items):
 def angle_picks(items):
     if not items:
         return []
-    return [('unit', '単価重視', '単価最安', min(items, key=lambda x: (x['unit_price'], x['price']))), ('total', '初期支出重視', '支払総額が最小', min(items, key=lambda x: (x['price'], x['unit_price']))), ('bulk', 'まとめ買い重視', '最大容量', max(items, key=lambda x: (x['quantity'], -x['unit_price'])))]
+    return [('unit', '長く使って安く', '単価重視', min(items, key=lambda x: (x['unit_price'], x['price']))), ('total', '今日は出費を抑える', '支払総額重視', min(items, key=lambda x: (x['price'], x['unit_price']))), ('bulk', '買い足す回数を減らす', 'まとめ買い重視', max(items, key=lambda x: (x['quantity'], -x['unit_price'])))]
 
 
 def angle_cards(category, items):
-    return ''.join(f'''<button type="button" class="angle-card" data-angle-card data-angle-role="{role}" aria-pressed="{'true' if role == 'unit' else 'false'}"><span class="angle-label">{label}</span><span class="angle-sub">{reason}</span><span class="angle-value" data-angle-value>{esc(yen(item['unit_price']) + ' / ' + category['metric_label'] if role == 'unit' else yen(item['price']) if role == 'total' else quantity_text(category, item))}</span></button>''' for role, label, reason, item in angle_picks(items))
+    return ''.join(f'''<button type="button" class="angle-card" data-angle-card data-angle-role="{role}" aria-pressed="{'true' if role == 'unit' else 'false'}"><span class="angle-label">{label}</span><span class="angle-sub">{reason}</span><span class="angle-value" data-angle-value>{esc(yen(item['unit_price']) + ' / ' + category['metric_label'] if role == 'unit' else yen(item['price']) if role == 'total' else quantity_text(category, item))}</span><span class="angle-lifetime" data-angle-lifetime hidden></span></button>''' for role, label, reason, item in angle_picks(items))
 
 
 def angle_detail(category, items):
     item = angle_picks(items)[0][3] if items else None
     attrs = affiliate_attrs(category, item, 1, 'comparison_angle_unit') if item else 'data-affiliate-link'
-    return f'''<div class="angle-detail" data-angle-detail {'hidden' if not item else ''}><div><p class="angle-detail-reason" data-angle-reason>この条件で、単価が最小</p><h3 class="angle-detail-title" data-angle-name>{esc(display_name(item['name'])) if item else ''}</h3></div><div class="angle-metrics"><div class="angle-metric"><span>単価 / {esc(category['metric_label'])}</span><b data-angle-unit>{yen(item['unit_price']) if item else '-'}</b></div><div class="angle-metric"><span>商品総額</span><b data-angle-total>{yen(item['price']) if item else '-'}</b></div><div class="angle-metric"><span>総数量</span><b data-angle-quantity>{quantity_text(category, item) if item else '-'}</b></div></div><div class="angle-detail-foot"><p class="angle-explain" data-angle-explain>1枚・1Lの負担を抑える選び方。購入額・送料も一緒に確認してください。</p><a class="btn secondary" data-angle-link {attrs}>楽天で確認</a></div></div>'''
+    return f'''<div class="angle-detail" data-angle-detail {'hidden' if not item else ''}><div><p class="angle-detail-reason" data-angle-reason>この条件で、単価が最小</p><h3 class="angle-detail-title" data-angle-name>{esc(display_name(item['name'])) if item else ''}</h3></div><div class="angle-metrics"><div class="angle-metric"><span>単価 / {esc(category['metric_label'])}</span><b data-angle-unit>{yen(item['unit_price']) if item else '-'}</b></div><div class="angle-metric"><span>商品総額</span><b data-angle-total>{yen(item['price']) if item else '-'}</b></div><div class="angle-metric"><span>総数量</span><b data-angle-quantity>{quantity_text(category, item) if item else '-'}</b></div></div><div class="usage-outcome" data-angle-usage hidden></div><div class="angle-detail-foot"><p class="angle-explain" data-angle-explain>1枚・1Lの負担を抑える選び方。購入額・送料も一緒に確認してください。</p><a class="btn secondary" data-angle-link {attrs}>楽天で確認</a></div></div>'''
 
 
 def product_rows(items, category):
@@ -250,7 +264,7 @@ def product_rows(items, category):
             reasons_html = f'<span class="value-badge">{esc(relative_price_label(item["unit_price"], middle)) if rank else ""}</span>'
         image = f'<img class="shop-card-image" src="{esc(item.get("image"))}" alt="" loading="lazy" width="64" height="64">' if item.get('image') else ''
         parts.append(f'''<article class="{classes}" id="product-{esc(item['product_id'])}" data-product-row data-group="{esc(item['group'])}" data-row-unit-price="{item['unit_price']}" data-total-price="{item['price']}" data-quantity="{item['quantity']}" data-quantity-evidence="{esc(item['quantity_evidence'])}" data-image="{esc(item.get('image'))}" data-item-id="{esc(item['product_id'])}" data-item-name="{esc(item['name'])}" data-display-name="{esc(display_name(item['name']))}" data-shop="{esc(item.get('shop'))}" data-shipping="{esc(shipping_label(item.get('postage_flag')))}" data-url="{esc(item['url'])}" {'hidden' if not rank else ''}>
-          <span class="shop-card-rank" data-rank-cell aria-label="単価順位">{rank}</span><div class="shop-card-image-wrap">{image}</div><div class="shop-card-prices"><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div><div class="value-badge-row" data-value-badges aria-label="安さの理由">{reasons_html}</div><div class="shop-card-head"><details class="product-name"><summary><span class="shop-card-title">{esc(display_name(item['name']))}</span><span class="name-toggle" aria-hidden="true"></span></summary><p class="original-name">楽天の商品名：{esc(item['name'])}</p></details><div class="shop-card-shop">{esc(item.get('shop'))}</div><div class="shop-card-tags">{quantity_text(category, item)} · {esc(item['quantity_evidence'])} · {esc(group_label(category, item['group']))}</div></div><div class="shop-checkout"><div class="shop-card-meta"><div class="shop-total"><span>商品総額</span>{yen(item['price'])}</div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div><div class="shop-card-action"><a class="btn secondary" {affiliate_attrs(category, item, rank, 'comparison_card')}>楽天で確認</a></div></div></article>''')
+          <span class="shop-card-rank" data-rank-cell aria-label="単価順位">{rank}</span><div class="shop-card-image-wrap">{image}</div><div class="shop-card-prices"><div class="shop-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></div></div><div class="value-badge-row" data-value-badges aria-label="安さの理由">{reasons_html}</div><div class="shop-card-head"><details class="product-name"><summary><span class="shop-card-title">{esc(display_name(item['name']))}</span><span class="name-toggle" aria-hidden="true"></span></summary><p class="original-name">楽天の商品名：{esc(item['name'])}</p></details><div class="shop-card-shop">{esc(item.get('shop'))}</div><div class="shop-card-tags">{quantity_text(category, item)} · {esc(item['quantity_evidence'])} · {esc(group_label(category, item['group']))}</div><p class="shop-usage" data-row-usage hidden></p></div><div class="shop-checkout"><div class="shop-card-meta"><div class="shop-total"><span>商品総額</span>{yen(item['price'])}</div><div class="shipping">{esc(shipping_label(item.get('postage_flag')))}</div></div><div class="shop-card-action"><a class="btn secondary" {affiliate_attrs(category, item, rank, 'comparison_card')}>楽天で確認</a></div></div></article>''')
     return ''.join(parts)
 
 
@@ -270,22 +284,28 @@ def category_page(category, items, categories, updated):
     initial = visible_default_items(category, items)
     stats = comparison_stats(initial)
     label = group_label(category, category.get('default_group', 'all'))
-    prompt = {'pet-sheets': '使っているサイズを選ぶ', 'cat-litter': '素材・用途を選ぶ', 'system-toilet-sheets': 'トイレ本体の対応を選ぶ'}[category['id']]
+    prompt = {'pet-sheets': '使っているサイズは？', 'cat-litter': '普段使っている素材は？', 'system-toilet-sheets': '使っているトイレは？'}[category['id']]
+    fit_note = {'pet-sheets': 'いつものサイズだけで比較します。厚さ・吸収力は商品ごとに確かめてください。', 'cat-litter': 'いつもの素材・用途だけで比較します。kgからLへの推測換算はしません。', 'system-toilet-sheets': '本体に合うシリーズだけで比較します。寸法・対応機種は購入前に商品ページで確認してください。'}[category['id']]
     suffix = 'L' if category['metric'] == 'per_liter' else '枚'
     schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     body = f'''{nav(categories, category['id'])}
-    <header class="page-intro wrap"><div class="intro-heading"><h1>{esc(category['name'])}の単価を比較</h1><span class="updated">最終更新 {esc(updated)}</span></div><p class="intro-copy">{esc(category['intro'])}</p></header>
+    <header class="page-intro wrap"><div class="intro-heading"><h1>{esc(short_name(category))}を、うちの条件で</h1><span class="updated">最終更新 {esc(updated)}</span></div><p class="intro-copy">うちで使えるものに絞って、その中で安いものを探しましょう。</p></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
-        <div class="step-label"><span class="step-number">01</span>条件をそろえる</div><h2 id="condition-heading">{prompt}</h2>
-        <div class="filter-wrap"><div class="filters" data-group-filter data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
-        <div class="condition-foot"><p class="result-status" data-result-status role="status" aria-live="polite" aria-atomic="true">{esc(label)} · {len(initial)}件の結果</p><a class="text-link" href="#store-calculator">店頭の価格も比べる</a></div>
+        <div class="step-label"><span class="step-number">01</span>うちの条件を教えてください</div><h2 id="condition-heading">{prompt}</h2>
+        <p class="condition-note">{fit_note}</p>
+        <div class="filter-wrap"><div data-group-filter data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
+        <div class="condition-foot"><p class="result-status" data-result-status role="status" aria-live="polite" aria-atomic="true">選ぶと、その条件の最安・買い方・商品一覧が表示されます。</p><span class="condition-save">選んだ条件はこの端末に保存</span></div>
+        {usage_panel(category)}
       </section>
+      <p class="condition-start" data-condition-start>まず、いつも使っている条件をひとつ選びましょう。<span>使用量を入れなくても、単価で比較できます。</span></p>
+      <noscript><style>[data-comparison-results][hidden]{{display:block!important}}[data-condition-start],[data-group-filter],.condition-foot{{display:none!important}}</style><p class="condition-note">JavaScriptが無効のため、{esc(label)}の比較例を表示しています。条件・使用量の変更にはJavaScriptを有効にしてください。</p></noscript>
+      <div data-comparison-results hidden>
       <aside class="comparison-sticky" data-comparison-sticky aria-label="現在の比較条件"><div class="comparison-sticky-inner">
-        <a class="sticky-cell sticky-condition" href="#comparison-conditions" aria-label="比較条件を変更"><span class="sticky-label">比較条件</span><strong class="sticky-value" data-sticky-condition>{esc(label)}</strong></a>
+        <a class="sticky-cell sticky-condition" href="#comparison-conditions" aria-label="比較条件を変更"><span class="sticky-label" data-sticky-condition-title>あなたの条件</span><strong class="sticky-value" data-sticky-condition>{esc(label)}</strong></a>
         <div class="sticky-cell sticky-price"><span class="sticky-label">現在最安</span><strong class="sticky-value" data-sticky-min>{yen(stats['min'])} / {esc(category['metric_label'])}</strong></div>
         <div class="sticky-cell sticky-gap"><span class="sticky-label">中央値との差</span><strong class="sticky-value" data-sticky-gap>{relative_price_label(stats['min'], stats['median'])}</strong></div>
         <div class="sticky-cell sticky-count"><span class="sticky-label">表示件数</span><strong class="sticky-value" data-sticky-count>{len(initial)}件</strong></div><a class="sticky-jump" href="#product-ranking" aria-label="商品ランキングへ移動">一覧</a>
@@ -296,20 +316,20 @@ def category_page(category, items, categories, updated):
         <div class="results-bridge"><a class="text-link" href="#top-three">2位・3位の差を見る</a><a class="text-link" href="#comparison-angles">別の選び方で比べる</a></div>
       </section>
       <section class="section snapshot-section" id="top-three" aria-labelledby="top3-heading">
-        <div class="section-head"><div><div class="step-label"><span class="step-number">02</span>価格差を見比べる</div><h2 id="top3-heading">1位・2位・3位、どのくらい違う？</h2><p class="section-sub">バーの長さは単価。同じ尺度、0円から表示しています。</p></div></div>
+        <div class="section-head"><div><div class="step-label"><span class="step-number">02</span>うちに合う買い方を比べる</div><h2 id="top3-heading">1位・2位・3位、どのくらい違う？</h2><p class="section-sub">バーの長さは単価。同じ尺度、0円から表示しています。</p></div></div>
         <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial)}</div><p class="snapshot-note">同じ単価なら、バーも同じ長さ。順位は価格順で、品質のおすすめではありません。</p>
       </section>
       <section class="section" id="comparison-angles" aria-labelledby="angle-heading">
-        <div class="section-head"><div><h2 id="angle-heading">「安い」を3つの角度で見る</h2><p class="section-sub">いま大切にしたいことを選ぶと、注目する商品が変わります。</p></div></div>
-        <div class="angle-grid" data-angle-grid>{angle_cards(category, initial)}</div>{angle_detail(category, initial)}
+        <div class="section-head"><div><h2 id="angle-heading">次の買い足し、どう買う？</h2><p class="section-sub">同じ条件でも、出費・買う量・持つ期間で選び方が変わります。</p></div><a class="text-link" href="#comparison-conditions" data-open-usage>使用量を入れる</a></div>
+        <div class="angle-grid" data-angle-grid>{angle_cards(category, initial)}</div><p class="condition-note" data-usage-scale-note hidden>細いバーは持つ期間。3候補を同じ尺度で比べています。</p>{angle_detail(category, initial)}
         <p class="angle-note">掲載データの数値だけで選んでいます。複数の選び方が同じ商品に当てはまる場合もあります。支払総額は掲載商品価格で比較し、送料別の送料は未加算です。</p>
       </section>
       <section class="section" id="product-ranking" aria-labelledby="ranking-heading">
-        <div class="section-head list-heading"><div><div class="step-label"><span class="step-number">03</span>商品ごとに確かめる</div><h2 id="ranking-heading">単価が安い順に比較</h2><p class="section-sub" data-list-context>{esc(label)} · {len(initial)}件 · {esc(category['metric_label'])}あたり</p></div><a class="text-link" href="#comparison-conditions">条件を変更</a></div>
+        <div class="section-head list-heading"><div><div class="step-label"><span class="step-number">03</span>買う量と今回の出費を確かめる</div><h2 id="ranking-heading">うちの条件で、単価が安い順</h2><p class="section-sub" data-list-context>{esc(label)} · {len(initial)}件 · {esc(category['metric_label'])}あたり</p></div><a class="text-link" href="#comparison-conditions">条件を変更</a></div>
         <div class="product-grid" data-product-grid>{product_rows(items, category)}</div><p class="empty-result" data-list-empty {'hidden' if initial else ''}>比較できる商品がありません。</p>
       </section>
       <section class="section calc-section" id="store-calculator" aria-labelledby="calculator-heading">
-        <div class="section-head"><div><div class="step-label"><span class="step-number">04</span>お店で見つけた価格も</div><h2 id="calculator-heading">店頭価格も比べる</h2></div></div>
+        <div class="section-head"><div><p class="step-label">お店で同じ条件の商品を見つけたら</p><h2 id="calculator-heading">店頭の商品も、うちの条件で比較</h2></div></div>
         <div class="calc-steps" aria-label="店頭比較の流れ"><span>値段と数量を入力</span><span>{category['metric_label']}単価に換算</span><span>掲載最安と比較</span></div>
         <div class="calc-layout"><form class="calculator" data-calculator novalidate><div class="calc-inputs">
           <label class="input-label">店頭の値段<span class="input-unit">（税込・円）</span><input class="input" type="text" inputmode="decimal" autocomplete="off" data-calc-price aria-label="店頭商品の総額" aria-describedby="calc-error" placeholder="例：980"></label>
@@ -322,7 +342,7 @@ def category_page(category, items, categories, updated):
         <details class="method-details"><summary>比較するときのポイント</summary>{guide_html(category)}</details>
         <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最安単価と最小総額の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは価格の順位です。吸収力・消臭力・原材料・ペットとの相性の評価ではありません。</p></details>
         <h2>よくある質問</h2>{faq_html(category)}
-      </section>
+      </section></div>
     </main>{footer()}{mobile_dock(categories, category['id'])}'''
     title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
     desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
@@ -341,14 +361,24 @@ def homepage(categories, summaries, updated):
           <div class="entry-gap"><b>{gap}%</b><span>掲載中央値より低い</span></div><div class="entry-chart">{price_chart(s.get('min'), s.get('median'), category['metric_label'], style_class='price-chart')}</div>
           <div class="entry-cta"><span>条件を選んで比較</span><span class="entry-count">この条件 {s.get('default_count', 0)}件</span></div>
         </a>''')
-    stores = ''.join(f'<a class="text-link" href="{BASE_URL}categories/{c["id"]}/#store-calculator">{esc(short_name(c))}</a>' for c in categories)
-    schema = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'url': BASE_URL, 'description': 'ペット用品を1枚・1Lなど同じ単位に揃えて比較するサイト'}
+    starts = []
+    for c in categories:
+        question, choices, pet = {
+            'pet-sheets': ('使っているサイズは？', 'レギュラー / ワイド / スーパーワイド', '犬・猫のトイレに'),
+            'cat-litter': ('普段使っている素材は？', '紙 / おから / 木 / 鉱物など', '猫のトイレに'),
+            'system-toilet-sheets': ('使っているトイレは？', 'デオトイレ / ニャンとも / 各社共通など', '猫のシステムトイレに'),
+        }[c['id']]
+        starts.append(f'''<a class="care-entry {category_theme(c['id'])}" data-pet-category="{c['id']}" href="{BASE_URL}categories/{c['id']}/"><span class="care-icon">{icon(c['id'])}</span><div><span class="care-for">{pet}</span><h3>{esc(short_name(c))}</h3><p class="care-question">{question}</p><p class="care-choices" data-saved-condition>{choices}</p></div><span class="care-arrow" aria-hidden="true">→</span></a>''')
+    schema = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'url': BASE_URL, 'description': 'うちで使えるペット用品を、うちの条件・使用量で比較するサイト'}
     body = f'''{nav(categories)}<main id="main" class="main wrap">
-      <header class="home-intro"><div><h1>いつもの用品、<br><em>1枚・1L</em>で比べよう。</h1><p class="home-note">数量が分かる商品だけ。条件をそろえて、いまの単価を比較。</p><span class="updated">最終更新 {esc(updated)}</span></div><img class="home-photo" src="{BASE_URL}assets/hero-pet-comparison.webp" alt="犬と猫、いつものペット用品を比べるイメージ" width="220" height="135" fetchpriority="high"></header>
-      <section class="section home-comparison" id="categories" data-daily-spotlight aria-labelledby="categories-heading"><div class="section-head"><div><h2 id="categories-heading">今日、まず見る3つ</h2><p class="section-sub">今日の価格差が大きい順。用品を選んで、条件をそろえましょう。</p></div></div><div class="category-entry-grid">{''.join(entries)}</div><p class="home-price-note">価格差は、表示した条件の「現在掲載商品の最安と中央値の差」です。過去価格や値下げを示すものではありません。猫砂の「すべて」には異なる素材・用途が含まれます。</p></section>
-      <section class="home-tools"><div><h2>同じ単位に、きちんとそろえる</h2><p>サイズ・素材・対応シリーズを選ぶと、最安・TOP3・一覧が一緒に切り替わります。数量が曖昧な選択式商品や、中古・訳あり商品は除外。毎回の更新で数量・分類・単価・重複を自動監査しています。</p></div><div><h2>お店で見つけた「これ安い？」も</h2><p>税込の値段と総数量を入力すると、1枚・1L単価に換算して掲載中の楽天商品と比べられます。</p><div class="store-links">{stores}</div></div></section>
+      <header class="home-intro"><div><p class="home-kicker">うちで使えるものを、うちの使い方で。</p><h1>いつもの用品、<br><em>うちの条件</em>ならどれ？</h1><p class="home-note">サイズ・素材・トイレ本体を選んで、使えるものの中で比べる。</p></div><img class="home-photo" src="{BASE_URL}assets/hero-pet-comparison.webp" alt="犬と猫、いつものペット用品を比べるイメージ" width="220" height="135" fetchpriority="high"></header>
+      <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><h2 id="categories-heading">何を使っていますか？</h2><p class="section-sub">まずは、いつもの用品を選びましょう。</p></div></div><div class="care-entry-grid">{''.join(starts)}</div></section>
+      <section class="home-journey" aria-label="うちの使い方で比較する流れ"><div><span class="step-number">01</span><h3>うちで使える？</h3><p>いつもの条件だけに絞る</p></div><div><span class="step-number">02</span><h3>どのくらい持つ？</h3><p>使用量を入れると、期間と月の負担に</p></div><div><span class="step-number">03</span><h3>買い足すならどれ？</h3><p>単価・今回の出費・買う量を一緒に</p></div></section>
+      <p class="home-usage-note">使用量の入力は任意。1枚・1Lの単価だけでも比較できます。選んだ条件・使用量は、この端末に保存されます。</p>
+      <details class="home-price-details" data-daily-spotlight><summary><span>今日の価格差も見る</span><span class="updated">最終更新 {esc(updated)}</span></summary><p class="section-sub">代表条件での比較例。価格差が大きい順に表示しています。</p><div class="category-entry-grid">{''.join(entries)}</div><p class="home-price-note">価格差は、表示した条件の「現在掲載商品の最安と中央値の差」です。過去価格や値下げを示すものではありません。ご自身の条件は、カテゴリを開いて選んでください。</p></details>
+      <section class="home-tools"><div><h2>うちの条件を、きちんとそろえる</h2><p>サイズ・素材・対応シリーズを混ぜずに比較。数量が曖昧な選択式商品や、中古・訳あり商品は除外し、更新ごとに数量・分類・単価・重複を監査しています。</p></div><div><h2>お店で同じ条件の商品を見つけたら</h2><p>各比較ページの店頭比較で、税込の値段と数量を1枚・1L単価へ。うちの条件に合う楽天掲載商品と比べられます。</p></div></section>
     </main>{footer()}{mobile_dock(categories)}'''
-    return shell(f'{SITE_NAME} | 1枚・1Lあたりで安さを比較', 'ペットシーツ、猫砂、猫用システムトイレシートを1枚・1Lあたりの単価に揃えて比較。数量が曖昧な商品は除外し、条件別に安い商品を確認できます。', body, schema=schema)
+    return shell(f'{SITE_NAME} | うちの条件・使い方で比べる', 'ペットシーツのサイズ、猫砂の素材、システムトイレ本体に合う条件から価格比較。使用量を入れると持つ期間と30日分の費用も分かります。', body, schema=schema)
 
 
 def write_text(path, text):
@@ -389,9 +419,10 @@ def main():
             ranked = choose_ranked(raw, category)
         write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
-        initial = visible_default_items(category, ranked)
+        spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
+        initial = [x for x in ranked if x['group'] == spotlight_group]
         stats = comparison_stats(initial)
-        summaries[category['id']] = {'total_count': len(ranked), 'default_count': len(initial), **stats, 'deal_percent': deal_percent(stats['min'], stats['median']), 'best': initial[0] if initial else None, 'default_label': group_label(category, category.get('default_group', 'all'))}
+        summaries[category['id']] = {'total_count': len(ranked), 'default_count': len(initial), **stats, 'deal_percent': deal_percent(stats['min'], stats['median']), 'best': initial[0] if initial else None, 'default_label': group_label(category, spotlight_group)}
     if args.reuse_data:
         updated = max(json.loads((ROOT / 'data' / f"{c['id']}.json").read_text())['updated'] for c in categories)
     write_text(SITE / 'index.html', homepage(categories, summaries, updated))
