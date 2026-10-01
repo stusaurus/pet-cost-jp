@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01 09:36 JST",
+  "updated": "2026-10-01 12:13 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -72,6 +72,25 @@
       "confidence": 0.99,
       "group": "regular",
       "unit_price": 4.1
+    },
+    {
+      "name": "【レギュラーお得な価格挑戦中】ペットシーツ レギュラー 800枚 多頭飼い 大容量 ペットシーツ ペットシーツ まとめ買い 業務用 ケース ペット用 犬 トイレシート おしっこシート 猫",
+      "price": 3580,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00rdq2o.7cx6m336.g00rdq2o.7cx6naeb/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flgcity%2Fpetsheets-800%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Flgcity%2Fi%2F10001558%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "ナイス物屋",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/lgcity/cabinet/10106758/10106762/800.jpg?_ex=128x128",
+      "review_average": 4.31,
+      "review_count": 85,
+      "postage_flag": 0,
+      "product_id": "1224bc098c44",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 800.0,
+      "quantity_evidence": "800枚",
+      "confidence": 0.9,
+      "group": "regular",
+      "unit_price": 4.475
     },
     {
       "name": "ペットシーツ レギュラー 800枚 超薄型 送料無料 ペットシート トイレシート 超薄型レギュラー ペットトイレシート おしっこシート 大容量 業務用 PSD001",
