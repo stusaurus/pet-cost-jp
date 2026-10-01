@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01 08:06 JST",
+  "updated": "2026-10-01 09:36 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -264,6 +264,25 @@
       "unit_price": 18.1667
     },
     {
+      "name": "純国産ペットシーツ　ワイド300枚[送料無料]表面：白色",
+      "price": 6600,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00puweo.7cx6m6c1.g00puweo.7cx6n670/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjushop%2F1081963%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fjushop%2Fi%2F10000336%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "ジェイユーショップ",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/jushop/cabinet/j/jun-w-box1.jpg?_ex=128x128",
+      "review_average": 4.58,
+      "review_count": 2324,
+      "postage_flag": 0,
+      "product_id": "ef6d162ffc16",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 300.0,
+      "quantity_evidence": "300枚",
+      "confidence": 0.9,
+      "group": "wide",
+      "unit_price": 22.0
+    },
+    {
       "name": "コスパがいいペットシーツ（1回使い捨てタイプ）　スーパーワイド　200枚入り　関東当日便",
       "price": 5280,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F284018%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F11092927%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -397,6 +416,25 @@
       "unit_price": 37.8
     },
     {
+      "name": "トムキャット 業務用ペットシーツ 厚型スーパーワイド 25枚 ×6袋入",
+      "price": 6160,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pxxxo.7cx6m93a.g00pxxxo.7cx6nede/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomcat%2Fbb601031%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomcat%2Fi%2F10000902%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "トムキャット楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/tomcat/cabinet/doggoods/toiletries/petsheets/bb601041.jpg?_ex=128x128",
+      "review_average": 4.65,
+      "review_count": 157,
+      "postage_flag": 0,
+      "product_id": "0146f6d5fec0",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 150.0,
+      "quantity_evidence": "25枚 x6袋",
+      "confidence": 0.99,
+      "group": "super_wide",
+      "unit_price": 41.0667
+    },
+    {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　スーパーワイド　薄型　40枚　1回交換タイプ（90cm×60cm）国産　ペットシート　お一人様4点限り",
       "price": 1672,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F190727%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10220355%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -416,25 +454,6 @@
       "unit_price": 41.8
     },
     {
-      "name": "国産 業務用ペットシーツ 中厚型 スーパーワイド 80枚［319079／大容量／多頭飼い／まとめ買い／おしっこ／トイレ／シート／大型犬／中型犬／小型犬／コーチョー］",
-      "price": 5940,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00rww7o.7cx6m286.g00rww7o.7cx6ne1a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Finterzoo-pet%2F005-0485-03-06%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Finterzoo-pet%2Fi%2F10000218%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "interzoo clinicclub",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/interzoo-pet/cabinet/dogetc/petsheets/imgrc0090808328.jpg?_ex=128x128",
-      "review_average": 4.9,
-      "review_count": 41,
-      "postage_flag": 0,
-      "product_id": "d5c1c3110eb2",
-      "category_id": "pet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 80.0,
-      "quantity_evidence": "80枚",
-      "confidence": 0.9,
-      "group": "super_wide",
-      "unit_price": 74.25
-    },
-    {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　スーパーワイド　23枚×4　お一人様1点限り",
       "price": 7361,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F222436%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10413133%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -452,6 +471,25 @@
       "confidence": 0.99,
       "group": "super_wide",
       "unit_price": 80.0109
+    },
+    {
+      "name": "国産 業務用ペットシーツ 中厚型 スーパーワイド 80枚［319079／大容量／多頭飼い／まとめ買い／おしっこ／トイレ／シート／大型犬／中型犬／小型犬／コーチョー］",
+      "price": 7150,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00rww7o.7cx6m286.g00rww7o.7cx6ne1a/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Finterzoo-pet%2F005-0485-03-06%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Finterzoo-pet%2Fi%2F10000218%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "interzoo clinicclub",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/interzoo-pet/cabinet/dogetc/petsheets/imgrc0090808328.jpg?_ex=128x128",
+      "review_average": 4.9,
+      "review_count": 41,
+      "postage_flag": 0,
+      "product_id": "d5c1c3110eb2",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 80.0,
+      "quantity_evidence": "80枚",
+      "confidence": 0.9,
+      "group": "super_wide",
+      "unit_price": 89.375
     },
     {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　コーチョー　ネオシーツ　カーボンDX　スーパーワイド　18枚×4袋　お一人様1点限り　ペットシーツ",
