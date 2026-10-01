@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "dog-food": {"species":"dog", "kind":"food", "name":"ドッグフード", "publish_products":false, "keywords":["ドッグフード 成犬 ドライ 総合栄養食"]},
+  "cat-food": {"species":"cat", "kind":"food", "name":"キャットフード", "publish_products":false, "keywords":["キャットフード 成猫 ドライ 総合栄養食"]},
+  "dog-toys": {"species":"dog", "kind":"toy", "name":"犬のおもちゃ", "publish_products":false, "keywords":["犬 おもちゃ ロープ 小型犬", "犬 おもちゃ ボール 中型犬", "犬 おもちゃ 知育 大型犬"]},
+  "cat-toys": {"species":"cat", "kind":"toy", "name":"猫のおもちゃ", "publish_products":false, "keywords":["猫 おもちゃ じゃらし", "猫 おもちゃ トンネル", "猫 おもちゃ 知育"]}
+}

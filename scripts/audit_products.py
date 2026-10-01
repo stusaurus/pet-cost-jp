@@ -7,6 +7,7 @@ from pathlib import Path
 from common.classify import classify
 from common.engine import _family_key, category_matches, parse_quantity
 from common.quantity import normalize_text
+from common.catalog import audit as audit_catalog
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE_DATA = ROOT / "site" / "data"
@@ -114,6 +115,9 @@ def main():
     if duplicate_ids:
         errors.append(f"duplicate product_id: {', '.join(duplicate_ids)}")
 
+    discovery_path = SITE_DATA / 'discovery.json'
+    if discovery_path.exists():
+        errors.extend(audit_catalog(json.loads(discovery_path.read_text()), json.loads((ROOT / 'config/discovery.json').read_text())))
     if errors:
         print("PRODUCT QUALITY AUDIT FAILED")
         for error in errors:

@@ -397,7 +397,7 @@
     $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
     $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
-    if (category) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
+    if (category && filter) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {
       const groupButton = event.target.closest('[data-group-button]');
       if (groupButton) {

@@ -174,8 +174,8 @@ class RenderTests(unittest.TestCase):
         for category in self.categories:
             home = build_site.care_art(category['id'])
             header = build_site.care_art(category['id'], role='category')
-            self.assertIn('/scene-', home)
-            self.assertIn('/key-', header)
+            self.assertIn('/assets/living/', home)
+            self.assertIn('/header-', header)
             self.assertNotEqual(home, header)
             self.assertNotIn('<svg', home + header)
             self.assertIn('<svg', build_site.icon(category['id']))
