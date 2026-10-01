@@ -39,7 +39,7 @@ def main():
  for i,name in enumerate(['dog-young','dog-adult','dog-senior','cat-young','cat-adult','cat-senior']):
   x=i%3*512;y=0 if i<3 else 490;bottom=490 if i<3 else 1024;export('ages',name,(x,y,x+512,bottom))
  for name,box in zip(['size-small','size-medium','size-large'],[(0,0,530,887),(530,0,1070,887),(1070,0,1774,887)]):export('sizes',name,box)
- for name,box in zip(['chew','chase','together','puzzle','teaser','hide'],[(0,0,500,500),(505,0,955,450),(960,0,1536,485),(0,505,503,965),(505,505,950,1024),(955,490,1536,1024)]):
+ for name,box in zip(['chew','chase','together','puzzle','teaser','hide'],[(0,0,500,500),(505,0,955,450),(960,0,1536,465),(0,505,503,965),(505,505,950,1024),(955,490,1536,1024)]):
   export('play','play-'+name,box)
  (OUT/'manifest.json').write_text(json.dumps({'version':'pet-living-2','mode':'built-in-imagegen','assets':records},ensure_ascii=False,indent=2))
  print(f'{len(records)} assets, {sum(r["bytes"] for r in records):,} bytes')

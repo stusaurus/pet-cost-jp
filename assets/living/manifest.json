@@ -337,13 +337,13 @@
       "file": "play-together.webp",
       "width": 320,
       "height": 240,
-      "bytes": 19624,
+      "bytes": 20612,
       "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
       "crop": [
         960,
         0,
         1536,
-        485
+        465
       ],
       "header_crop": false
     },
