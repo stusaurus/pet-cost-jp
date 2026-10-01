@@ -110,7 +110,7 @@ class RenderTests(unittest.TestCase):
         self.assertIn('この条件 8件', source)
         self.assertIn('現在掲載商品の最安と中央値の差', source)
         self.assertIn('WebSite', source)
-        self.assertLess(source.index('何を使っていますか？'), source.index('今日の価格差も見る'))
+        self.assertLess(source.index('いつもの用品をすぐ比べる'), source.index('今日の価格差も見る'))
         self.assertIn('data-pet-category="pet-sheets"', source)
         self.assertNotIn('商品名から', source)
 

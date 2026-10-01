@@ -1,10 +1,11 @@
 """Evidence-only discovery; no inferred suitability or toy price ranking."""
 import re
+from datetime import date
 from urllib.parse import urlparse, parse_qs
 from .quantity import normalize_text
 from .engine import GLOBAL_EXCLUDE, parse_quantity, product_id
 
-EXCLUDE = GLOBAL_EXCLUDE + ('選べる', '選択', 'ランダム', '種類おまかせ', '色おまかせ', 'サイズ展開', 'よりどり', '福袋', '詰め合わせ', '交換用', '替え用', 'パーツ', 'セット内容', '各種')
+EXCLUDE = GLOBAL_EXCLUDE + ('選べる', '選択', 'ランダム', '種類おまかせ', '色おまかせ', 'サイズ展開', 'よりどり', '福袋', '詰め合わせ', '交換用', '替え用', 'パーツ', 'セット内容', '各種', 'sサイズ', 'mサイズ', 'lサイズ', '点セット', '中大型犬')
 MEDICAL = ('療法', '腎臓', '尿路', '消化器', '糖尿', 'アレルギー', '肥満', '治療', '減量', 'ダイエット', '処方', 'おやつ', 'スナック', 'サプリ')
 AGE = {'young':('子犬', '子猫', 'パピー', 'キトン'), 'adult':('成犬', '成猫', 'アダルト'), 'senior':('シニア', '高齢', '老犬', '老猫')}
 SIZE = {'small':('小型犬', '超小型犬'), 'medium':('中型犬',), 'large':('大型犬',)}
@@ -12,6 +13,19 @@ PLAY = {'chew':('噛む', 'かむ', 'カミカミ'), 'chase':('ボール', 'フ�
 
 def matching(text, mapping):
     return {key: next((word for word in words if normalize_text(word) in text), '') for key, words in mapping.items()}
+
+def reviewed(item, config):
+    direct = parse_qs(urlparse(item.get('url','')).query).get('pc',[''])[0]
+    review = config.get('approved_products',{}).get(direct)
+    if not review: return None
+    try:
+        age = (date.today() - date.fromisoformat(review['reviewed_on'])).days
+    except (KeyError,ValueError): return None
+    if not 0 <= age <= 180: return None
+    title = normalize_text(item['name'])
+    if not all(normalize_text(term) in title for term in review['required_title_terms']): return None
+    if any(item.get(k) != review.get(k) for k in ('play','age','size','dimensions')): return None
+    return review
 
 def inspect(raw, config):
     title = raw.get('name', '')
@@ -59,7 +73,15 @@ def collect(raw, config):
             if direct not in seen:
                 seen.add(direct); items.append(item)
     # Alphabetical, not cheapest-first or quality-ranked.
-    return {'items':sorted(items,key=lambda x:x['name'])[:12], 'research':{'fetched':len(raw),'eligible':len(items),'held_by_reason':rejected}, 'version':1}
+    eligible = len(items)
+    if config.get('publish_products'):
+        approved=[]
+        for item in items:
+            review=reviewed(item,config)
+            if review:
+                approved.append({**item,'review_warning':review['warning'],'review_label':review['label'],'reviewed_on':review['reviewed_on'],'review_source':review['source']})
+        items=approved
+    return {'items':sorted(items,key=lambda x:x['name'])[:12], 'research':{'fetched':len(raw),'eligible':eligible,'published_reviewed':len(items) if config.get('publish_products') else 0,'held_by_reason':rejected}, 'version':1}
 
 def audit(payload, configs):
     errors=[]
@@ -71,6 +93,8 @@ def audit(payload, configs):
         for item in items:
             rebuilt,reason=inspect(item,config)
             if reason or not rebuilt or any(rebuilt.get(k)!=item.get(k) for k in ('species','play','age','size','dimensions','evidence')): errors.append(key+': unsupported attributes')
+            review=reviewed(item,config)
+            if not review or any(item.get(k)!=review.get(v) for k,v in [('review_warning','warning'),('review_label','label'),('reviewed_on','reviewed_on'),('review_source','source')]): errors.append(key+': manual review missing or changed')
             if item.get('product_id') in seen: errors.append(key+': duplicate')
             seen.add(item.get('product_id'))
     return errors

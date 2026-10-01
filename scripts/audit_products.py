@@ -117,7 +117,11 @@ def main():
 
     discovery_path = SITE_DATA / 'discovery.json'
     if discovery_path.exists():
-        errors.extend(audit_catalog(json.loads(discovery_path.read_text()), json.loads((ROOT / 'config/discovery.json').read_text())))
+        discovery_data = json.loads(discovery_path.read_text())
+        errors.extend(audit_catalog(discovery_data, json.loads((ROOT / 'config/discovery.json').read_text())))
+        for key, payload in discovery_data.items():
+            summary[key] = len(payload.get('items',[]))
+            total += summary[key]
     if errors:
         print("PRODUCT QUALITY AUDIT FAILED")
         for error in errors:

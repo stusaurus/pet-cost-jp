@@ -1,7 +1,80 @@
 {
   "version": 1,
-  "dog-food": {"species":"dog", "kind":"food", "name":"ドッグフード", "publish_products":false, "keywords":["ドッグフード 成犬 ドライ 総合栄養食"]},
-  "cat-food": {"species":"cat", "kind":"food", "name":"キャットフード", "publish_products":false, "keywords":["キャットフード 成猫 ドライ 総合栄養食"]},
-  "dog-toys": {"species":"dog", "kind":"toy", "name":"犬のおもちゃ", "publish_products":false, "keywords":["犬 おもちゃ ロープ 小型犬", "犬 おもちゃ ボール 中型犬", "犬 おもちゃ 知育 大型犬"]},
-  "cat-toys": {"species":"cat", "kind":"toy", "name":"猫のおもちゃ", "publish_products":false, "keywords":["猫 おもちゃ じゃらし", "猫 おもちゃ トンネル", "猫 おもちゃ 知育"]}
+  "dog-food": {
+    "species": "dog",
+    "kind": "food",
+    "name": "ドッグフード",
+    "publish_products": false,
+    "keywords": [
+      "ドッグフード 成犬 ドライ 総合栄養食"
+    ]
+  },
+  "cat-food": {
+    "species": "cat",
+    "kind": "food",
+    "name": "キャットフード",
+    "publish_products": false,
+    "keywords": [
+      "キャットフード 成猫 ドライ 総合栄養食"
+    ]
+  },
+  "dog-toys": {
+    "species": "dog",
+    "kind": "toy",
+    "name": "犬のおもちゃ",
+    "publish_products": true,
+    "keywords": [
+      "犬 おもちゃ ロープ 小型犬",
+      "犬 おもちゃ ボール 中型犬",
+      "犬 おもちゃ 知育 大型犬"
+    ],
+    "approved_products": {
+      "https://item.rakuten.co.jp/pet-para/943-67079/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ペットパラダイス",
+          "スリンキー",
+          "ロープ",
+          "20cm",
+          "小型犬"
+        ],
+        "play": "together",
+        "age": "",
+        "size": "small",
+        "dimensions": "20cm",
+        "warning": "超小型〜小型犬用。噛む力が強い犬には与えないでください。破損したら使用を中止し、飼い主が一緒に遊んでください。",
+        "source": "https://item.rakuten.co.jp/pet-para/943-67079/",
+        "label": "スリンキー ロープトイ（約20cm）"
+      }
+    }
+  },
+  "cat-toys": {
+    "species": "cat",
+    "kind": "toy",
+    "name": "猫のおもちゃ",
+    "publish_products": true,
+    "keywords": [
+      "猫 おもちゃ じゃらし",
+      "猫 おもちゃ トンネル",
+      "猫 おもちゃ 知育"
+    ],
+    "approved_products": {
+      "https://item.rakuten.co.jp/nagaipet/ajd0033/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "Nagaipet",
+          "S型",
+          "トンネル",
+          "25CM"
+        ],
+        "play": "hide",
+        "age": "",
+        "size": "",
+        "dimensions": "25cm",
+        "warning": "入口直径25cm・長さ117cm。ポンポンやワイヤーの破損、噛む・引っ掻く癖に注意。猫を入れたまま移動しないでください。",
+        "source": "https://item.rakuten.co.jp/nagaipet/ajd0033/",
+        "label": "S型キャットトンネル（入口直径25cm）"
+      }
+    }
+  }
 }

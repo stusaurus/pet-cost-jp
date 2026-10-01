@@ -1,6 +1,7 @@
 import json
 import sys
 import unittest
+from datetime import date
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from common.catalog import inspect, collect, audit
@@ -15,7 +16,7 @@ class CatalogTest(unittest.TestCase):
         self.assertFalse(reason);self.assertEqual(a['size'],'small');self.assertEqual(a['play'],'together');self.assertEqual(a['age'],'')
         for e in a['evidence']:self.assertIn(e['quote'],self.row['name'])
         self.assertNotIn('unit_price',a)
-        self.assertEqual(len(collect([self.row,self.row],self.config['dog-toys'])['items']),1)
+        self.assertEqual(len(collect([self.row,self.row],{**self.config['dog-toys'],'publish_products':False})['items']),1)
     def test_reject_uncertain_products(self):
         for title in ['猫 犬 おもちゃ ロープ 12cm','犬 おもちゃ ボール ロープ 12cm','犬 おもちゃ ロープ','犬 おもちゃ ロープ 選べる 12cm','中古 犬 おもちゃ ロープ 12cm','犬 おもちゃ ロープ 成犬 シニア 12cm']:
             self.assertIsNone(inspect({**self.row,'name':title},self.config['dog-toys'])[0],title)
@@ -29,8 +30,14 @@ class CatalogTest(unittest.TestCase):
         self.assertTrue(audit({'dog-food':{'items':[candidate]}},self.config))
     def test_audit_detects_fabricated_attributes(self):
         a,_=inspect(self.row,self.config['dog-toys'])
-        approved={**self.config,'dog-toys':{**self.config['dog-toys'],'publish_products':True}}
+        review={'reviewed_on':date.today().isoformat(),'required_title_terms':['ロープ','12cm'],'play':'together','age':'','size':'small','dimensions':'12cm','label':'ロープトイ','warning':'見守りのもとで使用','source':'https://item.rakuten.co.jp/test/one/'}
+        approved={**self.config,'dog-toys':{**self.config['dog-toys'],'publish_products':True,'approved_products':{'https://item.rakuten.co.jp/test/one/':review}}}
+        a=collect([self.row],approved['dog-toys'])['items'][0]
         self.assertFalse(audit({'dog-toys':{'items':[a]}},approved))
         self.assertTrue(audit({'dog-toys':{'items':[{**a,'age':'senior'}]}},self.config))
+        self.assertEqual(collect([self.row],self.config['dog-toys'])['items'],[])
+        expired={**approved['dog-toys'],'approved_products':{'https://item.rakuten.co.jp/test/one/':{**review,'reviewed_on':'2020-01-01'}}}
+        self.assertEqual(collect([self.row],expired)['items'],[])
+        self.assertTrue(audit({'dog-toys':{'items':[{**a,'review_warning':'絶対壊れない'}]}},approved))
 
 if __name__=='__main__':unittest.main()
