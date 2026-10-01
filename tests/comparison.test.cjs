@@ -216,7 +216,8 @@ test('quiet comparison standards opens from the trust strip without changing sho
     assert.equal(events(p, 'affiliate_click').length, 0);
     assert.equal(events(p, 'pet_category_select').length, 0);
     assert.ok(get(p, '.home-scene img').src.endsWith('/assets/pet-home-morning.webp'));
-    assert.equal(all(p, '[data-pet-category] .care-art svg').length, 3);
+    assert.equal(all(p, '[data-pet-category] .care-art img.editorial-art').length, 3);
+    assert.equal(all(p, '[data-pet-category] .care-art svg').length, 0);
     assert.deepEqual(p.errors, []);
   } finally { p.close(); }
 });

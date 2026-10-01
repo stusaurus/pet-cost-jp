@@ -146,6 +146,40 @@ class RenderTests(unittest.TestCase):
         self.assertEqual([a['data-angle-role'] for a in page.with_attr('data-angle-card')], ['unit', 'total', 'bulk'])
         self.assertIn('hidden', page.with_attr('data-comparison-results')[0])
 
+    def test_editorial_assets_are_real_files_with_reserved_geometry(self):
+        manifest = json.loads((ROOT / 'assets/illustrations/manifest.json').read_text())
+        self.assertEqual(len(manifest['assets']), 18)
+        self.assertLess(sum(a['bytes'] for a in manifest['assets']), 400000)
+        for asset in manifest['assets']:
+            path = ROOT / 'assets/illustrations' / asset['file']
+            data = path.read_bytes()
+            self.assertEqual(data[:4], b'RIFF')
+            self.assertEqual(data[8:12], b'WEBP')
+            self.assertEqual(len(data), asset['bytes'])
+            self.assertGreater(len(data), 1000)
+            self.assertLess(len(data), 40000)
+            self.assertEqual(asset['width'] / asset['height'], 4 / 3)
+        for category in self.categories:
+            for group in ('', *category['groups']):
+                image = Page(build_site.care_art(category['id'], group)).tags[0]
+                self.assertEqual(image[0], 'img')
+                attrs = image[1]
+                self.assertEqual(attrs['alt'], '')
+                self.assertEqual(attrs['aria-hidden'], 'true')
+                self.assertIn('width', attrs)
+                self.assertIn('height', attrs)
+                self.assertTrue((ROOT / attrs['src'].removeprefix(build_site.BASE_URL)).is_file())
+
+    def test_home_and_category_use_distinct_editorial_compositions(self):
+        for category in self.categories:
+            home = build_site.care_art(category['id'])
+            header = build_site.care_art(category['id'], role='category')
+            self.assertIn('/scene-', home)
+            self.assertIn('/key-', header)
+            self.assertNotEqual(home, header)
+            self.assertNotIn('<svg', home + header)
+            self.assertIn('<svg', build_site.icon(category['id']))
+
 
 if __name__ == '__main__':
     unittest.main()

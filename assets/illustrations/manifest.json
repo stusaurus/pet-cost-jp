@@ -1,0 +1,244 @@
+{
+  "version": "editorial-art-1",
+  "medium": "digital gouache / colored pencil",
+  "illustrative_only": true,
+  "assets": [
+    {
+      "file": "scene-pet-sheets.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 22722,
+      "source": "exec-d333cc31-28f1-407b-a021-15782d25aacc.png",
+      "crop": null,
+      "role": "home"
+    },
+    {
+      "file": "key-pet-sheets.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 22890,
+      "source": "exec-d333cc31-28f1-407b-a021-15782d25aacc.png",
+      "crop": [
+        0,
+        180,
+        1448,
+        1086
+      ],
+      "role": "category"
+    },
+    {
+      "file": "scene-cat-litter.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 26338,
+      "source": "exec-6c017d68-8375-4695-a577-a23e5d0242f3.png",
+      "crop": null,
+      "role": "home"
+    },
+    {
+      "file": "key-cat-litter.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 23424,
+      "source": "exec-6c017d68-8375-4695-a577-a23e5d0242f3.png",
+      "crop": [
+        0,
+        240,
+        1448,
+        1086
+      ],
+      "role": "category"
+    },
+    {
+      "file": "scene-system-toilet-sheets.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 29972,
+      "source": "exec-4819dd5b-d286-4831-ad0a-99b901b025e2.png",
+      "crop": null,
+      "role": "home"
+    },
+    {
+      "file": "key-system-toilet-sheets.webp",
+      "width": 352,
+      "height": 264,
+      "bytes": 28528,
+      "source": "exec-4819dd5b-d286-4831-ad0a-99b901b025e2.png",
+      "crop": [
+        0,
+        180,
+        1448,
+        1086
+      ],
+      "role": "category"
+    },
+    {
+      "file": "filter-sheet-regular.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 5970,
+      "source": "exec-86f05d03-0558-42c2-8459-69779ed0b37d.png",
+      "crop": [
+        0,
+        0,
+        585,
+        724
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-sheet-wide.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 8242,
+      "source": "exec-86f05d03-0558-42c2-8459-69779ed0b37d.png",
+      "crop": [
+        585,
+        0,
+        1300,
+        724
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-sheet-super_wide.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 11016,
+      "source": "exec-86f05d03-0558-42c2-8459-69779ed0b37d.png",
+      "crop": [
+        1300,
+        0,
+        2172,
+        724
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-paper.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 14438,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-okara.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 14560,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-wood.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 14666,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-mineral.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 13538,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-mixed.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 15766,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-litter-system.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 13952,
+      "source": "exec-4f07dc24-d3b4-4796-a270-82e254ccf3d5.png",
+      "crop": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-system-deotoilet.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 10022,
+      "source": "exec-d023268c-eebf-4e49-91b3-217c6d822712.png",
+      "crop": [
+        0,
+        0,
+        753,
+        724
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-system-nyantomo.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 10806,
+      "source": "exec-d023268c-eebf-4e49-91b3-217c6d822712.png",
+      "crop": [
+        753,
+        0,
+        1440,
+        724
+      ],
+      "role": "filter"
+    },
+    {
+      "file": "filter-system-universal.webp",
+      "width": 240,
+      "height": 180,
+      "bytes": 11538,
+      "source": "exec-d023268c-eebf-4e49-91b3-217c6d822712.png",
+      "crop": [
+        1440,
+        0,
+        2172,
+        724
+      ],
+      "role": "filter"
+    }
+  ]
+}

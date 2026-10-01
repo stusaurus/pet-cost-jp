@@ -86,26 +86,30 @@ def icon(kind):
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + shapes.get(kind, shapes['home']) + '</svg>'
 
 
-def care_art(category_id, group=''):
-    """Decorative product motifs, never actual dimensions or compatibility claims."""
-    if category_id == 'pet-sheets':
-        width = {'regular': 70, 'wide': 92, 'super_wide': 112}.get(group, 98)
-        x = (160-width)/2
-        shapes = f'<path d="M{x-7} 38h{width}v57H{x-7}z" fill="#d7e3d5"/><path d="M{x} 30h{width}v57H{x}z" fill="#fffdf7" stroke="currentColor"/><path d="M{x+9} 39h{width-18}v39H{x+9}z" fill="#edf3e9" stroke="#bbcdbb" stroke-dasharray="3 4"/><path d="M{x+width-16} 30v16h16" fill="#d7e3d5" stroke="currentColor"/>'
-    elif category_id == 'cat-litter':
-        grains = '<path d="m54 56 5-4 5 4-5 5zm23-8 4-4 6 4-5 5zm20 9 5-4 5 4-5 5z" fill="#e4d0a5"/>'
-        if group == 'paper':
-            grains = '<path d="m52 52 9-4 5 7-9 4zm25-7 7 1-2 9-7-1zm21 7 10 3-3 7-10-3z" fill="#fffdf7" stroke="#b4aa8c"/>'
-        elif group == 'wood':
-            grains = '<path d="m51 53 12-5 3 7-12 5zm24-7 12 2-1 7-12-2zm22 11 12-3 2 6-12 3z" fill="#bc9e70"/>'
-        elif group == 'okara':
-            grains = '<g fill="#e1ca96"><ellipse cx="60" cy="53" rx="8" ry="4"/><ellipse cx="83" cy="49" rx="7" ry="4"/><ellipse cx="103" cy="57" rx="7" ry="4"/></g>'
-        elif group == 'mineral':
-            grains = '<path d="m52 50 8-2 5 8-9 4-6-6zm25-6 9 1 4 7-8 5-7-6zm20 9 10-2 5 8-12 3-5-4z" fill="#b4b1a1"/>'
-        shapes = '<ellipse cx="80" cy="60" rx="57" ry="19" fill="#eee4d1" stroke="currentColor"/><path d="m23 60 10 32q47 15 94 0l10-32q-57 25-114 0" fill="#dbcaad" stroke="currentColor"/>' + grains
+def care_art(category_id, group='', role='home'):
+    """Commissioned editorial assets; labels, dimensions and fit come from data.
+
+    These concept illustrations never establish actual size, material composition,
+    manufacturer compatibility or quality. Empty alt preserves existing UI names.
+    """
+    illustrated_groups = {
+        'pet-sheets': {'regular', 'wide', 'super_wide'},
+        'cat-litter': {'paper', 'okara', 'wood', 'mineral', 'mixed', 'system'},
+        'system-toilet-sheets': {'deotoilet', 'nyantomo', 'universal'},
+    }
+    if group in illustrated_groups.get(category_id, set()):
+        family = {'pet-sheets': 'sheet', 'cat-litter': 'litter',
+                  'system-toilet-sheets': 'system'}[category_id]
+        filename = f'filter-{family}-{group}.webp'
+        width, height = 240, 180
     else:
-        shapes = '<path d="M31 40q0-14 14-14h70q14 0 14 14v41H31z" fill="#e5e9e4" stroke="currentColor"/><ellipse cx="80" cy="48" rx="42" ry="15" fill="#fffdf7" stroke="#bacbc7"/><path d="M31 69h98v15H31z" fill="#b3c4c1"/><path d="m37 78 80 0 8 20H29z" fill="#fffdf7" stroke="currentColor"/><path d="m43 83 66 0 4 10H39z" fill="#e6eeeb"/><path d="M70 97h20" stroke="currentColor"/>'
-    return '<svg viewBox="0 0 160 120" fill="none" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true" focusable="false"><ellipse cx="80" cy="103" rx="62" ry="5" fill="currentColor" opacity=".08"/>' + shapes + '</svg>'
+        # New/unspecified conditions use a neutral scene, not a guessed material.
+        prefix = 'key' if role == 'category' or group else 'scene'
+        filename = f'{prefix}-{category_id}.webp'
+        width, height = 352, 264
+    return (f'<img class="editorial-art" src="{BASE_URL}assets/illustrations/{filename}" '
+            f'width="{width}" height="{height}" alt="" aria-hidden="true" '
+            'data-art-version="editorial-art-1" decoding="async" draggable="false">')
 
 
 def trust_strip(target):
@@ -329,7 +333,7 @@ def category_page(category, items, categories, updated):
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     body = f'''{nav(categories, category['id'])}
-    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">うちの条件で、次の買い足しを。</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'])}</div></header>
+    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">うちの条件で、次の買い足しを。</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>
