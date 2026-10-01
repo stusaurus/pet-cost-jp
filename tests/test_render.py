@@ -122,10 +122,29 @@ class RenderTests(unittest.TestCase):
                 build_site.copy_static_verification_files()
                 for source in ROOT.glob('google*.html'):
                     self.assertEqual((Path(tmp) / source.name).read_bytes(), source.read_bytes())
-                for asset in ('pet-cost-logo.svg', 'favicon.svg', 'site.webmanifest', 'comparison.css'):
+                for asset in ('pet-cost-logo.svg', 'favicon.svg', 'site.webmanifest', 'comparison.css', 'pet-home-morning.webp'):
                     self.assertTrue((Path(tmp) / 'assets' / asset).exists())
         finally:
             build_site.SITE = original_site
+
+    def test_lifestyle_art_is_decorative_not_a_product_or_compatibility_claim(self):
+        source = self.render([self.item])
+        page = Page(source)
+        self.assertIn('pet-living-1', source)
+        self.assertEqual(page.with_attr('data-condition-progress')[0]['class'], 'condition-progress')
+        self.assertEqual(len(page.with_attr('data-angle-card')), 3)
+        svg = [a for tag, a in page.tags if tag == 'svg']
+        self.assertTrue(svg)
+        self.assertTrue(all(a.get('aria-hidden') == 'true' for a in svg))
+        self.assertIn('数量・比較の根拠を見る', source)
+        self.assertIn('品質やペットとの相性を保証するものではありません', source)
+        self.assertIn('過去価格ではありません', source)
+        self.assertLess((ROOT / 'assets/pet-home-morning.webp').stat().st_size, 300000)
+
+    def test_empty_default_keeps_three_buying_choices_for_later_selection(self):
+        page = Page(self.render([]))
+        self.assertEqual([a['data-angle-role'] for a in page.with_attr('data-angle-card')], ['unit', 'total', 'bulk'])
+        self.assertIn('hidden', page.with_attr('data-comparison-results')[0])
 
 
 if __name__ == '__main__':

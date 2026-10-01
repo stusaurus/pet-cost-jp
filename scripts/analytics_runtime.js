@@ -266,14 +266,6 @@
       grid.hidden = detail.hidden = !visibleRows.length;
       if (!visibleRows.length) return;
       const picks = anglePicks();
-      if (!grid.children.length) {
-        [['unit', '長く使って安く', '単価重視'], ['total', '今日は出費を抑える', '支払総額重視'], ['bulk', '買い足す回数を減らす', 'まとめ買い重視']].forEach(([role, label, sub]) => {
-          const button = element('button', 'angle-card');
-          button.type = 'button'; button.dataset.angleCard = '1'; button.dataset.angleRole = role;
-          button.appendChild(element('span', 'angle-label', label)); button.appendChild(element('span', 'angle-sub', sub));
-          const value = element('span', 'angle-value'); value.dataset.angleValue = '1'; button.appendChild(value); grid.appendChild(button);
-        });
-      }
       $$('[data-angle-card]', grid).forEach(button => {
         const role = button.dataset.angleRole, row = picks[role];
         button.setAttribute('aria-pressed', String(role === angleRole));
@@ -321,12 +313,14 @@
       text('[data-sticky-gap]', relativeLabel(stats.min, stats.median));
       text('[data-sticky-count]', visibleRows.length + '件');
       text('[data-result-status]', (group === 'all' ? '素材指定なし：' : 'あなたの条件：') + activeLabel + ' · ' + visibleRows.length + '件' + (feedback ? 'に更新しました' : 'を比較中'));
+      const progress = $('[data-condition-progress]');
+      if (progress) { progress.classList.add('is-ready'); progress.textContent = group === 'all' ? '素材指定なしの比較' : 'うちの条件で比較中'; }
       text('[data-list-context]', activeLabel + ' · ' + visibleRows.length + '件 · ' + metricLabel + 'あたり');
       text('[data-calc-condition]', activeLabel);
       $$('[data-empty-result], [data-list-empty]').forEach(node => { node.hidden = !!visibleRows.length; });
       updateFeatured(); updateTop3(); updateAngles(); updateUsage(); saveHome();
       if (calcActive) calculate(false);
-      if (feedback) { respond($('[data-featured-box]')); respond($('[data-top3-strip]')); respond($('[data-angle-detail]')); }
+      if (feedback) { respond($('[data-featured-box]')); respond($('[data-top3-strip]')); respond($('[data-angle-detail]')); respond($('[data-comparison-sticky]')); respond($('[data-result-status]')); }
     }
     function readInput(selector) {
       const input = $(selector);
@@ -418,6 +412,7 @@
       }
       if (event.target.closest('[data-usage-clear]')) setUsage(true, true);
       if (event.target.closest('[data-open-usage]')) { const usagePanel = $('[data-usage-panel]'); if (usagePanel) usagePanel.open = true; }
+      if (event.target.closest('[data-open-standards]')) { const standards = $('#comparison-standards'); if (standards) standards.open = true; }
       const care = event.target.closest('[data-pet-category]');
       if (care) send('pet_category_select', { category_id: care.dataset.petCategory, conversion_source: 'household_start' });
       const editorial = event.target.closest('a[data-editorial-category]');
