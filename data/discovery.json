@@ -1,0 +1,61 @@
+{
+  "dog-food": {
+    "items": [],
+    "research": {
+      "fetched": 30,
+      "eligible": 0,
+      "held_by_reason": {
+        "食種・栄養区分・単一年齢未確認": 17,
+        "医療・用途対象外": 7,
+        "内容量未確定": 4,
+        "要メーカー照合": 2
+      }
+    },
+    "version": 1
+  },
+  "cat-food": {
+    "items": [],
+    "research": {
+      "fetched": 30,
+      "eligible": 0,
+      "held_by_reason": {
+        "対象動物不明・混在": 4,
+        "医療・用途対象外": 14,
+        "要メーカー照合": 9,
+        "食種・栄養区分・単一年齢未確認": 2,
+        "内容量未確定": 1
+      }
+    },
+    "version": 1
+  },
+  "dog-toys": {
+    "items": [],
+    "research": {
+      "fetched": 90,
+      "eligible": 1,
+      "held_by_reason": {
+        "遊びタイプ不明・混在": 39,
+        "対象動物不明・混在": 24,
+        "寸法・対象条件未確定": 23,
+        "用品違い": 1,
+        "除外条件・選択式": 2
+      }
+    },
+    "version": 1
+  },
+  "cat-toys": {
+    "items": [],
+    "research": {
+      "fetched": 90,
+      "eligible": 5,
+      "held_by_reason": {
+        "寸法・対象条件未確定": 36,
+        "遊びタイプ不明・混在": 34,
+        "除外条件・選択式": 5,
+        "対象動物不明・混在": 9,
+        "用品違い": 1
+      }
+    },
+    "version": 1
+  }
+}

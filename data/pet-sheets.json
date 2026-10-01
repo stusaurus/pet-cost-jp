@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-01 20:11 JST",
+  "updated": "2026-10-01 22:37 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -207,8 +207,27 @@
       "unit_price": 15.29
     },
     {
+      "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　ワイド　薄型　100枚　1回交換タイプ（60cm×45cm）国産　ペットシート　お一人様4点限り",
+      "price": 1672,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F275018%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10406085%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "charm 楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2751/275018-1.jpg?_ex=128x128",
+      "review_average": 4.59,
+      "review_count": 229,
+      "postage_flag": 1,
+      "product_id": "9a6f98e93e2f",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 100.0,
+      "quantity_evidence": "100枚",
+      "confidence": 0.9,
+      "group": "wide",
+      "unit_price": 16.72
+    },
+    {
       "name": "ハニーケア ペットシート 薄型 ワイドタイプ HND-100(100枚入)",
-      "price": 1744,
+      "price": 1743,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00r136o.7cx6meef.g00r136o.7cx6n891/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4580639721003%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frakuten24%2Fi%2F11283286%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
       "shop": "楽天24",
       "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/003/4580639721003.jpg?_ex=128x128",
@@ -223,7 +242,7 @@
       "quantity_evidence": "100枚入",
       "confidence": 0.9,
       "group": "wide",
-      "unit_price": 17.44
+      "unit_price": 17.43
     },
     {
       "name": "ペット用品 業務用 ペットシーツ 超薄型 スーパーワイド 300枚(75枚×4) ペットライブラリー ペツトシ-ツチヨウウスガタSW300",
@@ -378,25 +397,6 @@
       "unit_price": 37.8
     },
     {
-      "name": "トムキャット 業務用ペットシーツ 厚型スーパーワイド 25枚 ×6袋入",
-      "price": 6160,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pxxxo.7cx6m93a.g00pxxxo.7cx6nede/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomcat%2Fbb601031%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomcat%2Fi%2F10000902%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "トムキャット楽天市場店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/tomcat/cabinet/doggoods/toiletries/petsheets/bb601041.jpg?_ex=128x128",
-      "review_average": 4.65,
-      "review_count": 157,
-      "postage_flag": 0,
-      "product_id": "0146f6d5fec0",
-      "category_id": "pet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 150.0,
-      "quantity_evidence": "25枚 x6袋",
-      "confidence": 0.99,
-      "group": "super_wide",
-      "unit_price": 41.0667
-    },
-    {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　スーパーワイド　薄型　40枚　1回交換タイプ（90cm×60cm）国産　ペットシート　お一人様4点限り",
       "price": 1672,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F190727%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10220355%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -414,6 +414,25 @@
       "confidence": 0.9,
       "group": "super_wide",
       "unit_price": 41.8
+    },
+    {
+      "name": "コーチョー　ネオシーツFX　スーパーワイド　36枚　薄型　ペットシーツ　関東当日便",
+      "price": 1982,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F202320%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10359618%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "charm 楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2025/202320-1.jpg?_ex=128x128",
+      "review_average": 5.0,
+      "review_count": 4,
+      "postage_flag": 1,
+      "product_id": "57ad04d7ca6f",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 36.0,
+      "quantity_evidence": "36枚",
+      "confidence": 0.9,
+      "group": "super_wide",
+      "unit_price": 55.0556
     },
     {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　デオシート　しっかり超吸収無香消臭タイプ　スーパーワイド　23枚×4　お一人様1点限り",
