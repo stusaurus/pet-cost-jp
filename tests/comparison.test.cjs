@@ -39,6 +39,8 @@ function verify(p, category, items, group) {
   assert.equal(text(p, '[data-sticky-condition]'), category.groups[group]);
   assert.equal(all(p, '[data-group-button][aria-pressed="true"]').length, 1);
   assert.equal(get(p, '[data-group-button][aria-pressed="true"]').dataset.group, group);
+  assert.ok(get(p, '[data-condition-progress]').classList.contains('is-ready'));
+  assert.equal(text(p, '[data-condition-progress]'), group === 'all' ? '素材指定なしの比較' : 'うちの条件で比較中');
   const middle = median(expected.map(x => x.unit_price));
   if (!expected.length) {
     assert.ok(get(p, '[data-featured-box]').hidden);
@@ -186,6 +188,8 @@ test('tied minima, even median, one-item and empty groups have honest states', a
     assert.equal(events(empty, 'unit_calculator_use').at(-1).comparison_result, 'benchmark_unavailable');
     get(empty, '[data-group="regular"][data-group-button]').click();
     verify(empty, emptyCategory, items, 'regular');
+    assert.equal(all(empty, '[data-angle-card] .angle-symbol svg').length, 3);
+    assert.equal(all(empty, '[data-angle-card] .angle-state').length, 3);
     assert.ok(text(empty, '[data-calc-result]').includes('高い店頭価格'));
   } finally { empty.close(); }
 });
@@ -197,6 +201,22 @@ test('homepage merged entry preserves both existing analytics events', async () 
     assert.equal(events(p, 'daily_spotlight_click').length, 3);
     assert.equal(events(p, 'affiliate_click').length, 0);
     assert.equal(events(p, 'comparison_view').length, 0);
+    assert.deepEqual(p.errors, []);
+  } finally { p.close(); }
+});
+test('quiet comparison standards opens from the trust strip without changing shopping telemetry', async () => {
+  const p = await open(fs.readFileSync(path.join(root, 'site/index.html'), 'utf8'));
+  try {
+    const details = get(p, '#comparison-standards');
+    assert.equal(details.open, false);
+    get(p, '[data-open-standards]').click();
+    assert.equal(details.open, true);
+    assert.ok(details.textContent.includes('品質やペットとの相性'));
+    assert.ok(details.textContent.includes('送料別の送料は未加算'));
+    assert.equal(events(p, 'affiliate_click').length, 0);
+    assert.equal(events(p, 'pet_category_select').length, 0);
+    assert.ok(get(p, '.home-scene img').src.endsWith('/assets/pet-home-morning.webp'));
+    assert.equal(all(p, '[data-pet-category] .care-art svg').length, 3);
     assert.deepEqual(p.errors, []);
   } finally { p.close(); }
 });
