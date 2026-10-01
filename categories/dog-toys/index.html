@@ -441,7 +441,7 @@
     const store=()=>{try{if(saved)localStorage.setItem(KEY,JSON.stringify({version:1,selected,...pets}));else localStorage.removeItem(KEY);return true;}catch(_){return false;}};
     const FOOD_KEY='pet_cost_food_preferences_v1', foodOptions=$$('[data-food-family-option]');
     let foodFamily='', foodDaily='', foodSaved=false, foodOrder='unit';
-    const positive=t=>/^\d+(\.\d+)?$/.test(t)&&Number(t)>0&&Number(t)<=100000;
+    const positive=t=>typeof t==='string'&&/^\d+(\.\d+)?$/.test(t)&&Number(t)>0&&Number(t)<=100000;
     if(foodOptions.length)try{const all=JSON.parse(localStorage.getItem(FOOD_KEY)||'{}'),f=all.version===1?all[selected]:null;if(f){foodFamily=foodOptions.some(n=>n.dataset.foodFamilyOption===f.family)?f.family:'';foodDaily=positive(f.daily)?f.daily:'';foodSaved=true;if(!pets[selected].age&&['young','adult','senior'].includes(f.age))pets[selected].age=f.age;if(!pets[selected].size&&['small','medium','large'].includes(f.size))pets[selected].size=f.size;}}catch(_){}
     if($('[data-food-usage]'))$('[data-food-usage]').value=foodDaily;
     function storeFood(){
@@ -456,7 +456,7 @@
       const option=foodOptions.find(n=>n.dataset.foodFamilyOption===foodFamily&&fits(n));
       $('[data-food-results]').hidden=!option;
       $$('[data-food-family]').forEach(n=>n.setAttribute('aria-pressed',String(!!option&&n.dataset.foodFamily===foodFamily)));
-      $('[data-food-fit-status]').textContent=!p.age?'年齢を選ぶと、対象条件を確認した銘柄が現れます。':selected==='dog'&&!p.size?'体格も選んでください。':'あなたの条件：'+({young:'幼齢',adult:'成犬・成猫',senior:'シニア'}[p.age])+(p.size?' · '+({small:'小型',medium:'中型',large:'大型'}[p.size]):'')+(foodOptions.some(fits)?' · 対象表記を確認して、いつもの銘柄を選んでください。':' · この条件で照合済みのごはんはまだありません。');
+      $('[data-food-fit-status]').textContent=!p.age?'年齢を選ぶと、対象条件を確認した銘柄が現れます。':selected==='dog'&&!p.size?'体格も選んでください。':'あなたの条件：'+({young:'幼齢',adult:selected==='dog'?'成犬':'成猫',senior:'シニア'}[p.age])+(p.size?' · '+({small:'小型',medium:'中型',large:'大型'}[p.size]):'')+(foodOptions.some(fits)?' · 対象表記を確認して、いつもの銘柄を選んでください。':' · この条件で照合済みのごはんはまだありません。');
       if($('[data-food-save]'))$('[data-food-save]').checked=foodSaved;
       const rows=$$('[data-food-candidate]'), candidates=rows.filter(n=>option&&n.dataset.family===foodFamily&&fits(n));
       rows.forEach(n=>n.hidden=!candidates.includes(n));
