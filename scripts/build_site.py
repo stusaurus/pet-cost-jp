@@ -135,7 +135,7 @@ def short_name(category):
 
 def nav(categories, current=''):
     links = ''.join(f'<a class="chip{" current" if c["id"] == current else ""}" href="{BASE_URL}categories/{esc(c["id"])}/" {"aria-current=page" if c["id"] == current else ""}><span class="nav-icon">{icon(c["id"])}</span>{esc(short_name(c))}</a>' for c in categories)
-    tool = '<a class="nav-tool" href="#comparison-conditions">うちの条件</a>' if current else '<a class="nav-tool" href="#categories">用品を選ぶ</a>'
+    tool = '<a class="nav-tool" href="#comparison-conditions">うちの条件</a>' if current else f'<a class="nav-tool" href="{BASE_URL}#pet-journey">うちの子から選ぶ</a>'
     return f'<nav class="topnav" aria-label="メインナビ"><div class="wrap"><a class="brand" href="{BASE_URL}" aria-label="ペット用品コスパ比較 トップ"><img class="brand-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="204" height="40"></a><div class="category-nav">{links}</div>{tool}</div></nav>'
 
 
@@ -425,7 +425,7 @@ def homepage(categories, summaries, updated):
     body = f'''{nav(categories)}<main id="main" class="main wrap">
       <header class="home-intro"><div class="home-intro-copy"><p class="home-kicker">ごはんも、遊びも、いつもの用品も。</p><h1>うちの子との毎日を、<br><em>心地よく。</em></h1><p class="home-note">うちの子に使えるものから、暮らしに合う選び方へ。<br>好きな遊びも、買い足す量も、一緒に見つけましょう。</p><a class="hero-start" href="#pet-journey">うちの子から選ぶ <span aria-hidden="true">↓</span></a></div><figure class="home-scene"><img class="home-photo" src="{BASE_URL}assets/living/home.webp" alt="朝の光の中、犬と猫がラグでくつろぐ。ごはんと遊びの道具が自然にある暮らし" width="1200" height="800" fetchpriority="high"><figcaption>その子に使えるものを、その家の暮らしで。</figcaption></figure></header>
       {journey()}
-      <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">いつもの用品を、買い足すなら</p><h2 id="categories-heading">何を使っていますか？</h2></div><span class="section-count">まずは条件から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
+      <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">条件が決まっている方へ</p><h2 id="categories-heading">いつもの用品をすぐ比べる</h2></div><span class="section-count">サイズ・素材・本体から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
       {trust_strip('comparison-standards')}
       <section class="home-journey" aria-label="うちの使い方で比較する流れ"><div><span class="journey-icon">{icon('fit')}</span><h3>うちで使える？</h3><p>いつものサイズ・素材・本体から。<br>使える条件だけで価格を比較。</p></div><div><span class="journey-icon">{icon('audit')}</span><h3>どのくらい持つ？</h3><p>使用量を入れれば、期間と月の費用に。<br>単価を、暮らしの数字へ。</p></div><div><span class="journey-icon">{icon('bulk')}</span><h3>買い足すならどれ？</h3><p>今回の出費も、まとめ買いも。<br>うちに合う買い方を選ぶ。</p></div></section>
       <p class="home-usage-note">使用量の入力は任意。条件・使用量は、この端末に保存されます。</p>
@@ -488,6 +488,8 @@ def main():
             continue
         if args.reuse_data or demo:
             result = prior.get(key, {'items': [], 'research': {'fetched': 0, 'eligible': 0, 'held_by_reason': {}}, 'version': 1})
+            if config.get('publish_products'):
+                result = {**result, 'items': collect_catalog(result.get('items',[]),config)['items']}
         else:
             raw = []
             try:
@@ -515,7 +517,7 @@ def main():
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     copy_static_verification_files()
-    print(f'Built {len(categories)} category pages in {SITE}')
+    print(f'Built {len(categories) + len(discovery_data)} category pages in {SITE}')
 
 
 if __name__ == '__main__':
