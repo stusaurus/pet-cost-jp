@@ -1,15 +1,76 @@
 {
   "dog-food": {
-    "items": [],
+    "items": [
+      {
+        "name": "ロイヤルカナン　ミニ　アダルト　成犬用　2kg　3182550402170　ジップ付　小型犬　お一人様5点限り　関東当日便",
+        "price": 3252,
+        "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F89151%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10178961%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+        "shop": "charm 楽天市場店",
+        "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/891/89151-1.jpg?_ex=128x128",
+        "review_average": 4.47,
+        "review_count": 15,
+        "postage_flag": 1,
+        "product_id": "5b7e035d480e",
+        "species": "dog",
+        "age": "adult",
+        "size": "small",
+        "form": "dry",
+        "nutrition": "complete",
+        "family": "mini-adult",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20.0,
+        "unit_price": 162.6,
+        "evidence": [
+          {
+            "attribute": "species",
+            "quote": "犬",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "quantity",
+            "quote": "2kg",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "age",
+            "value": "adult",
+            "source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "size",
+            "value": "small",
+            "source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "form",
+            "value": "dry",
+            "source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "nutrition",
+            "value": "complete",
+            "source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001",
+            "method": "個別照合"
+          }
+        ],
+        "review_warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "review_label": "ロイヤルカナン ミニ アダルト 2kg・1袋",
+        "reviewed_on": "2026-10-01",
+        "review_source": "https://item.rakuten.co.jp/chanet/89151/"
+      }
+    ],
     "research": {
-      "fetched": 30,
-      "eligible": 0,
-      "published_reviewed": 0,
+      "fetched": 60,
+      "eligible": 1,
+      "published_reviewed": 1,
       "held_by_reason": {
-        "食種・栄養区分・単一年齢未確認": 18,
-        "医療・用途対象外": 5,
-        "内容量未確定": 4,
-        "要メーカー照合": 3
+        "食種・栄養区分・単一年齢未確認": 56,
+        "対象動物不明・混在": 2,
+        "要メーカー照合": 1
       }
     },
     "version": 1
@@ -21,10 +82,9 @@
       "eligible": 0,
       "published_reviewed": 0,
       "held_by_reason": {
-        "対象動物不明・混在": 4,
-        "医療・用途対象外": 16,
-        "要メーカー照合": 9,
-        "食種・栄養区分・単一年齢未確認": 1
+        "食種・栄養区分・単一年齢未確認": 26,
+        "要メーカー照合": 3,
+        "対象動物不明・混在": 1
       }
     },
     "version": 1
@@ -133,8 +193,8 @@
       "eligible": 3,
       "published_reviewed": 1,
       "held_by_reason": {
-        "寸法・対象条件未確定": 34,
-        "遊びタイプ不明・混在": 32,
+        "寸法・対象条件未確定": 35,
+        "遊びタイプ不明・混在": 31,
         "除外条件・選択式": 11,
         "対象動物不明・混在": 9,
         "用品違い": 1
