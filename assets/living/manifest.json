@@ -1,0 +1,393 @@
+{
+  "version": "pet-living-2",
+  "mode": "built-in-imagegen",
+  "assets": [
+    {
+      "file": "home.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 183860,
+      "master": "exec-94044eed-bcbc-4400-ac51-ba333832d237.png",
+      "crop": null,
+      "header_crop": false
+    },
+    {
+      "file": "entry-dog.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 22342,
+      "master": "exec-582a887b-b7b5-4a8a-bdff-67eb7184c889.png",
+      "crop": [
+        0,
+        0,
+        887,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "entry-cat.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 20064,
+      "master": "exec-582a887b-b7b5-4a8a-bdff-67eb7184c889.png",
+      "crop": [
+        887,
+        0,
+        1774,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "dog-food.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23642,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        0,
+        0,
+        460,
+        450
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "cat-food.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 19080,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        460,
+        0,
+        888,
+        450
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "sheets.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 22108,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        888,
+        0,
+        1335,
+        450
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "header-sheets.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 26866,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        888,
+        0,
+        1335,
+        450
+      ],
+      "header_crop": true
+    },
+    {
+      "file": "litter.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 20156,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        1335,
+        0,
+        1774,
+        450
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "header-litter.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 25082,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        1335,
+        0,
+        1774,
+        450
+      ],
+      "header_crop": true
+    },
+    {
+      "file": "system.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23212,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        0,
+        450,
+        462,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "header-system.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 27718,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        0,
+        450,
+        462,
+        887
+      ],
+      "header_crop": true
+    },
+    {
+      "file": "dog-toys.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 26388,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        462,
+        450,
+        888,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "cat-toys.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23442,
+      "master": "exec-d6d07e7d-efd3-4b4e-b331-acfcfb482686.png",
+      "crop": [
+        888,
+        450,
+        1335,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "dog-young.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 19842,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        0,
+        0,
+        512,
+        490
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "dog-adult.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 25584,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        512,
+        0,
+        1024,
+        490
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "dog-senior.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 24570,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        1024,
+        0,
+        1536,
+        490
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "cat-young.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 17346,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        0,
+        490,
+        512,
+        1024
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "cat-adult.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23020,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        512,
+        490,
+        1024,
+        1024
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "cat-senior.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23122,
+      "master": "exec-82d961be-203d-418e-9760-bcdf3b0d614a.png",
+      "crop": [
+        1024,
+        490,
+        1536,
+        1024
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "size-small.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 9406,
+      "master": "exec-9b7c7e70-b9a4-4295-b3fc-226dadf02240.png",
+      "crop": [
+        0,
+        0,
+        530,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "size-medium.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 13996,
+      "master": "exec-9b7c7e70-b9a4-4295-b3fc-226dadf02240.png",
+      "crop": [
+        530,
+        0,
+        1070,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "size-large.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 19742,
+      "master": "exec-9b7c7e70-b9a4-4295-b3fc-226dadf02240.png",
+      "crop": [
+        1070,
+        0,
+        1774,
+        887
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-chew.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 21498,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        0,
+        0,
+        500,
+        500
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-chase.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 18804,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        505,
+        0,
+        955,
+        450
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-together.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 19624,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        960,
+        0,
+        1536,
+        485
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-puzzle.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 23850,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        0,
+        505,
+        503,
+        965
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-teaser.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 22056,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        505,
+        505,
+        950,
+        1024
+      ],
+      "header_crop": false
+    },
+    {
+      "file": "play-hide.webp",
+      "width": 320,
+      "height": 240,
+      "bytes": 19892,
+      "master": "exec-89be205f-43d7-41f6-a101-fe145a276e8a.png",
+      "crop": [
+        955,
+        490,
+        1536,
+        1024
+      ],
+      "header_crop": false
+    }
+  ]
+}

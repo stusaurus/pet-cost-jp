@@ -18,6 +18,7 @@ async function open(html, id = '', options = {}) {
       window.dataLayer.push = args => events.push([...args]);
       window.matchMedia = () => ({ matches: !!options.reduced });
       if (options.household) window.localStorage.setItem('pet_cost_household_v1', JSON.stringify(options.household));
+      if (options.profiles) window.localStorage.setItem('pet_cost_profiles_v1', JSON.stringify(options.profiles));
       if (options.storageError) Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage disabled'); } });
     }
   });
@@ -30,6 +31,42 @@ const all = (p, selector) => [...p.document.querySelectorAll(selector)];
 const text = (p, s) => get(p, s).textContent;
 const events = (p, name) => p.events.filter(e => e[0] === 'event' && e[1] === name).map(e => e[2]);
 const median = xs => { const s = [...xs].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length ? s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2 : 0; };
+test('pet-first journey, voluntary profile storage and telemetry privacy', async () => {
+  const p=await open(fs.readFileSync(path.join(root,'site/index.html'),'utf8'));
+  try {
+    assert.ok(get(p,'[data-pet-routes="dog"]').hidden);
+    get(p,'[data-pet-select="dog"]').click();
+    assert.equal(all(p,'[data-pet-routes]:not([hidden]) [data-living-route]').length,3);
+    get(p,'[data-profile-species="dog"] [data-profile-age="adult"]').click();
+    get(p,'[data-profile-species="dog"] [data-profile-size="small"]').click();
+    const weight=get(p,'[data-profile-species="dog"] [data-profile-weight]');weight.value='5.25';weight.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    const breed=get(p,'[data-profile-species="dog"] [data-profile-breed]');breed.value='秘密の犬種';breed.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    assert.equal(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'),null);
+    const save=get(p,'[data-profile-save]');save.checked=true;save.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    const data=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'));assert.equal(data.dog.weight,'5.25');assert.equal(data.dog.age,'adult');
+    assert.ok(!JSON.stringify(p.events).includes('5.25'));assert.ok(!JSON.stringify(p.events).includes('秘密の犬種'));
+    get(p,'[data-pet-select="cat"]').click();assert.equal(all(p,'[data-pet-routes]:not([hidden]) [data-living-route]').length,4);
+    get(p,'[data-profile-clear]').click();assert.equal(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'),null);
+    assert.deepEqual(p.errors,[]);
+  } finally {p.close();}
+});
+test('profiles restore only valid fields and work when storage is unavailable',async()=>{
+  for(const options of [{profiles:{version:1,selected:'cat',cat:{age:'adult',weight:'NaN',breed:'ミックス'}}},{storageError:true}]) {
+    const p=await open(fs.readFileSync(path.join(root,'site/index.html'),'utf8'),'',options);
+    try {if(options.profiles){assert.ok(!get(p,'[data-pet-routes="cat"]').hidden);assert.equal(get(p,'[data-profile-species="cat"] [data-profile-weight]').value,'');}get(p,'[data-pet-select="dog"]').click();assert.ok(!get(p,'[data-pet-routes="dog"]').hidden);assert.deepEqual(p.errors,[]);}finally{p.close();}
+  }
+});
+test('food calculator uses supplied grams and never estimates from weight',async()=>{
+  for(const key of ['dog-food','cat-food']){
+    const p=await open(fs.readFileSync(path.join(root,`site/categories/${key}/index.html`),'utf8'),key);
+    try {get(p,'[data-food-weight]').value='2000';get(p,'[data-food-price]').value='3000';get(p,'[data-food-daily]').value='120';get(p,'[data-food-calculator]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));const out=text(p,'[data-food-outcome]');assert.ok(out.includes('約16.7日分'));assert.ok(out.includes('約¥180'));assert.ok(out.includes('約¥5,400'));assert.ok(out.includes('約¥150'));assert.ok(out.includes('約¥1,500'));assert.deepEqual(JSON.parse(JSON.stringify(events(p,'pet_food_calculator_use').at(-1))),{site_id:'pet-cost-jp',species:key.startsWith('dog')?'dog':'cat',operator_test:'1'});get(p,'[data-food-daily]').value='0';get(p,'[data-food-calculator]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.ok(text(p,'[data-food-outcome]').includes('有効な数値'));assert.deepEqual(p.errors,[]);}finally{p.close();}
+  }
+});
+test('play discovery filters by observed age/size and never treats unknown fit as confirmed',async()=>{
+  let html=fs.readFileSync(path.join(root,'site/categories/dog-toys/index.html'),'utf8');
+  html=html.replace('<div class="toy-candidates">','<div class="toy-candidates"><article data-toy-candidate data-play="chase" data-age="" data-size="small" hidden>年齢不明</article><article data-toy-candidate data-play="chase" data-age="adult" data-size="small" hidden>成犬表記</article>');
+  const p=await open(html,'dog-toys');try{get(p,'[data-play-select="chase"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);get(p,'[data-profile-age="adult"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,1);get(p,'[data-profile-age="senior"]').click();assert.ok(!get(p,'[data-toy-empty]').hidden);get(p,'[data-profile-age-clear]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);assert.deepEqual(p.errors,[]);}finally{p.close();}
+});
 const yen = x => x < 10 ? `¥${x.toFixed(2)}` : x < 100 ? `¥${x.toFixed(1)}` : `¥${Math.round(x).toLocaleString('ja-JP')}`;
 function verify(p, category, items, group) {
   const expected = items.filter(x => group === 'all' || x.group === group).sort((a, b) => a.unit_price - b.unit_price);
@@ -215,7 +252,7 @@ test('quiet comparison standards opens from the trust strip without changing sho
     assert.ok(details.textContent.includes('送料別の送料は未加算'));
     assert.equal(events(p, 'affiliate_click').length, 0);
     assert.equal(events(p, 'pet_category_select').length, 0);
-    assert.ok(get(p, '.home-scene img').src.endsWith('/assets/pet-home-morning.webp'));
+    assert.ok(get(p, '.home-scene img').src.endsWith('/assets/living/home.webp'));
     assert.equal(all(p, '[data-pet-category] .care-art img.editorial-art').length, 3);
     assert.equal(all(p, '[data-pet-category] .care-art svg').length, 0);
     assert.deepEqual(p.errors, []);

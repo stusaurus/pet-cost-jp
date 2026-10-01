@@ -11,6 +11,8 @@ from zoneinfo import ZoneInfo
 
 from common.engine import choose_ranked
 from common.rakuten import fetch_items
+from common.catalog import collect as collect_catalog, audit as audit_catalog
+from discovery import journey, catalog_body, profile
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'site'
@@ -19,6 +21,7 @@ FIXTURE = ROOT / 'fixtures' / 'demo_products.json'
 BASE_URL = 'https://stusaurus.github.io/pet-cost-jp/'
 SITE_NAME = 'ペット用品コスパ比較'
 CSS = (ROOT / 'assets' / 'comparison.css').read_text(encoding='utf-8')
+CSS += '\n' + (ROOT / 'assets' / 'living.css').read_text(encoding='utf-8')
 
 
 def yen(value):
@@ -55,6 +58,7 @@ def load_fixture(category_id):
 def analytics_head():
     measurement = os.environ.get('GA_MEASUREMENT_ID', '').strip()
     runtime = (ROOT / 'scripts' / 'analytics_runtime.js').read_text(encoding='utf-8')
+    runtime += '\n' + (ROOT / 'scripts' / 'living_runtime.js').read_text(encoding='utf-8')
     if not measurement:
         return f'<script>{runtime}</script>'
     return f'''<script async src="https://www.googletagmanager.com/gtag/js?id={esc(measurement)}"></script>
@@ -107,6 +111,11 @@ def care_art(category_id, group='', role='home'):
         prefix = 'key' if role == 'category' or group else 'scene'
         filename = f'{prefix}-{category_id}.webp'
         width, height = 352, 264
+    if not group:
+        living_name = {'pet-sheets': 'sheets', 'cat-litter': 'litter', 'system-toilet-sheets': 'system'}[category_id]
+        prefix = 'header-' if role == 'category' else ''
+        return (f'<img class="editorial-art" src="{BASE_URL}assets/living/{prefix}{living_name}.webp" '
+                'width="320" height="240" alt="" aria-hidden="true" data-art-version="pet-living-2" decoding="async">')
     return (f'<img class="editorial-art" src="{BASE_URL}assets/illustrations/{filename}" '
             f'width="{width}" height="{height}" alt="" aria-hidden="true" '
             'data-art-version="editorial-art-1" decoding="async" draggable="false">')
@@ -335,6 +344,8 @@ def category_page(category, items, categories, updated):
     body = f'''{nav(categories, category['id'])}
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">うちの条件で、次の買い足しを。</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
+      <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
+      {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>
         <p class="condition-note">{fit_note}</p>
@@ -412,7 +423,8 @@ def homepage(categories, summaries, updated):
         starts.append(f'''<a class="care-entry {category_theme(c['id'])}" data-pet-category="{c['id']}" href="{BASE_URL}categories/{c['id']}/"><span class="care-art">{care_art(c['id'])}</span><div class="care-copy"><span class="care-for">{pet}</span><h3>{esc(short_name(c))}</h3><p class="care-question">{question}</p><p class="care-choices" data-saved-condition>{choices}</p></div><span class="care-arrow" aria-hidden="true">→</span></a>''')
     schema = {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'url': BASE_URL, 'description': 'うちで使えるペット用品を、うちの条件・使用量で比較するサイト'}
     body = f'''{nav(categories)}<main id="main" class="main wrap">
-      <header class="home-intro"><div class="home-intro-copy"><p class="home-kicker">いつもの用品から、暮らしを整える。</p><h1>うちの子との毎日を、<br><em>心地よく。</em></h1><p class="home-note">使える条件をそろえて、価格も、持つ期間も。<br>次の買い足しを、うちの使い方で比べましょう。</p><a class="hero-start" href="#categories">いつもの用品を選ぶ <span aria-hidden="true">↓</span></a></div><figure class="home-scene"><img class="home-photo" src="{BASE_URL}assets/pet-home-morning.webp" alt="朝の光が入る部屋でくつろぐ犬と猫。いつもの用品が整った、穏やかな暮らしのイラスト" width="1536" height="1024" fetchpriority="high"><figcaption>うちで使えるものを、うちの使い方で。</figcaption></figure></header>
+      <header class="home-intro"><div class="home-intro-copy"><p class="home-kicker">ごはんも、遊びも、いつもの用品も。</p><h1>うちの子との毎日を、<br><em>心地よく。</em></h1><p class="home-note">うちの子に使えるものから、暮らしに合う選び方へ。<br>好きな遊びも、買い足す量も、一緒に見つけましょう。</p><a class="hero-start" href="#pet-journey">うちの子から選ぶ <span aria-hidden="true">↓</span></a></div><figure class="home-scene"><img class="home-photo" src="{BASE_URL}assets/living/home.webp" alt="朝の光の中、犬と猫がラグでくつろぐ。ごはんと遊びの道具が自然にある暮らし" width="1200" height="800" fetchpriority="high"><figcaption>その子に使えるものを、その家の暮らしで。</figcaption></figure></header>
+      {journey()}
       <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">いつもの用品を、買い足すなら</p><h2 id="categories-heading">何を使っていますか？</h2></div><span class="section-count">まずは条件から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
       {trust_strip('comparison-standards')}
       <section class="home-journey" aria-label="うちの使い方で比較する流れ"><div><span class="journey-icon">{icon('fit')}</span><h3>うちで使える？</h3><p>いつものサイズ・素材・本体から。<br>使える条件だけで価格を比較。</p></div><div><span class="journey-icon">{icon('audit')}</span><h3>どのくらい持つ？</h3><p>使用量を入れれば、期間と月の費用に。<br>単価を、暮らしの数字へ。</p></div><div><span class="journey-icon">{icon('bulk')}</span><h3>買い足すならどれ？</h3><p>今回の出費も、まとめ買いも。<br>うちに合う買い方を選ぶ。</p></div></section>
@@ -467,9 +479,39 @@ def main():
         summaries[category['id']] = {'total_count': len(ranked), 'default_count': len(initial), **stats, 'deal_percent': deal_percent(stats['min'], stats['median']), 'best': initial[0] if initial else None, 'default_label': group_label(category, spotlight_group)}
     if args.reuse_data:
         updated = max(json.loads((ROOT / 'data' / f"{c['id']}.json").read_text())['updated'] for c in categories)
+    discovery_config = json.loads((ROOT / 'config' / 'discovery.json').read_text())
+    discovery_data = {}
+    prior_path = ROOT / 'data' / 'discovery.json'
+    prior = json.loads(prior_path.read_text()) if prior_path.exists() else {}
+    for key, config in discovery_config.items():
+        if key == 'version':
+            continue
+        if args.reuse_data or demo:
+            result = prior.get(key, {'items': [], 'research': {'fetched': 0, 'eligible': 0, 'held_by_reason': {}}, 'version': 1})
+        else:
+            raw = []
+            try:
+                for keyword in config['keywords']:
+                    raw.extend(fetch_items(keyword, pages=1))
+                result = collect_catalog(raw, config)
+            except Exception as error:
+                # Never expose request URLs/credentials. Unverified prior prices are not reused.
+                result = {'items': [], 'research': {'fetched': len(raw), 'eligible': 0, 'fetch_status': type(error).__name__}, 'version': 1}
+        if not args.reuse_data and not demo:
+            print('DISCOVERY_REVIEW ' + json.dumps({'category': key, **result}, ensure_ascii=False))
+        if not config.get('publish_products'):
+            result = {**result, 'items': []}
+        discovery_data[key] = result
+        body = catalog_body(key, config, result, nav(categories), footer(), mobile_dock(categories))
+        schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL}, {'@type': 'ListItem', 'position': 2, 'name': config['name'], 'item': f'{BASE_URL}categories/{key}/'}]}
+        write_text(SITE / 'categories' / key / 'index.html', shell(config['name']+' | うちの子との暮らし', '遊び方と確認できる商品表記から候補を探す。ごはんは入力した袋の内容量と1日量から持つ期間と費用を計算。', body, key, schema))
+    errors = audit_catalog(discovery_data, discovery_config)
+    if errors:
+        raise RuntimeError('Discovery quality audit failed: '+ '; '.join(errors))
+    write_text(SITE / 'data' / 'discovery.json', json.dumps(discovery_data, ensure_ascii=False, indent=2))
     write_text(SITE / 'index.html', homepage(categories, summaries, updated))
     write_text(SITE / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {BASE_URL}sitemap.xml\n')
-    urls = [BASE_URL] + [f"{BASE_URL}categories/{c['id']}/" for c in categories]
+    urls = [BASE_URL] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     copy_static_verification_files()
