@@ -3,6 +3,7 @@ import sys
 import unittest
 from datetime import date
 from pathlib import Path
+from urllib.parse import quote
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from common.catalog import inspect, collect, audit
 ROOT=Path(__file__).resolve().parents[1]
@@ -39,5 +40,25 @@ class CatalogTest(unittest.TestCase):
         expired={**approved['dog-toys'],'approved_products':{'https://item.rakuten.co.jp/test/one/':{**review,'reviewed_on':'2020-01-01'}}}
         self.assertEqual(collect([self.row],expired)['items'],[])
         self.assertTrue(audit({'dog-toys':{'items':[{**a,'review_warning':'絶対壊れない'}]}},approved))
+    def test_reviewed_food_quantity_family_and_expiration(self):
+        for key in ('dog-food','cat-food'):
+            config=self.config[key]
+            for direct,original in config['approved_products'].items():
+                review={**original,'reviewed_on':date.today().isoformat()}
+                config={**config,'approved_products':{direct:review}}
+                row={**self.row,'name':' '.join(review['required_title_terms']),'url':'https://hb.afl.rakuten.co.jp/hgc/test/?pc='+quote(direct,safe='')}
+                result=collect([row,row],config)
+                self.assertEqual(len(result['items']),1)
+                item=result['items'][0]
+                self.assertEqual(item['quantity_100g'],review['pack_grams']*review['pack_count']/100)
+                self.assertFalse(audit({key:result},{key:config}))
+                for change in [{'unit_price':1},{'pack_count':8},{'age':'young'},{'family':'other'},{'review_source':'https://example.com/'}]:
+                    self.assertTrue(audit({key:{'items':[{**item,**change}]}},{key:config}),change)
+                for suffix in (' 選べる',' 療法食',' アダルト8+',' 子犬 子猫',' シニア',' 500g'):
+                    self.assertFalse(collect([{**row,'name':row['name']+suffix}],config)['items'],suffix)
+                self.assertFalse(collect([{**row,'price':float('inf')}],config)['items'])
+                expired={**config,'approved_products':{direct:{**review,'reviewed_on':'2020-01-01'}}}
+                self.assertFalse(collect([row],expired)['items'])
+                self.assertFalse(collect([{**row,'url':row['url']+'unapproved'}],config)['items'])
 
 if __name__=='__main__':unittest.main()

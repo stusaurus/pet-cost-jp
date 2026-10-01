@@ -4,19 +4,152 @@
     "species": "dog",
     "kind": "food",
     "name": "ドッグフード",
-    "publish_products": false,
+    "publish_products": true,
     "keywords": [
-      "ドッグフード 成犬 ドライ 総合栄養食"
-    ]
+      "ロイヤルカナン ミニ アダルト 2kg",
+      "ロイヤルカナン ミニ アダルト 8kg"
+    ],
+    "food_families": {
+      "mini-adult": {
+        "label": "ロイヤルカナン ミニ アダルト",
+        "species": "dog",
+        "age": "adult",
+        "size": "small",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "小型の成犬用・生後10か月以上。販売店により8歳までと表記。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001"
+      }
+    },
+    "approved_products": {
+      "https://item.rakuten.co.jp/chanet/89151/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミニ",
+          "アダルト",
+          "成犬",
+          "2kg",
+          "3182550402170"
+        ],
+        "family": "mini-adult",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20.0,
+        "label": "ロイヤルカナン ミニ アダルト 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89151/",
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
+        ]
+      },
+      "https://item.rakuten.co.jp/sweet-pet/77450380/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミニ",
+          "アダルト",
+          "小型犬",
+          "成犬",
+          "8kg"
+        ],
+        "family": "mini-adult",
+        "pack_grams": 8000,
+        "pack_count": 1,
+        "quantity_100g": 80.0,
+        "label": "ロイヤルカナン ミニ アダルト 8kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/sweet-pet/77450380/",
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
+        ]
+      }
+    }
   },
   "cat-food": {
     "species": "cat",
     "kind": "food",
     "name": "キャットフード",
-    "publish_products": false,
+    "publish_products": true,
     "keywords": [
-      "キャットフード 成猫 ドライ 総合栄養食"
-    ]
+      "ロイヤルカナン フィット 2kg"
+    ],
+    "food_families": {
+      "fit": {
+        "label": "ロイヤルカナン フィット",
+        "species": "cat",
+        "age": "adult",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "成猫用・生後12か月以上。販売店は12歳までと表記。旧パッケージは7歳まで表記の場合があります。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520"
+      }
+    },
+    "approved_products": {
+      "https://item.rakuten.co.jp/sweet-pet/77687284/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "フィット",
+          "成猫",
+          "2kg"
+        ],
+        "family": "fit",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20.0,
+        "label": "ロイヤルカナン フィット 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/sweet-pet/77687284/",
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
+        ]
+      },
+      "https://item.rakuten.co.jp/sweet-pet/set0554ro/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "フィット",
+          "成猫",
+          "2kg×2袋"
+        ],
+        "family": "fit",
+        "pack_grams": 2000,
+        "pack_count": 2,
+        "quantity_100g": 40.0,
+        "label": "ロイヤルカナン フィット 2kg ×2袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/sweet-pet/set0554ro/",
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
+        ]
+      }
+    }
   },
   "dog-toys": {
     "species": "dog",

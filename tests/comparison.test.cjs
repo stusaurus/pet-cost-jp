@@ -19,6 +19,7 @@ async function open(html, id = '', options = {}) {
       window.matchMedia = () => ({ matches: !!options.reduced });
       if (options.household) window.localStorage.setItem('pet_cost_household_v1', JSON.stringify(options.household));
       if (options.profiles) window.localStorage.setItem('pet_cost_profiles_v1', JSON.stringify(options.profiles));
+      if (options.foodPreferences) window.localStorage.setItem('pet_cost_food_preferences_v1', JSON.stringify(options.foodPreferences));
       if (options.storageError) Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage disabled'); } });
     }
   });
@@ -31,6 +32,37 @@ const all = (p, selector) => [...p.document.querySelectorAll(selector)];
 const text = (p, s) => get(p, s).textContent;
 const events = (p, name) => p.events.filter(e => e[0] === 'event' && e[1] === name).map(e => e[2]);
 const median = xs => { const s = [...xs].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length ? s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2 : 0; };
+test('food fit precedes family prices; buying styles, duration, privacy and voluntary storage',async()=>{
+  for(const key of ['dog-food','cat-food']){
+    const dog=key.startsWith('dog'),family=dog?'mini-adult':'fit',pet=dog?'dog':'cat';
+    let html=fs.readFileSync(path.join(root,`site/categories/${key}/index.html`),'utf8');
+    const fixture=(g,price)=>`<article data-food-candidate data-family="${family}" data-age="adult" data-size="${dog?'small':''}" data-grams="${g}" data-price="${price}" data-unit="${price/g*100}" hidden><span data-food-reason></span><span data-food-duration></span><a data-affiliate-link data-category-id="${key}" data-item-id="test-${g}" href="https://hb.afl.rakuten.co.jp/hgc/test/">確認</a></article>`;
+    // Replace fetched rows with controlled amounts, independent of market availability.
+    html=html.replace(/<div class="food-candidates">[\s\S]*?<\/div>\s*<p class="condition-note">同じ銘柄/,`<div class="food-candidates">${fixture(2000,3000)}${fixture(8000,8000)}</div><p class="condition-note">同じ銘柄`);
+    const p=await open(html,key);
+    try{
+      assert.ok(get(p,'[data-food-results]').hidden);
+      get(p,'[data-food-age="adult"]').click();if(dog){assert.ok(get(p,'[data-food-family-option]').hidden);get(p,'[data-food-size="small"]').click();}
+      assert.ok(!get(p,'[data-food-family-option]').hidden);assert.ok(get(p,'[data-food-results]').hidden);
+      get(p,'[data-food-family]').click();assert.ok(!get(p,'[data-food-results]').hidden);
+      assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'8000');
+      get(p,'[data-food-order="price"]').click();assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'2000');
+      get(p,'[data-food-order="amount"]').click();assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'8000');
+      get(p,'[data-food-usage]').value='120';get(p,'[data-food-usage-form]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));
+      const durations=all(p,'[data-food-duration]').map(n=>n.textContent);assert.ok(durations.some(t=>t.includes('約16.7日分')&&t.includes('5,400')));assert.ok(durations.some(t=>t.includes('約66.7日分')&&t.includes('3,600')));
+      assert.equal(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'),null);
+      const save=get(p,'[data-food-save]');save.checked=true;save.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+      const stored=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'));assert.equal(stored[pet].daily,'120');assert.equal(stored[pet].family,family);
+      assert.ok(!JSON.stringify(events(p,'pet_food_usage_set')).includes('120'));
+      const restored=await open(html,key,{foodPreferences:stored});try{assert.ok(!get(restored,'[data-food-results]').hidden);assert.equal(get(restored,'[data-food-usage]').value,'120');assert.ok(text(restored,'[data-food-answer]').includes('2件'));}finally{restored.close();}
+      get(p,'[data-food-usage]').value='0';get(p,'[data-food-usage-form]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.ok(text(p,'[data-food-usage-status]').includes('解除'));assert.ok(all(p,'[data-food-duration]').every(n=>!(/約[\d,.]+日分/.test(n.textContent))));
+      get(p,'[data-profile-age="senior"]').click();assert.ok(get(p,'[data-food-results]').hidden);assert.equal(all(p,'[data-food-candidate]:not([hidden])').length,0);
+      get(p,'[data-profile-age="adult"]').click();if(dog){get(p,'[data-food-size="large"]').click();assert.ok(get(p,'[data-food-results]').hidden);get(p,'[data-food-size="small"]').click();}
+      get(p,'[data-food-clear]').click();assert.equal(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'),null);assert.ok(get(p,'[data-food-results]').hidden);assert.deepEqual(p.errors,[]);
+    }finally{p.close();}
+    const blocked=await open(html,key,{storageError:true});try{get(blocked,'[data-food-age="adult"]').click();if(dog)get(blocked,'[data-food-size="small"]').click();get(blocked,'[data-food-family]').click();get(blocked,'[data-food-save]').click();assert.ok(text(blocked,'[data-food-usage-status]').includes('保存できません'));assert.deepEqual(blocked.errors,[]);}finally{blocked.close();}
+  }
+});
 test('pet-first journey, voluntary profile storage and telemetry privacy', async () => {
   const p=await open(fs.readFileSync(path.join(root,'site/index.html'),'utf8'));
   try {
