@@ -13,6 +13,7 @@
     const positive=t=>typeof t==='string'&&/^\d+(\.\d+)?$/.test(t)&&Number(t)>0&&Number(t)<=100000;
     if(foodOptions.length)try{const all=JSON.parse(localStorage.getItem(FOOD_KEY)||'{}'),f=all.version===1?all[selected]:null;if(f){foodFamily=foodOptions.some(n=>n.dataset.foodFamilyOption===f.family)?f.family:'';foodDaily=positive(f.daily)?f.daily:'';foodSaved=true;if(!pets[selected].age&&['young','adult','senior'].includes(f.age))pets[selected].age=f.age;if(!pets[selected].size&&['small','medium','large'].includes(f.size))pets[selected].size=f.size;}}catch(_){}
     if($('[data-food-usage]'))$('[data-food-usage]').value=foodDaily;
+    if(foodDaily&&$('[data-food-usage-status]'))$('[data-food-usage-status]').textContent='保存した1日量で計算。給与量の推薦ではありません。';
     function storeFood(){
       try {let all;try{all=JSON.parse(localStorage.getItem(FOOD_KEY)||'{}');}catch(_){all={};}if(all?.version!==1)all={version:1};if(foodSaved)all[selected]={family:foodFamily,daily:foodDaily,age:pets[selected].age,size:pets[selected].size};else delete all[selected];if(all.dog||all.cat)localStorage.setItem(FOOD_KEY,JSON.stringify(all));else localStorage.removeItem(FOOD_KEY);return true;}catch(_){return false;}
     }
