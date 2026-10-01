@@ -75,11 +75,46 @@
         "label": "ロイヤルカナン ミニ アダルト 8kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/89152/"
+      },
+      "https://item.rakuten.co.jp/chanet/157814/": {
+        "reviewed_on": "2026-10-01",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミニ",
+          "アダルト",
+          "成犬",
+          "800g",
+          "3182550793124"
+        ],
+        "family": "mini-adult",
+        "pack_grams": 800,
+        "pack_count": 1,
+        "quantity_100g": 8.0,
+        "label": "ロイヤルカナン ミニ アダルト 800g・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/157814/",
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
+        ]
       }
     },
     "reviewed_lookups": [
       {
-        "keyword": "ロイヤルカナン ミニ アダルト",
+        "keyword": "ロイヤルカナン ミニ アダルト 800g",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミニ アダルト 2kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミニ アダルト 8kg",
         "shop_code": "chanet"
       }
     ]
