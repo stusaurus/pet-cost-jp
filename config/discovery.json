@@ -49,23 +49,16 @@
           "選べる"
         ]
       },
-      "https://item.rakuten.co.jp/sweet-pet/77450380/": {
+      "https://item.rakuten.co.jp/chanet/89152/": {
         "reviewed_on": "2026-10-01",
         "required_title_terms": [
           "ロイヤルカナン",
           "ミニ",
           "アダルト",
-          "小型犬",
           "成犬",
-          "8kg"
+          "8kg",
+          "3182550716888"
         ],
-        "family": "mini-adult",
-        "pack_grams": 8000,
-        "pack_count": 1,
-        "quantity_100g": 80.0,
-        "label": "ロイヤルカナン ミニ アダルト 8kg・1袋",
-        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
-        "source": "https://item.rakuten.co.jp/sweet-pet/77450380/",
         "forbidden_title_terms": [
           "8+",
           "12+",
@@ -74,17 +67,20 @@
           "インドア",
           "ステアライズド",
           "選べる"
-        ]
+        ],
+        "family": "mini-adult",
+        "pack_grams": 8000,
+        "pack_count": 1,
+        "quantity_100g": 80.0,
+        "label": "ロイヤルカナン ミニ アダルト 8kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89152/"
       }
     },
     "reviewed_lookups": [
       {
-        "keyword": "ロイヤルカナン ミニ アダルト 2kg",
+        "keyword": "ロイヤルカナン ミニ アダルト",
         "shop_code": "chanet"
-      },
-      {
-        "keyword": "ロイヤルカナン ミニ アダルト 8kg",
-        "shop_code": "sweet-pet"
       }
     ]
   },
@@ -109,13 +105,23 @@
       }
     },
     "approved_products": {
-      "https://item.rakuten.co.jp/sweet-pet/77687284/": {
+      "https://item.rakuten.co.jp/chanet/75314/": {
         "reviewed_on": "2026-10-01",
         "required_title_terms": [
           "ロイヤルカナン",
           "フィット",
           "成猫",
-          "2kg"
+          "2kg",
+          "3182550702201"
+        ],
+        "forbidden_title_terms": [
+          "8+",
+          "12+",
+          "パピー",
+          "エイジング",
+          "インドア",
+          "ステアライズド",
+          "選べる"
         ],
         "family": "fit",
         "pack_grams": 2000,
@@ -123,32 +129,17 @@
         "quantity_100g": 20.0,
         "label": "ロイヤルカナン フィット 2kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
-        "source": "https://item.rakuten.co.jp/sweet-pet/77687284/",
-        "forbidden_title_terms": [
-          "8+",
-          "12+",
-          "パピー",
-          "エイジング",
-          "インドア",
-          "ステアライズド",
-          "選べる"
-        ]
+        "source": "https://item.rakuten.co.jp/chanet/75314/"
       },
-      "https://item.rakuten.co.jp/sweet-pet/set0554ro/": {
+      "https://item.rakuten.co.jp/chanet/75315/": {
         "reviewed_on": "2026-10-01",
         "required_title_terms": [
           "ロイヤルカナン",
           "フィット",
           "成猫",
-          "2kg×2袋"
+          "4kg",
+          "3182550702225"
         ],
-        "family": "fit",
-        "pack_grams": 2000,
-        "pack_count": 2,
-        "quantity_100g": 40.0,
-        "label": "ロイヤルカナン フィット 2kg ×2袋",
-        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
-        "source": "https://item.rakuten.co.jp/sweet-pet/set0554ro/",
         "forbidden_title_terms": [
           "8+",
           "12+",
@@ -157,13 +148,20 @@
           "インドア",
           "ステアライズド",
           "選べる"
-        ]
+        ],
+        "family": "fit",
+        "pack_grams": 4000,
+        "pack_count": 1,
+        "quantity_100g": 40.0,
+        "label": "ロイヤルカナン フィット 4kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/75315/"
       }
     },
     "reviewed_lookups": [
       {
-        "keyword": "ロイヤルカナン フィット 2kg",
-        "shop_code": "sweet-pet"
+        "keyword": "ロイヤルカナン フィット",
+        "shop_code": "chanet"
       }
     ]
   },
