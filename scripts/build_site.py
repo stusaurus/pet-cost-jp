@@ -495,6 +495,10 @@ def main():
             try:
                 for keyword in config['keywords']:
                     raw.extend(fetch_items(keyword, pages=1))
+                # Reviewed shops can fall outside the first broad-search page.
+                # Use the documented shopCode filter; every result still passes the URL/title gate.
+                for lookup in config.get('reviewed_lookups',[]):
+                    raw.extend(fetch_items(lookup['keyword'], pages=1, shop_code=lookup['shop_code']))
                 result = collect_catalog(raw, config)
             except Exception as error:
                 # Never expose request URLs/credentials. Unverified prior prices are not reused.

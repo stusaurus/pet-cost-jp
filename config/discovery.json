@@ -76,7 +76,17 @@
           "選べる"
         ]
       }
-    }
+    },
+    "reviewed_lookups": [
+      {
+        "keyword": "ロイヤルカナン ミニ アダルト 2kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミニ アダルト 8kg",
+        "shop_code": "sweet-pet"
+      }
+    ]
   },
   "cat-food": {
     "species": "cat",
@@ -149,7 +159,13 @@
           "選べる"
         ]
       }
-    }
+    },
+    "reviewed_lookups": [
+      {
+        "keyword": "ロイヤルカナン フィット 2kg",
+        "shop_code": "sweet-pet"
+      }
+    ]
   },
   "dog-toys": {
     "species": "dog",

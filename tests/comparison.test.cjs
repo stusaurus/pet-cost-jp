@@ -36,7 +36,7 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
   for(const key of ['dog-food','cat-food']){
     const dog=key.startsWith('dog'),family=dog?'mini-adult':'fit',pet=dog?'dog':'cat';
     let html=fs.readFileSync(path.join(root,`site/categories/${key}/index.html`),'utf8');
-    const fixture=(g,price)=>`<article data-food-candidate data-family="${family}" data-age="adult" data-size="${dog?'small':''}" data-grams="${g}" data-price="${price}" data-unit="${price/g*100}" hidden><span data-food-reason></span><span data-food-duration></span><a data-affiliate-link data-category-id="${key}" data-item-id="test-${g}" href="https://hb.afl.rakuten.co.jp/hgc/test/">確認</a></article>`;
+    const fixture=(g,price)=>`<article data-food-candidate data-family="${family}" data-age="adult" data-size="${dog?'small':''}" data-grams="${g}" data-price="${price}" data-unit="${price/g*100}" hidden><span data-food-reason></span><span data-food-duration></span><a data-affiliate-link data-category-id="${key}" data-metric="100g" data-unit-price="${price/g*100}" data-conversion-source="food_family" data-item-id="test-${g}" href="https://hb.afl.rakuten.co.jp/hgc/test/">確認</a></article>`;
     // Replace fetched rows with controlled amounts, independent of market availability.
     html=html.replace(/<div class="food-candidates">[\s\S]*?<\/div>\s*<p class="condition-note">同じ銘柄/,`<div class="food-candidates">${fixture(2000,3000)}${fixture(8000,8000)}</div><p class="condition-note">同じ銘柄`);
     const p=await open(html,key);
@@ -54,6 +54,7 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
       const save=get(p,'[data-food-save]');save.checked=true;save.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
       const stored=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'));assert.equal(stored[pet].daily,'120');assert.equal(stored[pet].family,family);
       assert.ok(!JSON.stringify(events(p,'pet_food_usage_set')).includes('120'));
+      get(p,'.food-candidates [data-affiliate-link]').click();assert.equal(events(p,'affiliate_click').at(-1).unit_metric,'100g');assert.equal(events(p,'affiliate_click').at(-1).conversion_source,'food_family');assert.equal(events(p,'affiliate_click').at(-1).position,1);
       const restored=await open(html,key,{foodPreferences:stored});try{assert.ok(!get(restored,'[data-food-results]').hidden);assert.equal(get(restored,'[data-food-usage]').value,'120');assert.ok(text(restored,'[data-food-answer]').includes('2件'));}finally{restored.close();}
       get(p,'[data-food-usage]').value='0';get(p,'[data-food-usage-form]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.ok(text(p,'[data-food-usage-status]').includes('解除'));assert.ok(all(p,'[data-food-duration]').every(n=>!(/約[\d,.]+日分/.test(n.textContent))));
       get(p,'[data-profile-age="senior"]').click();assert.ok(get(p,'[data-food-results]').hidden);assert.equal(all(p,'[data-food-candidate]:not([hidden])').length,0);

@@ -48,7 +48,7 @@ def _open_json(req):
     raise RuntimeError("Rakuten API retry loop exhausted")
 
 
-def fetch_items(keyword: str, pages: int = 2, hits: int = 30):
+def fetch_items(keyword: str, pages: int = 2, hits: int = 30, shop_code: str = ''):
     app_id = os.environ.get("RAKUTEN_APPLICATION_ID")
     access_key = os.environ.get("RAKUTEN_ACCESS_KEY")
     affiliate_id = os.environ.get("RAKUTEN_AFFILIATE_ID", "")
@@ -69,6 +69,8 @@ def fetch_items(keyword: str, pages: int = 2, hits: int = 30):
         }
         if affiliate_id:
             params["affiliateId"] = affiliate_id
+        if shop_code:
+            params["shopCode"] = shop_code
         url = API_URL + "?" + urllib.parse.urlencode(params)
         req = urllib.request.Request(
             url,
