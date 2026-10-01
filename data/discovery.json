@@ -4,11 +4,12 @@
     "research": {
       "fetched": 30,
       "eligible": 0,
+      "published_reviewed": 0,
       "held_by_reason": {
-        "食種・栄養区分・単一年齢未確認": 17,
-        "医療・用途対象外": 7,
+        "食種・栄養区分・単一年齢未確認": 18,
+        "医療・用途対象外": 5,
         "内容量未確定": 4,
-        "要メーカー照合": 2
+        "要メーカー照合": 3
       }
     },
     "version": 1
@@ -18,40 +19,123 @@
     "research": {
       "fetched": 30,
       "eligible": 0,
+      "published_reviewed": 0,
       "held_by_reason": {
         "対象動物不明・混在": 4,
-        "医療・用途対象外": 14,
-        "要メーカー照合": 9,
-        "食種・栄養区分・単一年齢未確認": 2,
-        "内容量未確定": 1
+        "医療・用途対象外": 17,
+        "要メーカー照合": 8,
+        "除外条件・選択式": 1
       }
     },
     "version": 1
   },
   "dog-toys": {
-    "items": [],
+    "items": [
+      {
+        "name": "ペットパラダイス公式 ディズニー 犬 おもちゃ ロープ トイ・ストーリー スリンキー (20cm) | ランキング1位 おうちで遊ぼう おうち時間 オモチャ ペット トイ 玩具 TOY 小型犬 かわいい 可愛い キャラクター 楽しい 室内",
+        "price": 2200,
+        "url": "https://hb.afl.rakuten.co.jp/hgc/g00pv4qo.7cx6m065.g00pv4qo.7cx6nade/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpet-para%2F943-67079%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fpet-para%2Fi%2F10027182%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+        "shop": "ペットパラダイス",
+        "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/pet-para/cabinet/rank/40856397.jpg?_ex=128x128",
+        "review_average": 4.35,
+        "review_count": 84,
+        "postage_flag": 1,
+        "product_id": "e7bba52cda0f",
+        "species": "dog",
+        "play": "together",
+        "age": "",
+        "size": "small",
+        "dimensions": "20cm",
+        "evidence": [
+          {
+            "attribute": "species",
+            "quote": "犬",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "play",
+            "quote": "ロープ",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "dimensions",
+            "quote": "20cm",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "size",
+            "quote": "小型犬",
+            "source": "商品タイトル"
+          }
+        ],
+        "review_warning": "超小型〜小型犬用。噛む力が強い犬には与えないでください。破損したら使用を中止し、飼い主が一緒に遊んでください。",
+        "review_label": "スリンキー ロープトイ（約20cm）",
+        "reviewed_on": "2026-10-01",
+        "review_source": "https://item.rakuten.co.jp/pet-para/943-67079/"
+      }
+    ],
     "research": {
       "fetched": 90,
       "eligible": 1,
+      "published_reviewed": 1,
       "held_by_reason": {
-        "遊びタイプ不明・混在": 39,
-        "対象動物不明・混在": 24,
+        "遊びタイプ不明・混在": 36,
+        "対象動物不明・混在": 22,
         "寸法・対象条件未確定": 23,
-        "用品違い": 1,
-        "除外条件・選択式": 2
+        "除外条件・選択式": 7,
+        "用品違い": 1
       }
     },
     "version": 1
   },
   "cat-toys": {
-    "items": [],
+    "items": [
+      {
+        "name": "Nagaipet S型 S字 猫 トンネル シャカシャカ おもちゃ 玩具 人気 交換ポンポン付き セームかわ キャットトンネル 2穴 直径25CM オシャレ コンパクト 折りたたみ式 猫遊宅 ストレス発散 運動不足対策 猫用おもちゃ ウサギ 小動物",
+        "price": 2280,
+        "url": "https://hb.afl.rakuten.co.jp/hgc/g00sq1go.7cx6me1c.g00sq1go.7cx6n7ce/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnagaipet%2Fajd0033%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fnagaipet%2Fi%2F10000759%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+        "shop": "ペットのlife&styleショップ",
+        "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/nagaipet/cabinet/05373044/05668159/06750118/1-1.jpg?_ex=128x128",
+        "review_average": 4.73,
+        "review_count": 775,
+        "postage_flag": 0,
+        "product_id": "552027c203c5",
+        "species": "cat",
+        "play": "hide",
+        "age": "",
+        "size": "",
+        "dimensions": "25cm",
+        "evidence": [
+          {
+            "attribute": "species",
+            "quote": "猫",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "play",
+            "quote": "トンネル",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "dimensions",
+            "quote": "25cm",
+            "source": "商品タイトル"
+          }
+        ],
+        "review_warning": "入口直径25cm・長さ117cm。ポンポンやワイヤーの破損、噛む・引っ掻く癖に注意。猫を入れたまま移動しないでください。",
+        "review_label": "S型キャットトンネル（入口直径25cm）",
+        "reviewed_on": "2026-10-01",
+        "review_source": "https://item.rakuten.co.jp/nagaipet/ajd0033/"
+      }
+    ],
     "research": {
       "fetched": 90,
-      "eligible": 5,
+      "eligible": 3,
+      "published_reviewed": 1,
       "held_by_reason": {
-        "寸法・対象条件未確定": 36,
-        "遊びタイプ不明・混在": 34,
-        "除外条件・選択式": 5,
+        "寸法・対象条件未確定": 34,
+        "遊びタイプ不明・混在": 32,
+        "除外条件・選択式": 11,
         "対象動物不明・混在": 9,
         "用品違い": 1
       }
