@@ -1,5 +1,6 @@
 """The household exploration layer; independent of consumable comparisons."""
 import html
+from food_discovery import food_choices
 BASE='https://stusaurus.github.io/pet-cost-jp/'
 def esc(x): return html.escape(str(x or ''),quote=True)
 def art(name,cls=''):
@@ -26,6 +27,7 @@ def catalog_body(key,config,payload,nav,footer,dock):
     head=f'{nav}<header class="page-intro wrap"><div><p class="home-kicker">{"犬" if species=="dog" else "猫"}との暮らし</p><h1>{esc(config["name"])}</h1><p class="intro-copy">{"いつものごはんを、暮らしの数字に。" if kind=="food" else "うちの子の好きな遊びから。"}</p><a class="text-link" href="{BASE}#pet-journey">犬・猫と用品を選び直す</a></div><div class="category-art">{art(key)}</div></header>'
     if kind=='food':
         content=f'<section class="food-guide"><div class="living-step-heading"><span>01</span><h2>いつものごはん、どのくらい持つ？</h2></div><p>袋の表示と、普段使っている1日量を入力してください。</p><form data-food-calculator novalidate><div class="food-input-grid"><label>袋の内容量（g）<input type="text" inputmode="decimal" data-food-weight aria-label="袋の内容量" placeholder="例：2000"></label><label>袋の価格（税込・円）<input type="text" inputmode="decimal" data-food-price aria-label="袋の価格" placeholder="例：3000"></label><label>1日に使う量（g）<input type="text" inputmode="decimal" data-food-daily aria-label="1日に使うフード量" placeholder="例：120"></label></div><button class="btn" type="submit">暮らしの数字で見る</button></form><div class="food-outcome" data-food-outcome role="status" aria-live="polite">入力すると、日数・1日の費用・30日分・100gと1kg単価に換算します。</div><p class="condition-note">1日量は、ご自身の使用量や商品の給与量表で確認した量を入力してください。体重からの自動推定は行いません。送料は未加算です。</p></section><section class="food-scope"><h2>ごはんは、条件の確認から。</h2><p>犬猫・年齢・食種・総合栄養食の表示を照合してから、同条件で比べる設計です。</p><p>現在、ドッグフード・キャットフードとも取得データとメーカー表記を照合中です。確認前の商品や価格順位は掲載していません。</p><p>療法食・疾病やアレルギーへの対応はこの比較の対象外です。獣医師から指示がある場合は、その指示に沿って商品を確認してください。</p></section>'
+        content=food_choices(key,config,payload)+content.replace('いつものごはん、どのくらい持つ？','お店や手元の袋も、どのくらい持つ？').replace('<span>01</span>','<span>補助</span>').replace('現在、ドッグフード・キャットフードとも取得データとメーカー表記を照合中です。確認前の商品や価格順位は掲載していません。','同じ銘柄の容量・袋数を比較します。未照合の銘柄、幼齢・シニア向けの商品は順次確認し、確認前のものは掲載しません。')
     else:
         keys=['chew','chase','together','puzzle'] if species=='dog' else ['teaser','chase','hide','puzzle']
         buttons=''.join(f'<button type="button" class="play-choice" data-play-select="{k}" aria-pressed="false">{art("play-"+k)}<span>{labels[k]}</span></button>' for k in keys)

@@ -1,5 +1,6 @@
 """Evidence-only discovery; no inferred suitability or toy price ranking."""
 import re
+import math
 from datetime import date
 from urllib.parse import urlparse, parse_qs
 from .quantity import normalize_text
@@ -24,14 +25,24 @@ def reviewed(item, config):
     if not 0 <= age <= 180: return None
     title = normalize_text(item['name'])
     if not all(normalize_text(term) in title for term in review['required_title_terms']): return None
-    if any(item.get(k) != review.get(k) for k in ('play','age','size','dimensions')): return None
+    if any(normalize_text(term) in title for term in review.get('forbidden_title_terms',[])): return None
+    if config['kind']=='food':
+        family=config.get('food_families',{}).get(review.get('family'),{})
+        if not family or family.get('species')!=config['species'] or family.get('age') not in AGE: return None
+        if family.get('form')!='dry' or family.get('nutrition')!='complete': return None
+        source=urlparse(family.get('manufacturer_source',''))
+        if source.scheme!='https' or source.hostname!='www.royalcanin.com': return None
+        if any(item.get(k)!=review.get(k) for k in ('family','pack_grams','pack_count','quantity_100g')): return None
+        if any(item.get(k)!=family.get(k) for k in ('species','age','size','form','nutrition')): return None
+        if review['pack_grams'] * review['pack_count'] / 100 != item['quantity_100g']: return None
+    elif any(item.get(k) != review.get(k) for k in ('play','age','size','dimensions')): return None
     return review
 
 def inspect(raw, config):
     title = raw.get('name', '')
     t = normalize_text(title)
     def reject(reason): return None, reason
-    if not title or raw.get('price', 0) <= 0: return reject('価格・名称不明')
+    if not title or not isinstance(raw.get('price'),(int,float)) or not math.isfinite(raw['price']) or raw['price'] <= 0: return reject('価格・名称不明')
     if any(normalize_text(w) in t for w in EXCLUDE): return reject('除外条件・選択式')
     u = urlparse(raw.get('url', ''))
     direct = parse_qs(u.query).get('pc', [''])[0]
@@ -45,6 +56,20 @@ def inspect(raw, config):
     evidence = [{'attribute':'species','quote':species_quote,'source':'商品タイトル'}]
     if config['kind'] == 'food':
         if any(normalize_text(w) in t for w in MEDICAL): return reject('医療・用途対象外')
+        review=config.get('approved_products',{}).get(direct)
+        if review:
+            family=config.get('food_families',{}).get(review.get('family'),{})
+            if not family or any(a!=family.get('age') for a in ages) or any(s!=family.get('size') for s in sizes): return reject('対象条件変更')
+            # A set expression must not conceal another weight (bonus, mixed recipe, variant).
+            weights=[float(n)*(1000 if unit=='kg' else 1) for n,unit in re.findall(r'(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)',t)]
+            if any(w not in (review.get('pack_grams'),review.get('quantity_100g',0)*100) for w in weights): return reject('複数容量・混合セット')
+            q=parse_quantity(title,'weight_100g')
+            if not q or q['confidence']<.9 or q['quantity']!=review.get('quantity_100g'): return reject('内容量変更・未確定')
+            evidence += [{'attribute':'quantity','quote':q['evidence'],'source':'商品タイトル'}]
+            evidence += [{'attribute':a,'value':family.get(a,''),'source':family.get('manufacturer_source',''),'method':'個別照合'} for a in ('age','size','form','nutrition') if family.get(a)]
+            item={**raw,'product_id':product_id(title,raw.get('shop','')),'species':config['species'],**{k:family.get(k) for k in ('age','size','form','nutrition')},**{k:review.get(k) for k in ('family','pack_grams','pack_count','quantity_100g')},'unit_price':round(raw['price']/q['quantity'],2),'evidence':evidence}
+            if not reviewed(item,config): return reject('個別照合未確認・期限切れ')
+            return item,''
         if '総合栄養食' not in t or 'ドライ' not in t or len(ages) != 1: return reject('食種・栄養区分・単一年齢未確認')
         q = parse_quantity(title, 'weight_100g')
         if not q or q['confidence'] < .9: return reject('内容量未確定')
@@ -68,7 +93,7 @@ def collect(raw, config):
     for row in raw:
         item, reason = inspect(row, config)
         if reason: rejected[reason] = rejected.get(reason,0)+1
-        if config['kind'] == 'toy' and item and not reason:
+        if item and not reason:
             direct = parse_qs(urlparse(item['url']).query).get('pc',[''])[0]
             if direct not in seen:
                 seen.add(direct); items.append(item)
@@ -88,11 +113,12 @@ def audit(payload, configs):
     for key,config in configs.items():
         if key == 'version': continue
         items=payload.get(key,{}).get('items',[])
-        if (config['kind']=='food' or not config.get('publish_products')) and items: errors.append(key+': publication gate violated')
+        if not config.get('publish_products') and items: errors.append(key+': publication gate violated')
         seen=set()
         for item in items:
             rebuilt,reason=inspect(item,config)
-            if reason or not rebuilt or any(rebuilt.get(k)!=item.get(k) for k in ('species','play','age','size','dimensions','evidence')): errors.append(key+': unsupported attributes')
+            attrs=('species','age','size','family','pack_grams','pack_count','quantity_100g','unit_price','form','nutrition','evidence') if config['kind']=='food' else ('species','play','age','size','dimensions','evidence')
+            if reason or not rebuilt or any(rebuilt.get(k)!=item.get(k) for k in attrs): errors.append(key+': unsupported attributes')
             review=reviewed(item,config)
             if not review or any(item.get(k)!=review.get(v) for k,v in [('review_warning','warning'),('review_label','label'),('reviewed_on','reviewed_on'),('review_source','source')]): errors.append(key+': manual review missing or changed')
             if item.get('product_id') in seen: errors.append(key+': duplicate')
