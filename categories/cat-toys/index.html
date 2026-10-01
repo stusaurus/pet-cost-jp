@@ -449,7 +449,7 @@
     }
     function updateFood(){
       if(!foodOptions.length)return;
-      const p=pets[selected],fits=n=>p.age===n.dataset.age&&(!n.dataset.size||p.size===n.dataset.size);
+      const p=pets[selected];if($('[data-food-size-panel]'))$('[data-food-size-panel]').hidden=!p.age;const fits=n=>p.age===n.dataset.age&&(!n.dataset.size||p.size===n.dataset.size);
       $$('[data-food-age]').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.foodAge===p.age)));
       $$('[data-food-size]').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.foodSize===p.size)));
       foodOptions.forEach(n=>n.hidden=!fits(n));
@@ -463,12 +463,12 @@
       candidates.sort((a,b)=>foodOrder==='amount'?Number(b.dataset.grams)-Number(a.dataset.grams):Number(a.dataset[foodOrder==='price'?'price':'unit'])-Number(b.dataset[foodOrder==='price'?'price':'unit'])||Number(a.dataset.price)-Number(b.dataset.price));
       const yen=x=>'¥'+Math.round(x).toLocaleString('ja-JP');
       candidates.forEach((n,i)=>{
-        $('[data-food-reason]',n).textContent=i?'同じ銘柄の別の容量':({unit:'掲載候補内で100g単価が最小',price:'掲載候補内で商品総額が最小',amount:'掲載候補内で合計量が最大'}[foodOrder]);
+        $('[data-food-reason]',n).textContent=candidates.length===1?'商品表記を照合済み':i?'同じ銘柄の別の容量':({unit:'掲載候補内で100g単価が最小',price:'掲載候補内で商品総額が最小',amount:'掲載候補内で合計量が最大'}[foodOrder]);
         const g=Number(n.dataset.grams),price=Number(n.dataset.price),daily=Number(foodDaily);
         $('[data-food-duration]',n).textContent=foodDaily?'約'+(g/daily).toLocaleString('ja-JP',{maximumFractionDigits:1})+'日分 · 1日約'+yen(price/g*daily)+' · 30日約'+yen(price/g*daily*30):'使用量を入れると、持つ期間と30日分の費用が分かります。';
         $('[data-affiliate-link]',n).dataset.position=String(i+1);$('.food-candidates').append(n);
       });
-      if(option){const label=$('h3',option).textContent;$('[data-food-answer]').textContent=candidates.length?label+' · '+candidates.length+'件。'+({unit:'同じごはんを、単価で比較中。',price:'今回の出費が小さい順。',amount:'合計量が多い順。'}[foodOrder]):label+'の照合済み候補は現在取得できていません。後ほど確認してください。';}
+      if(option){const label=$('h3',option).textContent;$('[data-food-answer]').textContent=candidates.length?label+' · '+candidates.length+'件。'+(candidates.length===1?'ほかの容量は現在取得できていません。':'')+({unit:'同じごはんを、単価で比較中。',price:'今回の出費が小さい順。',amount:'合計量が多い順。'}[foodOrder]):label+'の照合済み候補は現在取得できていません。後ほど確認してください。';}
     }
     function updateToys(){
       if(!$('[data-toy-status]'))return;

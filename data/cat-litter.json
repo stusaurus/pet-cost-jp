@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02 07:09 JST",
+  "updated": "2026-10-02 07:16 JST",
   "category": {
     "id": "cat-litter",
     "name": "猫砂",
@@ -271,25 +271,6 @@
       "unit_price": 89.8485
     },
     {
-      "name": "猫砂 鉱物 猫 トイレ 砂 ベントナイト 猫砂 固まる ウッディフレッシュ 16L×2袋セット WF-160 猫砂 鉱物系 小粒 猫砂 鉱物系 消臭 燃やせる 抗菌粒 木 猫砂 ベントナイト ネコ砂 トイレ 猫 トイレ砂",
-      "price": 2880,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1314970%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10023027%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "Pet館〜ペット館〜",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1314970.jpg?_ex=128x128",
-      "review_average": 4.74,
-      "review_count": 62,
-      "postage_flag": 0,
-      "product_id": "e50f3cafa627",
-      "category_id": "cat-litter",
-      "metric": "per_liter",
-      "metric_label": "1L",
-      "quantity": 32.0,
-      "quantity_evidence": "16lx2袋",
-      "confidence": 0.99,
-      "group": "mixed",
-      "unit_price": 90.0
-    },
-    {
       "name": "猫砂 ペレット ＼愛されて10周年 累計出荷数17万個突破／ 木質ペレット 崩れるタイプ 【強力消臭＆抗菌】ネコ砂 33L ( 20kg ) 箱入り 約330日分 システムトイレ 天然木 無添加 飛び散りにくい 木製猫砂 猫 うさぎ 大容量 猫トイレ ねこ砂 岩国再生エネルギー",
       "price": 2980,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00tzido.7cx6m7ac.g00tzido.7cx6ncb2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fiseshop%2Fise-p20kg%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fiseshop%2Fi%2F10000003%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -516,6 +497,25 @@
       "confidence": 0.9,
       "group": "mixed",
       "unit_price": 101.875
+    },
+    {
+      "name": "【16L×2袋セット】 猫砂 鉱物 べントナイト 大容量 多頭飼い 猫 トイレ 固まる ウッディフレッシュ WF-160 猫砂 鉱物系 小粒 消臭 燃やせる 抗菌粒 木の猫砂 ネコトイレ 猫トイレ トイレ砂トイレ用品",
+      "price": 3280,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00rqlbo.7cx6mdc3.g00rqlbo.7cx6n70f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fk-home%2F1314970%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fk-home%2Fi%2F10091708%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "快適ホームライフ",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/k-home/cabinet/thum/naosi/eigyo_niku/1314970.jpg?_ex=128x128",
+      "review_average": 0.0,
+      "review_count": 0,
+      "postage_flag": 0,
+      "product_id": "cbfb5df5776c",
+      "category_id": "cat-litter",
+      "metric": "per_liter",
+      "metric_label": "1L",
+      "quantity": 32.0,
+      "quantity_evidence": "16lx2袋",
+      "confidence": 0.99,
+      "group": "mixed",
+      "unit_price": 102.5
     },
     {
       "name": "猫砂 鉱物 ネコ砂 消臭 ハイパーウッディフレッシュ 8L×3袋セット HWF-80 固まる 消臭 燃やせる 抗菌粒 木 ベントナイト ねこ砂 まとめ買い ネコトイレ 猫トイレ トイレ用品 【◆K】",

@@ -64,11 +64,11 @@
       }
     ],
     "research": {
-      "fetched": 92,
+      "fetched": 90,
       "eligible": 1,
       "published_reviewed": 1,
       "held_by_reason": {
-        "食種・栄養区分・単一年齢未確認": 85,
+        "食種・栄養区分・単一年齢未確認": 83,
         "対象動物不明・混在": 2,
         "要メーカー照合": 1,
         "医療・用途対象外": 2
@@ -77,15 +77,127 @@
     "version": 1
   },
   "cat-food": {
-    "items": [],
+    "items": [
+      {
+        "name": "【10／1限定】当選確率2分の1！1等最大100％　ロイヤルカナン　猫　フィット　成猫用　2kg　3182550702201　お一人様5点限り　ジップ付",
+        "price": 3644,
+        "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F75314%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10133314%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+        "shop": "charm 楽天市場店",
+        "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/753/75314-1.jpg?_ex=128x128",
+        "review_average": 4.76,
+        "review_count": 34,
+        "postage_flag": 1,
+        "product_id": "24cea1d9670b",
+        "species": "cat",
+        "age": "adult",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "family": "fit",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20.0,
+        "unit_price": 182.2,
+        "evidence": [
+          {
+            "attribute": "species",
+            "quote": "猫",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "quantity",
+            "quote": "2kg",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "age",
+            "value": "adult",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "form",
+            "value": "dry",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "nutrition",
+            "value": "complete",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          }
+        ],
+        "review_warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "review_label": "ロイヤルカナン フィット 2kg・1袋",
+        "reviewed_on": "2026-10-01",
+        "review_source": "https://item.rakuten.co.jp/chanet/75314/"
+      },
+      {
+        "name": "ロイヤルカナン　猫　フィット　成猫用　4kg　3182550702225　お一人様5点限り　ジップ付　関東当日便",
+        "price": 6476,
+        "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F75315%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10133315%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+        "shop": "charm 楽天市場店",
+        "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/753/75315-1.jpg?_ex=128x128",
+        "review_average": 4.86,
+        "review_count": 22,
+        "postage_flag": 0,
+        "product_id": "733df6fa5d6a",
+        "species": "cat",
+        "age": "adult",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "family": "fit",
+        "pack_grams": 4000,
+        "pack_count": 1,
+        "quantity_100g": 40.0,
+        "unit_price": 161.9,
+        "evidence": [
+          {
+            "attribute": "species",
+            "quote": "猫",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "quantity",
+            "quote": "4kg",
+            "source": "商品タイトル"
+          },
+          {
+            "attribute": "age",
+            "value": "adult",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "form",
+            "value": "dry",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          },
+          {
+            "attribute": "nutrition",
+            "value": "complete",
+            "source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520",
+            "method": "個別照合"
+          }
+        ],
+        "review_warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "review_label": "ロイヤルカナン フィット 4kg・1袋",
+        "reviewed_on": "2026-10-01",
+        "review_source": "https://item.rakuten.co.jp/chanet/75315/"
+      }
+    ],
     "research": {
-      "fetched": 30,
-      "eligible": 0,
-      "published_reviewed": 0,
+      "fetched": 60,
+      "eligible": 2,
+      "published_reviewed": 2,
       "held_by_reason": {
-        "食種・栄養区分・単一年齢未確認": 26,
+        "食種・栄養区分・単一年齢未確認": 52,
         "要メーカー照合": 3,
-        "対象動物不明・混在": 1
+        "対象動物不明・混在": 1,
+        "医療・用途対象外": 1
       }
     },
     "version": 1
