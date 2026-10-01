@@ -87,7 +87,7 @@ def icon(kind):
 
 
 def care_art(category_id, group='', role='home'):
-    """Commissioned editorial assets; labels, dimensions and fit come from data.
+    """Purpose-made editorial assets; labels, dimensions and fit come from data.
 
     These concept illustrations never establish actual size, material composition,
     manufacturer compatibility or quality. Empty alt preserves existing UI names.
