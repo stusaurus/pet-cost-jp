@@ -56,6 +56,7 @@ def inspect(raw, config):
     evidence = [{'attribute':'species','quote':species_quote,'source':'商品タイトル'}]
     if config['kind'] == 'food':
         if any(normalize_text(w) in t for w in MEDICAL): return reject('医療・用途対象外')
+        if any(normalize_text(w) in t for w in ('ウェット','フリーズドライ','半生','缶詰','一般食','補完食','妊娠','授乳')): return reject('食種・用途対象外')
         review=config.get('approved_products',{}).get(direct)
         if review:
             family=config.get('food_families',{}).get(review.get('family'),{})
