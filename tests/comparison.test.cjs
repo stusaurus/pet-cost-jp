@@ -42,7 +42,8 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
     const p=await open(html,key);
     try{
       assert.ok(get(p,'[data-food-results]').hidden);
-      get(p,'[data-food-age="adult"]').click();if(dog){assert.ok(get(p,'[data-food-family-option]').hidden);get(p,'[data-food-size="small"]').click();}
+      assert.equal(get(p,'[data-food-age="young"]').disabled,true);assert.equal(get(p,'[data-food-age="senior"]').disabled,true);assert.equal(get(p,'[data-food-age="adult"]').disabled,false);
+      get(p,'[data-food-age="adult"]').click();if(dog){assert.equal(get(p,'[data-food-size="small"]').disabled,false);assert.equal(get(p,'[data-food-size="medium"]').disabled,true);assert.equal(get(p,'[data-food-size="large"]').disabled,true);assert.ok(get(p,'[data-food-family-option]').hidden);get(p,'[data-food-size="small"]').click();}
       assert.ok(!get(p,'[data-food-family-option]').hidden);assert.ok(get(p,'[data-food-results]').hidden);
       get(p,'[data-food-family]').click();assert.ok(!get(p,'[data-food-results]').hidden);
       assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'8000');
@@ -58,7 +59,7 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
       const restored=await open(html,key,{foodPreferences:stored});try{assert.ok(!get(restored,'[data-food-results]').hidden);assert.equal(get(restored,'[data-food-usage]').value,'120');assert.ok(text(restored,'[data-food-usage-status]').includes('保存した1日量'));assert.ok(text(restored,'[data-food-answer]').includes('2件'));}finally{restored.close();}
       get(p,'[data-food-usage]').value='0';get(p,'[data-food-usage-form]').dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));assert.ok(text(p,'[data-food-usage-status]').includes('解除'));assert.ok(all(p,'[data-food-duration]').every(n=>!(/約[\d,.]+日分/.test(n.textContent))));
       get(p,'[data-profile-age="senior"]').click();assert.ok(get(p,'[data-food-results]').hidden);assert.equal(all(p,'[data-food-candidate]:not([hidden])').length,0);
-      get(p,'[data-profile-age="adult"]').click();if(dog){get(p,'[data-food-size="large"]').click();assert.ok(get(p,'[data-food-results]').hidden);get(p,'[data-food-size="small"]').click();}
+      get(p,'[data-profile-age="adult"]').click();if(dog){get(p,'[data-profile-size="large"]').click();assert.ok(get(p,'[data-food-results]').hidden);assert.equal(get(p,'[data-food-size="large"]').disabled,true);get(p,'[data-food-size="small"]').click();}
       get(p,'[data-food-clear]').click();assert.equal(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'),null);assert.ok(get(p,'[data-food-results]').hidden);assert.deepEqual(p.errors,[]);
     }finally{p.close();}
     const blocked=await open(html,key,{storageError:true});try{get(blocked,'[data-food-age="adult"]').click();if(dog)get(blocked,'[data-food-size="small"]').click();get(blocked,'[data-food-family]').click();get(blocked,'[data-food-save]').click();assert.ok(text(blocked,'[data-food-usage-status]').includes('保存できません'));assert.deepEqual(blocked.errors,[]);}finally{blocked.close();}
@@ -98,7 +99,7 @@ test('food calculator uses supplied grams and never estimates from weight',async
 test('play discovery filters by observed age/size and never treats unknown fit as confirmed',async()=>{
   let html=fs.readFileSync(path.join(root,'site/categories/dog-toys/index.html'),'utf8');
   html=html.replace('<div class="toy-candidates">','<div class="toy-candidates"><article data-toy-candidate data-play="chase" data-age="" data-size="small" hidden>年齢不明</article><article data-toy-candidate data-play="chase" data-age="adult" data-size="small" hidden>成犬表記</article>');
-  const p=await open(html,'dog-toys');try{get(p,'[data-play-select="chase"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);get(p,'[data-profile-age="adult"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,1);get(p,'[data-profile-age="senior"]').click();assert.ok(!get(p,'[data-toy-empty]').hidden);get(p,'[data-profile-age-clear]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);assert.deepEqual(p.errors,[]);}finally{p.close();}
+  const p=await open(html,'dog-toys');try{assert.equal(get(p,'[data-play-select="chase"]').disabled,false);get(p,'[data-play-select="chase"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);get(p,'[data-profile-age="adult"]').click();assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,1);get(p,'[data-profile-age="senior"]').click();assert.equal(get(p,'[data-play-select="chase"]').disabled,true);assert.ok(!get(p,'[data-toy-empty]').hidden);get(p,'[data-profile-age-clear]').click();assert.equal(get(p,'[data-play-select="chase"]').disabled,false);assert.equal(all(p,'[data-toy-candidate]:not([hidden])').length,2);assert.deepEqual(p.errors,[]);}finally{p.close();}
 });
 const yen = x => x < 10 ? `¥${x.toFixed(2)}` : x < 100 ? `¥${x.toFixed(1)}` : `¥${Math.round(x).toLocaleString('ja-JP')}`;
 function verify(p, category, items, group) {
