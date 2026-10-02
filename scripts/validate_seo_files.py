@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 SITE = Path("site")
 BASE_URL = "https://stusaurus.github.io/pet-cost-jp/"
 
-html_files = sorted(p for p in SITE.rglob("*.html") if p.name != "404.html")
+html_files = sorted(p for p in SITE.rglob("*.html") if p.name != "404.html" and not (p.parent == SITE and p.name.startswith("google")))
 expected = []
 for p in html_files:
     rel = p.relative_to(SITE).as_posix()
