@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02 07:24 JST",
+  "updated": "2026-10-02 09:52 JST",
   "category": {
     "id": "pet-sheets",
     "name": "ペットシーツ",
@@ -397,6 +397,25 @@
       "unit_price": 37.8
     },
     {
+      "name": "トムキャット 業務用ペットシーツ 厚型スーパーワイド 25枚 ×6袋入",
+      "price": 6160,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pxxxo.7cx6m93a.g00pxxxo.7cx6nede/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftomcat%2Fbb601031%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Ftomcat%2Fi%2F10000902%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "トムキャット楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/tomcat/cabinet/doggoods/toiletries/petsheets/bb601031.jpg?_ex=128x128",
+      "review_average": 4.65,
+      "review_count": 157,
+      "postage_flag": 0,
+      "product_id": "0146f6d5fec0",
+      "category_id": "pet-sheets",
+      "metric": "per_sheet",
+      "metric_label": "1枚",
+      "quantity": 150.0,
+      "quantity_evidence": "25枚 x6袋",
+      "confidence": 0.99,
+      "group": "super_wide",
+      "unit_price": 41.0667
+    },
+    {
       "name": "【10／1限定】当選確率2分の1！1等最大100％　ペットシーツ　スーパーワイド　薄型　40枚　1回交換タイプ（90cm×60cm）国産　ペットシート　お一人様4点限り",
       "price": 1672,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F190727%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10220355%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -471,25 +490,6 @@
       "confidence": 0.9,
       "group": "super_wide",
       "unit_price": 89.375
-    },
-    {
-      "name": "【10／1限定】当選確率2分の1！1等最大100％　コーチョー　ネオシーツ　カーボンDX　スーパーワイド　18枚×4袋　お一人様1点限り　ペットシーツ",
-      "price": 7494,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F204738%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10485067%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "charm 楽天市場店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2049/204738-1.jpg?_ex=128x128",
-      "review_average": 4.78,
-      "review_count": 9,
-      "postage_flag": 0,
-      "product_id": "34774f6a7f65",
-      "category_id": "pet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 72.0,
-      "quantity_evidence": "18枚x4袋",
-      "confidence": 0.99,
-      "group": "super_wide",
-      "unit_price": 104.0833
     }
   ]
 }
