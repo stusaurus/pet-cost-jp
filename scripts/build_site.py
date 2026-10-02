@@ -510,7 +510,12 @@ def main():
         discovery_data[key] = result
         body = catalog_body(key, config, result, nav(categories), footer(), mobile_dock(categories))
         schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL}, {'@type': 'ListItem', 'position': 2, 'name': config['name'], 'item': f'{BASE_URL}categories/{key}/'}]}
-        write_text(SITE / 'categories' / key / 'index.html', shell(config['name']+' | うちの子との暮らし', '遊び方と確認できる商品表記から候補を探す。ごはんは入力した袋の内容量と1日量から持つ期間と費用を計算。', body, key, schema))
+        if config.get('kind') == 'food':
+            fit = '年齢・体格' if config.get('species') == 'dog' else '年齢'
+            description = f"{config['name']}を{fit}とメーカー表記を確認した銘柄から比較。100g単価・商品総額・内容量に加え、入力した1日量から持つ日数や30日分の費用も確認できます。"
+        else:
+            description = f"{config['name']}を好きな遊び方から探し、商品タイトル・寸法・対象条件を確認できた候補だけを表示。価格ランキングではなく、楽天でサイズや仕様を確かめて選べます。"
+        write_text(SITE / 'categories' / key / 'index.html', shell(config['name']+' | うちの子との暮らし', description, body, key, schema))
     errors = audit_catalog(discovery_data, discovery_config)
     if errors:
         raise RuntimeError('Discovery quality audit failed: '+ '; '.join(errors))
