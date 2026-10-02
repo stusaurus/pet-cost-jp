@@ -19,9 +19,24 @@
     }
     function updateFood(){
       if(!foodOptions.length)return;
-      const p=pets[selected];if($('[data-food-size-panel]'))$('[data-food-size-panel]').hidden=!p.age;const fits=n=>p.age===n.dataset.age&&(!n.dataset.size||p.size===n.dataset.size);
-      $$('[data-food-age]').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.foodAge===p.age)));
-      $$('[data-food-size]').forEach(n=>n.setAttribute('aria-pressed',String(n.dataset.foodSize===p.size)));
+      const p=pets[selected];
+      const availableAges=new Set(foodOptions.map(n=>n.dataset.age).filter(Boolean));
+      document.querySelectorAll('[data-food-age]').forEach(n=>{
+        const available=availableAges.has(n.dataset.foodAge);
+        n.disabled=!available;
+        n.setAttribute('aria-disabled',String(!available));
+        n.setAttribute('aria-pressed',String(available&&n.dataset.foodAge===p.age));
+      });
+      const sizePanel=$('[data-food-size-panel]');
+      if(sizePanel)sizePanel.hidden=!p.age;
+      const availableSizes=new Set(foodOptions.filter(n=>n.dataset.age===p.age).map(n=>n.dataset.size).filter(Boolean));
+      document.querySelectorAll('[data-food-size]').forEach(n=>{
+        const available=!!p.age&&availableSizes.has(n.dataset.foodSize);
+        n.disabled=!available;
+        n.setAttribute('aria-disabled',String(!available));
+        n.setAttribute('aria-pressed',String(available&&n.dataset.foodSize===p.size));
+      });
+      const fits=n=>p.age===n.dataset.age&&(!n.dataset.size||p.size===n.dataset.size);
       foodOptions.forEach(n=>n.hidden=!fits(n));
       const option=foodOptions.find(n=>n.dataset.foodFamilyOption===foodFamily&&fits(n));
       $('[data-food-results]').hidden=!option;
@@ -42,9 +57,26 @@
     }
     function updateToys(){
       if(!$('[data-toy-status]'))return;
-      const p=pets[selected]||{}, rows=$$('[data-toy-candidate]');let count=0;
-      rows.forEach(row=>{const fits=play&&row.dataset.play===play&&(!p.age||row.dataset.age===p.age)&&(!p.size||row.dataset.size===p.size);row.hidden=!fits;if(fits)count++;});
-      $('[data-toy-status]').textContent=play?speciesLabels[selected]+' · 選んだ遊び方 · 商品表記を確認した候補 '+count+'件':'遊び方を選んでください。価格・品質のランキングではありません。';
+      const p=pets[selected]||{}, rows=[...document.querySelectorAll('[data-toy-candidate]')];
+      const profileFits=row=>(!p.age||row.dataset.age===p.age)&&(!p.size||row.dataset.size===p.size);
+      const availablePlays=new Set(rows.filter(profileFits).map(row=>row.dataset.play).filter(Boolean));
+      document.querySelectorAll('[data-play-select]').forEach(button=>{
+        const available=availablePlays.has(button.dataset.playSelect);
+        button.disabled=!available;
+        button.setAttribute('aria-disabled',String(!available));
+        button.setAttribute('aria-pressed',String(button.dataset.playSelect===play));
+      });
+      let count=0;
+      rows.forEach(row=>{const fits=play&&row.dataset.play===play&&profileFits(row);row.hidden=!fits;if(fits)count++;});
+      if(play){
+        $('[data-toy-status]').textContent=count
+          ? speciesLabels[selected]+' · 選んだ遊び方 · 商品表記を確認した候補 '+count+'件'
+          : speciesLabels[selected]+' · 選んだ遊び方 · このプロフィール条件で確認済み候補はまだありません。';
+      }else{
+        $('[data-toy-status]').textContent=availablePlays.size
+          ? '確認済み候補のある遊び方を選んでください。価格・品質のランキングではありません。'
+          : 'このプロフィール条件まで確認できるおもちゃはまだありません。年齢・体格を「指定しない」にすると候補が見つかる場合があります。';
+      }
       $('[data-toy-empty]').hidden=!play||count>0;
     }
     function render(){
