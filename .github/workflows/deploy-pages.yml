@@ -42,6 +42,8 @@ jobs:
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
           GA_MEASUREMENT_ID: G-GFVSZ8YDQ5
         run: python scripts/build_site.py
+      - name: Validate sitemap and robots discovery files
+        run: python scripts/validate_seo_files.py
       - name: Comparison interaction regression tests
         env:
           PET_COST_TEST_SITE: "1"
