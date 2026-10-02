@@ -515,7 +515,11 @@ def main():
             description = f"{config['name']}を{fit}とメーカー表記を確認した銘柄から比較。100g単価・商品総額・内容量に加え、入力した1日量から持つ日数や30日分の費用も確認できます。"
         else:
             description = f"{config['name']}を好きな遊び方から探し、商品タイトル・寸法・対象条件を確認できた候補だけを表示。価格ランキングではなく、楽天でサイズや仕様を確かめて選べます。"
-        write_text(SITE / 'categories' / key / 'index.html', shell(config['name']+' | うちの子との暮らし', description, body, key, schema))
+        if config.get('kind') == 'food':
+            seo_title = f"{config['name']}の価格・容量を比較｜100g単価と30日分の費用 | {SITE_NAME}"
+        else:
+            seo_title = f"{config['name']}を遊び方・サイズで探す｜楽天の商品を比較 | {SITE_NAME}"
+        write_text(SITE / 'categories' / key / 'index.html', shell(seo_title, description, body, key, schema))
     errors = audit_catalog(discovery_data, discovery_config)
     if errors:
         raise RuntimeError('Discovery quality audit failed: '+ '; '.join(errors))
