@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02 09:52 JST",
+  "updated": "2026-10-02 12:12 JST",
   "category": {
     "id": "cat-litter",
     "name": "猫砂",
@@ -157,23 +157,23 @@
       "unit_price": 74.0
     },
     {
-      "name": "常陸化工 ファインブルー 固まる紙製猫砂 12L×5個入 | トイレ用品 まとめ買い ペット ねこ砂 ネコ砂 猫砂 ねこすな 紙タイプ 大容量 固まる パワフル消臭 トイレに流せる 抗菌 色が変わる",
-      "price": 4600,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00s0vmo.7cx6mf25.g00s0vmo.7cx6n1c3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbeisia%2F4952667185988%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fbeisia%2Fi%2F10029713%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "ベイシア楽天市場店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/beisia/cabinet/09485898/4952667185988x5.jpg?_ex=128x128",
-      "review_average": 4.79,
-      "review_count": 217,
+      "name": "猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L×10袋『送料無料（一部地域除く）』",
+      "price": 8990,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00prcko.7cx6m1c4.g00prcko.7cx6nf4d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonestep%2Fpe2234%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fonestep%2Fi%2F10113723%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "よろずやマルシェ",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/onestep/cabinet/life/pet06/pe3424.jpg?_ex=128x128",
+      "review_average": 4.66,
+      "review_count": 86,
       "postage_flag": 0,
-      "product_id": "3de20da16cad",
+      "product_id": "ad40c4c2db63",
       "category_id": "cat-litter",
       "metric": "per_liter",
       "metric_label": "1L",
-      "quantity": 60.0,
-      "quantity_evidence": "12lx5個",
+      "quantity": 120.0,
+      "quantity_evidence": "12lx10袋",
       "confidence": 0.99,
       "group": "paper",
-      "unit_price": 76.6667
+      "unit_price": 74.9167
     },
     {
       "name": "【楽天オリジナル】猫砂紙タイプ 42L 7L×6袋 [トイレに流せる 紙製 軽量 ネコ砂 ねこ砂 猫すな 燃やせる] 消臭効果 トイレに流せる ほこりが出にくい 軽量 ペット用品 まとめ買い ペット消耗品",
@@ -250,6 +250,25 @@
       "confidence": 0.99,
       "group": "wood",
       "unit_price": 82.9167
+    },
+    {
+      "name": "【楽天オリジナル】猫砂木タイプ 24L 8L×3袋 [固まる 消臭 軽量 ネコ砂 ねこ砂 猫すな ] 消臭効果 ほこりが出にくい ペット用品 まとめ買い ペット消耗品",
+      "price": 2000,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00uqzro.7cx6m99a.g00uqzro.7cx6n201/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakutenoriginal-daily%2Fro-p-006%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frakutenoriginal-daily%2Fi%2F10000005%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "楽天オリジナル",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakutenoriginal-daily/cabinet/item/pet/ro-p-006_a_v2.jpg?_ex=128x128",
+      "review_average": 3.61,
+      "review_count": 28,
+      "postage_flag": 0,
+      "product_id": "dcb45ab13b11",
+      "category_id": "cat-litter",
+      "metric": "per_liter",
+      "metric_label": "1L",
+      "quantity": 24.0,
+      "quantity_evidence": "8lx3袋",
+      "confidence": 0.99,
+      "group": "unknown",
+      "unit_price": 83.3333
     },
     {
       "name": "猫砂 紙の猫砂 白い猫砂 流せる 燃やせる 固まる 紙製の砂 13.5L 4袋 環境にやさしい 大容量 クリーンミュウ シーズイシハラ 日本製 ×4コ まとめ セット売り 国産",
@@ -611,25 +630,6 @@
       "confidence": 0.99,
       "group": "paper",
       "unit_price": 106.0
-    },
-    {
-      "name": "猫砂 おから 流せる 緑茶 7L×4袋セット 猫砂 おから お茶 おからの猫砂 静岡県産茶葉配合 当店オリジナル 4個 ネコトイレ砂 砂 ネコ砂 トイレに流せる 燃やせる 燃えるゴミ お茶 おから 香り 抗菌 消臭【R上】",
-      "price": 2981,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F535454%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10183479%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "Pet館〜ペット館〜",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin5/535454_00.jpg?_ex=128x128",
-      "review_average": 3.71,
-      "review_count": 31,
-      "postage_flag": 0,
-      "product_id": "d4ff966626fc",
-      "category_id": "cat-litter",
-      "metric": "per_liter",
-      "metric_label": "1L",
-      "quantity": 28.0,
-      "quantity_evidence": "7lx4袋",
-      "confidence": 0.99,
-      "group": "okara",
-      "unit_price": 106.4643
     }
   ]
 }
