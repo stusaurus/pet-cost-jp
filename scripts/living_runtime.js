@@ -21,7 +21,7 @@
       if(!foodOptions.length)return;
       const p=pets[selected];
       const availableAges=new Set(foodOptions.map(n=>n.dataset.age).filter(Boolean));
-      $('[data-food-age]').forEach(n=>{
+      document.querySelectorAll('[data-food-age]').forEach(n=>{
         const available=availableAges.has(n.dataset.foodAge);
         n.disabled=!available;
         n.setAttribute('aria-disabled',String(!available));
@@ -30,7 +30,7 @@
       const sizePanel=$('[data-food-size-panel]');
       if(sizePanel)sizePanel.hidden=!p.age;
       const availableSizes=new Set(foodOptions.filter(n=>n.dataset.age===p.age).map(n=>n.dataset.size).filter(Boolean));
-      $('[data-food-size]').forEach(n=>{
+      document.querySelectorAll('[data-food-size]').forEach(n=>{
         const available=!!p.age&&availableSizes.has(n.dataset.foodSize);
         n.disabled=!available;
         n.setAttribute('aria-disabled',String(!available));
@@ -57,10 +57,10 @@
     }
     function updateToys(){
       if(!$('[data-toy-status]'))return;
-      const p=pets[selected]||{}, rows=$('[data-toy-candidate]');
+      const p=pets[selected]||{}, rows=[...document.querySelectorAll('[data-toy-candidate]')];
       const profileFits=row=>(!p.age||row.dataset.age===p.age)&&(!p.size||row.dataset.size===p.size);
       const availablePlays=new Set(rows.filter(profileFits).map(row=>row.dataset.play).filter(Boolean));
-      $('[data-play-select]').forEach(button=>{
+      document.querySelectorAll('[data-play-select]').forEach(button=>{
         const available=availablePlays.has(button.dataset.playSelect);
         button.disabled=!available;
         button.setAttribute('aria-disabled',String(!available));
