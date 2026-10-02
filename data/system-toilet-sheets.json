@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-02 13:33 JST",
+  "updated": "2026-10-02 23:41 JST",
   "category": {
     "id": "system-toilet-sheets",
     "name": "猫用システムトイレシート",
@@ -63,7 +63,7 @@
   "items": [
     {
       "name": "【LINE追加で最大2,000円OFF】＼ラクリーン30枚×4袋セットおまけ付／システムトイレ 猫シート システムトイレ用 30枚 4袋 1週間におわない 複数猫用 多頭飼い ラクリーン Raclean 各社共通 臭わない 1週間取り替えいらず アイリスオーヤマ SSS30 SSSF16 SSSF24 TIH-30C",
-      "price": 5480,
+      "price": 4780,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00qr6oo.7cx6m1d0.g00qr6oo.7cx6n20f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcat-land%2F1896194%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fcat-land%2Fi%2F10065021%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
       "shop": "キャットランド",
       "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/cat-land/cabinet/jishahin45/313544_enet.jpg?_ex=128x128",
@@ -78,18 +78,18 @@
       "quantity_evidence": "30枚x4袋",
       "confidence": 0.99,
       "group": "universal",
-      "unit_price": 45.6667
+      "unit_price": 39.8333
     },
     {
-      "name": "＼楽天1位／＼各社共通タイプ／【リニューアル！】猫 トイレ シート ラクリーン シーツ システムトイレ用消臭シート30枚 S-SS30 1週間におわない クエン酸の力で消臭 システム1週間取り替えいらず アイリスオーヤマ 30枚 TIH-30C【R上】",
+      "name": "[10％OFFクーポン★4日20時〜]【まずお試し！】＼ラクリーン新登場／強力消臭 猫 トイレ シート システム猫トイレ用消臭シート ラクリーン Raclean 30枚1週間におわない クエン酸の力で消臭ネコトイレ専用 アイリスオーヤマ TIH-30C S-SS30",
       "price": 1580,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F313172%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10003044%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "Pet館〜ペット館〜",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/07991229/08167859/206157.jpg?_ex=128x128",
-      "review_average": 4.6,
-      "review_count": 494,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00r3t0o.7cx6ma1a.g00r3t0o.7cx6n81c/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpetworldone%2F251202%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fpetworldone%2Fi%2F10085715%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "快適ペットライフ",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/petworldone/cabinet/10835141/12495857/imgrc0105371140.jpg?_ex=128x128",
+      "review_average": 4.68,
+      "review_count": 34,
       "postage_flag": 0,
-      "product_id": "3dcb637f6281",
+      "product_id": "722da4a75c73",
       "category_id": "system-toilet-sheets",
       "metric": "per_sheet",
       "metric_label": "1枚",
