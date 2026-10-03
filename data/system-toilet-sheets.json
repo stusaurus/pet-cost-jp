@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03 12:46 JST",
+  "updated": "2026-10-03 21:25 JST",
   "category": {
     "id": "system-toilet-sheets",
     "name": "猫用システムトイレシート",
@@ -81,25 +81,6 @@
       "unit_price": 39.8333
     },
     {
-      "name": "[10％OFFクーポン★4日20時〜]【まずお試し！】＼ラクリーン新登場／強力消臭 猫 トイレ シート システム猫トイレ用消臭シート ラクリーン Raclean 30枚1週間におわない クエン酸の力で消臭ネコトイレ専用 アイリスオーヤマ TIH-30C S-SS30",
-      "price": 1580,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00r3t0o.7cx6ma1a.g00r3t0o.7cx6n81c/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpetworldone%2F251202%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fpetworldone%2Fi%2F10085715%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "快適ペットライフ",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/petworldone/cabinet/10835141/12495857/imgrc0105371140.jpg?_ex=128x128",
-      "review_average": 4.68,
-      "review_count": 34,
-      "postage_flag": 0,
-      "product_id": "722da4a75c73",
-      "category_id": "system-toilet-sheets",
-      "metric": "per_sheet",
-      "metric_label": "1枚",
-      "quantity": 30.0,
-      "quantity_evidence": "30枚",
-      "confidence": 0.9,
-      "group": "universal",
-      "unit_price": 52.6667
-    },
-    {
       "name": "【ユニチャーム】デオトイレ　消臭・抗菌シート　20枚x12個（ケース販売）",
       "price": 20883,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00q3wqo.7cx6mae5.g00q3wqo.7cx6n548/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbluewood%2F4520699677919%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fbluewood%2Fi%2F10021148%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -138,23 +119,23 @@
       "unit_price": 87.45
     },
     {
-      "name": "デオトイレシート20枚 ふんわり香る 消臭・抗菌シート ナチュラルガーデンの香り 20枚 ユニチャーム デオトイレ 消臭・抗菌シート",
-      "price": 1749,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00u2o2o.7cx6m1f2.g00u2o2o.7cx6n615/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpet-gardeninglife%2F4520699678183%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fpet-gardeninglife%2Fi%2F10001170%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "ペット&ガーデニングライフ",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/pet-gardeninglife/cabinet/08533235/uni/02/goods-10.jpg?_ex=128x128",
-      "review_average": 4.93,
-      "review_count": 14,
+      "name": "デオトイレ　シート　ふんわり香る消臭・抗菌シート　ナチュラルガーデンの香り　大容量　20枚入　関東当日便",
+      "price": 1772,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pyjho.7cx6m8f2.g00pyjho.7cx6n777/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fchanet%2F212775%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fchanet%2Fi%2F10638837%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "charm 楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/2127/212775-1.jpg?_ex=128x128",
+      "review_average": 4.75,
+      "review_count": 16,
       "postage_flag": 1,
-      "product_id": "4514969c3a0c",
+      "product_id": "eeb77bee2fad",
       "category_id": "system-toilet-sheets",
       "metric": "per_sheet",
       "metric_label": "1枚",
       "quantity": 20.0,
-      "quantity_evidence": "20枚",
+      "quantity_evidence": "20枚入",
       "confidence": 0.9,
       "group": "deotoilet",
-      "unit_price": 87.45
+      "unit_price": 88.6
     },
     {
       "name": "ユニ・チャームペット　デオトイレ ふんわり香る消臭・抗菌シート ナチュラルソープの香り　20枚入　【デオトイレ】※メーカー都合によりパッケージ、デザインが変更となる場合がございます",
