@@ -414,3 +414,10 @@ test('save, restore, same-condition comparison, honest history and click attribu
   const restored=await open(html,'pet-sheets',{savedProducts:[first.key,'no-longer-published']});try{assert.ok(text(restored,'[data-saved-products]').includes(first.name));assert.ok(text(restored,'[data-saved-products]').includes('掲載対象外'));assert.equal(get(restored,`[data-product-save="${first.key}"]`).getAttribute('aria-pressed'),'true');assert.deepEqual(restored.errors,[]);}finally{restored.close();}
  }finally{p.close();}
 });
+
+test('food comparison labels keep dog and cat suitability separate',async()=>{
+ for(const category of ['dog-food','cat-food']){
+  const p=await open(fs.readFileSync(path.join(root,`site/categories/${category}/index.html`),'utf8'),category);
+  try{get(p,'[data-food-age="adult"]').click();if(category==='dog-food')get(p,'[data-food-size="small"]').click();get(p,'[data-food-family]').click();const b=get(p,'[data-product-compare]');if(b){b.click();const label=text(p,'[data-product-comparison]');assert.ok(label.includes(category==='dog-food'?'成犬用':'成猫用'));assert.ok(!label.includes(category==='dog-food'?'成猫用':'成犬用'));}}finally{p.close();}
+ }
+});

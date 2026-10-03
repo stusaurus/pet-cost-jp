@@ -47,7 +47,7 @@
         const card=el('article');const img=el('img');img.src=p.image;img.alt=p.name;img.width=96;img.height=96;img.loading='lazy';if(p.image)card.append(img);
         card.append(el('h4',p.name),el('p','商品価格 '+money(p.price)),el('p',p.shipping));
         if(p.unit)card.append(el('p',money(p.unit)+' / '+p.metric),el('p','内容量 '+(p.metric==='100g'?p.quantity/10+'kg':p.quantity+(p.metric==='1L'?'L':'枚'))));
-        if(p.age||p.size)card.append(el('p',[({young:'幼齢用',adult:'成犬・成猫用',senior:'シニア用'})[p.age],({small:'小型用',medium:'中型用',large:'大型用'})[p.size]].filter(Boolean).join(' · ')));
+        if(p.age||p.size)card.append(el('p',[({young:p.category.startsWith('dog')?'子犬用':'子猫用',adult:p.category.startsWith('dog')?'成犬用':'成猫用',senior:'シニア用'})[p.age],({small:'小型用',medium:'中型用',large:'大型用'})[p.size]].filter(Boolean).join(' · ')));
         if(p.dimensions)card.append(el('p','寸法 '+p.dimensions));
         const a=el('a','楽天で現在価格・仕様を確認');a.className='btn secondary';a.href=p.url;a.target='_blank';a.rel='nofollow sponsored noopener';
         Object.assign(a.dataset,{affiliateLink:'',categoryId:p.category,itemId:p.id,itemName:p.name,conversionSource:'saved_comparison',position:String([...selected].indexOf(p.key)+1),...(p.unit?{unitPrice:String(p.unit),metric:p.metric}: {})});
