@@ -100,12 +100,15 @@ jobs:
           import json, os, urllib.request, xml.etree.ElementTree as ET
           base=os.environ["SITE_URL"]; key=os.environ["INDEXNOW_KEY"]; key_url=base+key+".txt"
           import time
-for attempt in range(12):
-    try:
-        if urllib.request.urlopen(key_url, timeout=20).read().decode().strip()==key: break
-    except Exception: pass
-    time.sleep(10)
-else: raise SystemExit("IndexNow key verification failed after publish propagation")
+          for attempt in range(12):
+              try:
+                  if urllib.request.urlopen(key_url, timeout=20).read().decode().strip()==key:
+                      break
+              except Exception:
+                  pass
+              time.sleep(10)
+          else:
+              raise SystemExit("IndexNow key verification failed after publish propagation")
           xml=urllib.request.urlopen(base+"sitemap.xml", timeout=20).read()
           root=ET.fromstring(xml); urls=[e.text.strip() for e in root.iter() if e.tag.endswith("loc") and e.text]
           req=urllib.request.Request("https://api.indexnow.org/IndexNow", data=json.dumps({"host":"stusaurus.github.io","key":key,"keyLocation":key_url,"urlList":urls}).encode(), headers={"Content-Type":"application/json; charset=utf-8"}, method="POST")
