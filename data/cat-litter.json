@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-03 09:32 JST",
+  "updated": "2026-10-03 12:37 JST",
   "category": {
     "id": "cat-litter",
     "name": "猫砂",
@@ -157,6 +157,25 @@
       "unit_price": 74.0
     },
     {
+      "name": "猫砂 紙製 流せる 固まる ホワイト 60L ケース販売 消臭 軽量 燃えるゴミ 可燃ごみ 再生パルプ 崩れにくい トイレに流せる猫砂 紙の猫砂 ネコ砂 キャットリッター 大容量 まとめ買い ストック ペット用品 猫用 室内飼い 清潔 簡単処理 掃除しやすい LIFELEX コーナン",
+      "price": 4490,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F4522831295746%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10275313%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "コーナンeショップ 楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202606/s1/4522831295746.jpg?_ex=128x128",
+      "review_average": 0.0,
+      "review_count": 0,
+      "postage_flag": 1,
+      "product_id": "37f9794ba2e8",
+      "category_id": "cat-litter",
+      "metric": "per_liter",
+      "metric_label": "1L",
+      "quantity": 60.0,
+      "quantity_evidence": "60l",
+      "confidence": 0.9,
+      "group": "paper",
+      "unit_price": 74.8333
+    },
+    {
       "name": "『10月9日15時までよろマル祭開催』猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L×10袋『送料無料（一部地域除く）』",
       "price": 8990,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00prcko.7cx6m1c4.g00prcko.7cx6nf4d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonestep%2Fpe2234%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fonestep%2Fi%2F10113723%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -176,6 +195,25 @@
       "unit_price": 74.9167
     },
     {
+      "name": "常陸化工 ファインブルー 固まる紙製猫砂 12L×5個入 | トイレ用品 まとめ買い ペット ねこ砂 ネコ砂 猫砂 ねこすな 紙タイプ 大容量 固まる パワフル消臭 トイレに流せる 抗菌 色が変わる",
+      "price": 4600,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00s0vmo.7cx6mf25.g00s0vmo.7cx6n1c3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbeisia%2F4952667185988%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fbeisia%2Fi%2F10029713%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "ベイシア楽天市場店",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/beisia/cabinet/09485898/4952667185988x5.jpg?_ex=128x128",
+      "review_average": 4.79,
+      "review_count": 217,
+      "postage_flag": 0,
+      "product_id": "3de20da16cad",
+      "category_id": "cat-litter",
+      "metric": "per_liter",
+      "metric_label": "1L",
+      "quantity": 60.0,
+      "quantity_evidence": "12lx5個",
+      "confidence": 0.99,
+      "group": "paper",
+      "unit_price": 76.6667
+    },
+    {
       "name": "【楽天オリジナル】猫砂紙タイプ 42L 7L×6袋 [トイレに流せる 紙製 軽量 ネコ砂 ねこ砂 猫すな 燃やせる] 消臭効果 トイレに流せる ほこりが出にくい 軽量 ペット用品 まとめ買い ペット消耗品",
       "price": 3280,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00uqzro.7cx6m99a.g00uqzro.7cx6n201/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakutenoriginal-daily%2Fro-p-007%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frakutenoriginal-daily%2Fi%2F10000006%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -193,25 +231,6 @@
       "confidence": 0.99,
       "group": "paper",
       "unit_price": 78.0952
-    },
-    {
-      "name": "『おひとり様2個まで』猫砂 紙製 常陸化工 ファインブルー 固まる紙製猫砂 12L",
-      "price": 948,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00prcko.7cx6m1c4.g00prcko.7cx6nf4d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonestep%2Fpec063%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fonestep%2Fi%2F10271646%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "よろずやマルシェ",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/onestep/cabinet/life/pet04/pec063_1.jpg?_ex=128x128",
-      "review_average": 5.0,
-      "review_count": 12,
-      "postage_flag": 1,
-      "product_id": "0d383f095be5",
-      "category_id": "cat-litter",
-      "metric": "per_liter",
-      "metric_label": "1L",
-      "quantity": 12.0,
-      "quantity_evidence": "12l",
-      "confidence": 0.9,
-      "group": "paper",
-      "unit_price": 79.0
     },
     {
       "name": "猫砂 ひのき 流せる 7L 6袋 猫 トイレ 砂 トイレ 砂 ネコ砂 ひのきの猫砂 7L×6袋セットPHKT-70 当店オリジナル ねこ砂 木の猫砂 燃やせる 脱臭 粉立ち少ない 猫トイレ アイリスオーヤマ",
@@ -461,25 +480,6 @@
       "unit_price": 90.8571
     },
     {
-      "name": "猫砂 クリーンサンド 7L 鉱物系 ベントナイト 固まる 消臭 臭わない 抗菌 ペレットタイプ 崩れにくい 多頭飼い コスパ 安い 大容量 業務用 トイレ用品 ネコ砂 ねこ砂 LIFELEX コーナン",
-      "price": 657,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00ssuao.7cx6m4bf.g00ssuao.7cx6n56f/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fkohnan-eshop%2F4522831785667%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fkohnan-eshop%2Fi%2F10226062%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "コーナンeショップ 楽天市場店",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/kohnan-eshop/cabinet/goods/202606/s1/4522831785667.jpg?_ex=128x128",
-      "review_average": 0.0,
-      "review_count": 0,
-      "postage_flag": 1,
-      "product_id": "9736285de9bb",
-      "category_id": "cat-litter",
-      "metric": "per_liter",
-      "metric_label": "1L",
-      "quantity": 7.0,
-      "quantity_evidence": "7l",
-      "confidence": 0.9,
-      "group": "mineral",
-      "unit_price": 93.8571
-    },
-    {
       "name": "【激アツ価格★9日9:59迄】猫砂 ベントナイト ガッチリ固まる猫砂 Ag+ 8L×2袋セット GN-8 8リットル 2個 ねこ砂 ネコ砂 固まる 消臭 脱臭 しっかり固まる 銀イオン 猫トイレ トイレ砂 ペット消耗品 まとめ買い",
       "price": 1551,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1523849%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10007935%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -537,25 +537,6 @@
       "unit_price": 100.0
     },
     {
-      "name": "木質ペレット20kg(10kg×2袋)】33L 大容量 京都ペレット (全木) 京都産 間伐材 天然木 100％ 国産 京都産スギ 無添加 安心・安全 環境に優しい 森の恵み ペレットストーブ　燃料　高い吸収力 消臭効果 崩れるタイプ 猫システムトイレ 猫砂にも",
-      "price": 3300,
-      "url": "https://hb.afl.rakuten.co.jp/hgc/g00ufpyo.7cx6m9d0.g00ufpyo.7cx6ncf0/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmorinochikarakyoto%2Fkyotopellet01%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fmorinochikarakyoto%2Fi%2F10000003%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
-      "shop": "woodpelletshop森の力京都",
-      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/morinochikarakyoto/cabinet/09838159/compass1686558766.jpg?_ex=128x128",
-      "review_average": 4.43,
-      "review_count": 7,
-      "postage_flag": 1,
-      "product_id": "997af658dcb9",
-      "category_id": "cat-litter",
-      "metric": "per_liter",
-      "metric_label": "1L",
-      "quantity": 33.0,
-      "quantity_evidence": "33l",
-      "confidence": 0.9,
-      "group": "system",
-      "unit_price": 100.0
-    },
-    {
       "name": "猫砂1番(7L×2セット)",
       "price": 1414,
       "url": "https://hb.afl.rakuten.co.jp/hgc/g00r136o.7cx6meef.g00r136o.7cx6n891/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F624327%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Frakuten24%2Fi%2F11368710%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
@@ -592,6 +573,25 @@
       "confidence": 0.9,
       "group": "mixed",
       "unit_price": 101.875
+    },
+    {
+      "name": "【激アツ価格★9日9:59迄】猫砂 ガッチリ固まってトイレに流せる猫砂 7L×4袋セット GTN-7L 7リットル 4個 ベントナイト 木材 ねこ砂 ネコ砂 固まる 流せる ペレット形状 猫トイレ トイレ砂 トイレ用品 消耗品",
+      "price": 2880,
+      "url": "https://hb.afl.rakuten.co.jp/hgc/g00pr3zo.7cx6m53d.g00pr3zo.7cx6nd0b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fdog-kan%2F1227601%2F&m=http%3A%2F%2Fm.rakuten.co.jp%2Fdog-kan%2Fi%2F10127265%2F&rafcid=wsc_i_is_ef002145-4af4-4f7f-bde6-093503cf633e",
+      "shop": "Pet館〜ペット館〜",
+      "image": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/jishahin29/1227601.jpg?_ex=128x128",
+      "review_average": 3.31,
+      "review_count": 13,
+      "postage_flag": 0,
+      "product_id": "fe6ee46da59c",
+      "category_id": "cat-litter",
+      "metric": "per_liter",
+      "metric_label": "1L",
+      "quantity": 28.0,
+      "quantity_evidence": "7lx4袋",
+      "confidence": 0.99,
+      "group": "mineral",
+      "unit_price": 102.8571
     },
     {
       "name": "【激アツ価格★9日9:59迄】【2個セット】 猫砂 紙 固まる 流せる 再生パルプ 飛び散りにくい ペレットタイプ ネコ砂 14L×2 ペーパーフレッシュ PFC-14L アイリスオーヤマ",
