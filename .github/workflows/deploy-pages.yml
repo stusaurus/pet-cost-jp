@@ -69,6 +69,9 @@ jobs:
             git commit -m "Sync generated Pages output"
             git push origin HEAD:main
           fi
+      - name: Add IndexNow verification key
+        run: printf '%s' '7d4f93c2a6814eb5b0d87f216ca9e403' > site/7d4f93c2a6814eb5b0d87f216ca9e403.txt
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -82,3 +85,23 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  indexnow:
+    name: Notify IndexNow
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit sitemap URLs to IndexNow
+        env:
+          SITE_URL: https://stusaurus.github.io/pet-cost-jp/
+          INDEXNOW_KEY: 7d4f93c2a6814eb5b0d87f216ca9e403
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request, xml.etree.ElementTree as ET
+          base=os.environ["SITE_URL"]; key=os.environ["INDEXNOW_KEY"]; key_url=base+key+".txt"
+          if urllib.request.urlopen(key_url, timeout=20).read().decode().strip()!=key: raise SystemExit("IndexNow key verification failed")
+          xml=urllib.request.urlopen(base+"sitemap.xml", timeout=20).read()
+          root=ET.fromstring(xml); urls=[e.text.strip() for e in root.iter() if e.tag.endswith("loc") and e.text]
+          req=urllib.request.Request("https://api.indexnow.org/IndexNow", data=json.dumps({"host":"stusaurus.github.io","key":key,"keyLocation":key_url,"urlList":urls}).encode(), headers={"Content-Type":"application/json; charset=utf-8"}, method="POST")
+          with urllib.request.urlopen(req, timeout=30) as r: print("IndexNow", r.status, "URLs", len(urls))
+          PY
