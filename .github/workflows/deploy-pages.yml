@@ -50,25 +50,6 @@ jobs:
         run: npm test
       - name: Product quality audit
         run: python scripts/audit_products.py
-      - name: Mirror generated site to main branch
-        run: |
-          rm -rf categories data
-          cp site/index.html ./index.html
-          cp -R site/categories ./categories
-          cp -R site/data ./data
-          cp site/robots.txt ./robots.txt
-          cp site/sitemap.xml ./sitemap.xml
-          cp site/404.html ./404.html
-          touch .nojekyll
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A index.html categories data robots.txt sitemap.xml 404.html .nojekyll
-          if git diff --cached --quiet; then
-            echo "Published files already match generated site."
-          else
-            git commit -m "Sync generated Pages output"
-            git push origin HEAD:main
-          fi
       - name: Add IndexNow verification key
         run: printf '%s' '7d4f93c2a6814eb5b0d87f216ca9e403' > site/7d4f93c2a6814eb5b0d87f216ca9e403.txt
 
