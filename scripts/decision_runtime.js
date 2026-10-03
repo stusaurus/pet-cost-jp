@@ -16,7 +16,7 @@
       const first=byKey.get([...selected][0]);
       if(first&&(first.category!==p.category||first.group!==p.group)){status.textContent='同じカテゴリ・サイズ・素材・対応シリーズ、または同じフード銘柄で比較してください。';return;}
       if(selected.size>=3){status.textContent='比較は3件までです。選択を外すと別の商品を追加できます。';return;}
-      selected.add(p.key);render();track('product_compare',{category_id:p.category,item_id:p.id,result_count:selected.size});
+      selected.add(p.key);render();status.textContent=selected.size+'件を比較中。「保存・比較欄を見る」から確認できます。';track('product_compare',{category_id:p.category,item_id:p.id,result_count:selected.size});
     }
     const links=[];
     products.filter(p=>p.category===document.body.dataset.categoryId).forEach(p=>{
@@ -25,6 +25,7 @@
       const actions=el('div');actions.className='decision-actions';
       const saveButton=button('保存する',()=>save(p)),compareButton=button('並べて比較',()=>compare(p));
       saveButton.dataset.productSave=p.key;compareButton.dataset.productCompare=p.key;actions.append(saveButton,compareButton);article.append(actions);links.push({p,saveButton,compareButton});
+      const jump=el('a','保存・比較欄を見る');jump.href='#decision-heading';jump.className='text-link';actions.append(jump);
       const history=el('details');history.className='observed-prices';history.append(el('summary','価格履歴を見る'));
       history.append(el('p','実際に取得した商品価格。送料・クーポン・ポイントは含みません。'));
       for(const h of p.history)history.append(el('p',h.date+' · '+money(h.price)+(h.unit?' · '+money(h.unit)+' / '+p.metric:'')));
@@ -45,7 +46,8 @@
       [...selected].map(k=>byKey.get(k)).filter(Boolean).forEach(p=>{
         const card=el('article');const img=el('img');img.src=p.image;img.alt=p.name;img.width=96;img.height=96;img.loading='lazy';if(p.image)card.append(img);
         card.append(el('h4',p.name),el('p','商品価格 '+money(p.price)),el('p',p.shipping));
-        if(p.unit)card.append(el('p',money(p.unit)+' / '+p.metric),el('p','数量 '+p.quantity+(p.metric==='100g'?' × 100g':p.metric==='1L'?'L':'枚')));
+        if(p.unit)card.append(el('p',money(p.unit)+' / '+p.metric),el('p','内容量 '+(p.metric==='100g'?p.quantity/10+'kg':p.quantity+(p.metric==='1L'?'L':'枚'))));
+        if(p.age||p.size)card.append(el('p',[({young:'幼齢用',adult:'成犬・成猫用',senior:'シニア用'})[p.age],({small:'小型用',medium:'中型用',large:'大型用'})[p.size]].filter(Boolean).join(' · ')));
         if(p.dimensions)card.append(el('p','寸法 '+p.dimensions));
         const a=el('a','楽天で現在価格・仕様を確認');a.className='btn secondary';a.href=p.url;a.target='_blank';a.rel='nofollow sponsored noopener';
         Object.assign(a.dataset,{affiliateLink:'',categoryId:p.category,itemId:p.id,itemName:p.name,conversionSource:'saved_comparison',position:String([...selected].indexOf(p.key)+1),...(p.unit?{unitPrice:String(p.unit),metric:p.metric}: {})});
