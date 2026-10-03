@@ -8,6 +8,9 @@
     let pets={dog:clean({}),cat:clean({})}, selected=$('[data-discovery-species]')?.dataset.discoverySpecies||$('[data-profile]')?.dataset.species||'', saved=false, play='';
     try {const data=JSON.parse(localStorage.getItem(KEY)||'{}');if(data?.version===1){pets={dog:clean(data.dog),cat:clean(data.cat)};saved=true;if(!selected&&validPet(data.selected))selected=data.selected;}}catch(_){}
     const store=()=>{try{if(saved)localStorage.setItem(KEY,JSON.stringify({version:1,selected,...pets}));else localStorage.removeItem(KEY);return true;}catch(_){return false;}};
+    // Carry explicit age/size choices across pages without persisting personal fields.
+    const routeParams=new URLSearchParams(location.search);
+    if(validPet(selected)){if(['young','adult','senior'].includes(routeParams.get('age')))pets[selected].age=routeParams.get('age');if(selected==='dog'&&['small','medium','large'].includes(routeParams.get('size')))pets.dog.size=routeParams.get('size');}
     const FOOD_KEY='pet_cost_food_preferences_v1', foodOptions=$$('[data-food-family-option]');
     let foodFamily='', foodDaily='', foodSaved=false, foodOrder='unit';
     const positive=t=>typeof t==='string'&&/^\d+(\.\d+)?$/.test(t)&&Number(t)>0&&Number(t)<=100000;
@@ -80,6 +83,7 @@
       $('[data-toy-empty]').hidden=!play||count>0;
     }
     function render(){
+      $$('[data-living-route]').forEach(n=>{const u=new URL(n.href),p=pets[selected]||{};u.searchParams.delete('age');u.searchParams.delete('size');if(p.age)u.searchParams.set('age',p.age);if(p.size)u.searchParams.set('size',p.size);n.href=u.href;});
       $$('[data-pet-select]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.petSelect===selected)));
       $$('[data-pet-routes]').forEach(n=>n.hidden=n.dataset.petRoutes!==selected);
       if($('[data-living-status]'))$('[data-living-status]').textContent=selected?speciesLabels[selected]+'の用品を選べます。プロフィールは任意です。':'犬・猫を選ぶと、その子の用品が現れます。';

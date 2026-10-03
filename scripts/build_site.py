@@ -13,6 +13,7 @@ from common.engine import choose_ranked
 from common.rakuten import fetch_items
 from common.catalog import collect as collect_catalog, audit as audit_catalog
 from discovery import journey, catalog_body, profile
+from decisions import enrich
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'site'
@@ -41,9 +42,10 @@ def esc(value):
 def display_name(name):
     """Trim promotional brackets for display; retain original titles in data/GA4."""
     def bracket(match):
-        return ' ' if re.search(r'クーポン|ポイント|SALE|セール|限定|当選|OFF|オフ|円引', match.group(0), re.I) else match.group(0)
+        return ' ' if re.search(r'クーポン|ポイント|SALE|セール|限定|当選|OFF|オフ|円引|要エントリー|激アツ|全商品対象', match.group(0), re.I) else match.group(0)
     text = re.sub(r'【[^】]*】|\[[^\]]*\]', bracket, name)
     text = re.sub(r'当選確率\S*\s*1等最大\S*\s*', '', text)
+    text = re.sub(r'^[■★\s]*最大ポイント\d+倍\s*', '', text)
     return re.sub(r'\s+', ' ', text).strip() or name
 
 
@@ -59,6 +61,7 @@ def analytics_head():
     measurement = os.environ.get('GA_MEASUREMENT_ID', '').strip()
     runtime = (ROOT / 'scripts' / 'analytics_runtime.js').read_text(encoding='utf-8')
     runtime += '\n' + (ROOT / 'scripts' / 'living_runtime.js').read_text(encoding='utf-8')
+    runtime += '\n' + (ROOT / 'scripts' / 'decision_runtime.js').read_text(encoding='utf-8')
     if not measurement:
         return f'<script>{runtime}</script>'
     return f'''<script async src="https://www.googletagmanager.com/gtag/js?id={esc(measurement)}"></script>
@@ -327,7 +330,8 @@ def faq_html(category):
 
 
 def footer():
-    return f'''<footer class="footer"><div class="wrap footer-box"><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
+    discovery_links = ''.join(f'<a href="{BASE_URL}categories/{key}/">{name}</a> ' for key,name in [('dog-food','犬のごはん'),('cat-food','猫のごはん'),('dog-toys','犬のおもちゃ'),('cat-toys','猫のおもちゃ')])
+    return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
 
 
 def category_page(category, items, categories, updated):
@@ -462,7 +466,7 @@ def main():
         category_updated = updated
         if args.reuse_data:
             payload = json.loads((ROOT / 'data' / f"{category['id']}.json").read_text(encoding='utf-8'))
-            ranked = payload['items']
+            ranked = choose_ranked(payload['items'], category)
             category_updated = payload['updated']
         else:
             raw = load_fixture(category['id']) if demo else []
@@ -507,6 +511,7 @@ def main():
             print('DISCOVERY_REVIEW ' + json.dumps({'category': key, **result}, ensure_ascii=False))
         if not config.get('publish_products'):
             result = {**result, 'items': []}
+        result['updated'] = result.get('updated', '') if args.reuse_data else updated
         discovery_data[key] = result
         body = catalog_body(key, config, result, nav(categories), footer(), mobile_dock(categories))
         schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL}, {'@type': 'ListItem', 'position': 2, 'name': config['name'], 'item': f'{BASE_URL}categories/{key}/'}]}
@@ -529,6 +534,8 @@ def main():
     urls = [BASE_URL] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
+    enrich(SITE, ROOT / 'data')
+    write_text(SITE / '404.html', '<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ページが見つかりません | ペット用品コスパ比較</title></head><body><main><h1>ページが見つかりません</h1><p>用品を選び直してください。</p><a href="'+BASE_URL+'">トップへ戻る</a></main></body></html>')
     copy_static_verification_files()
     print(f'Built {len(categories) + len(discovery_data)} category pages in {SITE}')
 

@@ -58,10 +58,11 @@ jobs:
           cp -R site/data ./data
           cp site/robots.txt ./robots.txt
           cp site/sitemap.xml ./sitemap.xml
+          cp site/404.html ./404.html
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A index.html categories data robots.txt sitemap.xml .nojekyll
+          git add -A index.html categories data robots.txt sitemap.xml 404.html .nojekyll
           if git diff --cached --quiet; then
             echo "Published files already match generated site."
           else

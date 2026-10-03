@@ -6,7 +6,7 @@ from .quantity import normalize_text, parse_count, parse_liters, parse_100g
 from .classify import classify
 
 GLOBAL_EXCLUDE = (
-    "ふるさと納税", "定期便",
+    "ふるさと納税", "定期便", "定期購入", "初回限定", "初回のみ", "お試し価格", "会員限定価格",
     "中古", "訳あり", "訳アリ", "アウトレット",
     "展示品", "開封品", "箱潰れ", "箱つぶれ", "b品"
 )
@@ -188,6 +188,7 @@ def choose_ranked(raw_items, category, limit=30):
 
     family_keep = _family_keep_ids(normalized, category)
     seen_names = set()
+    seen_targets = set()
     ranked = []
     for item in normalized:
         family = _family_key(item, category)
@@ -195,9 +196,11 @@ def choose_ranked(raw_items, category, limit=30):
             continue
 
         name_key = normalize_text(item["name"])
-        if name_key in seen_names:
+        direct = urllib.parse.parse_qs(urllib.parse.urlparse(item['url']).query).get('pc', [''])[0]
+        if name_key in seen_names or (direct and direct in seen_targets):
             continue
         seen_names.add(name_key)
+        if direct: seen_targets.add(direct)
         ranked.append(item)
         if len(ranked) >= limit:
             break

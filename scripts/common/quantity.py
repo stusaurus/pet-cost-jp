@@ -72,7 +72,8 @@ def parse_count(title: str):
 
     if explicit_matches:
         total = explicit_totals[0]
-        if len(distinct_singles) > 1 and int(total) not in distinct_singles:
+        each_values = {int(m.group(1)) for pattern in explicit_patterns for m in re.finditer(pattern, text)}
+        if any(v not in each_values | {int(total)} for v in distinct_singles):
             return None
         evidence = next(e for value, e in explicit_matches if round(value, 6) == total)
         return {"quantity": float(total), "confidence": 0.99, "evidence": evidence}
@@ -118,11 +119,14 @@ def parse_liters(title: str):
 
     if explicit_matches:
         total = explicit_totals[0]
-        if len(distinct_values) > 1 and round(total, 6) not in distinct_values:
+        each_values = {round(x[2], 6) for x in explicit_matches}
+        if any(v not in each_values | {round(total, 6)} for v in distinct_values):
             return None
         evidence = next(e for value, e, _ in explicit_matches if round(value, 6) == total)
         return {"quantity": float(total), "confidence": 0.99, "evidence": evidence}
 
+    if _pack_counts(text):
+        return None
     if not distinct_values or len(distinct_values) > 1:
         return None
     return {"quantity": float(distinct_values[0]), "confidence": 0.90, "evidence": matches[0].group(0)}
@@ -148,9 +152,15 @@ def parse_100g(title: str):
         return None
     if totals:
         grams = distinct_totals[0]
+        weights = [float(n) * (1000 if u == 'kg' else 1) for n, u in re.findall(r'(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)', text)]
+        each = float(explicit_matches[0].group(1)) * (1000 if explicit_matches[0].group(2) == 'kg' else 1)
+        if any(w not in (each, grams) for w in weights):
+            return None
         evidence = next(e for value, e in totals if round(value, 6) == grams)
         return {"quantity": grams / 100, "confidence": 0.99, "evidence": evidence}
 
+    if _pack_counts(text):
+        return None
     matches = list(re.finditer(r"(?<!\d)(\d+(?:\.\d+)?)\s*(kg|g)", text))
     grams = []
     for m in matches:

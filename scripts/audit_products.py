@@ -8,6 +8,7 @@ from common.classify import classify
 from common.engine import _family_key, category_matches, parse_quantity
 from common.quantity import normalize_text
 from common.catalog import audit as audit_catalog
+from decisions import regression_errors
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE_DATA = ROOT / "site" / "data"
@@ -96,6 +97,11 @@ def main():
                 errors.append(
                     f"{label}: unit price mismatch {unit_price} != {price}/{quantity}"
                 )
+            if not all(math.isfinite(v) for v in (price, quantity, unit_price)):
+                errors.append(f'{label}: non-finite numeric value')
+            lower = 5 if category['metric'] == 'per_liter' else .5
+            if not lower <= unit_price <= 10000:
+                errors.append(f'{label}: implausible unit price; requires review')
 
             if not direct_rakuten_url(item.get("url", "")):
                 errors.append(f"{label}: affiliate URL has no valid Rakuten item target")
@@ -122,6 +128,9 @@ def main():
         for key, payload in discovery_data.items():
             summary[key] = len(payload.get('items',[]))
             total += summary[key]
+    else:
+        errors.append('discovery data missing')
+    errors.extend(regression_errors(ROOT / 'site', ROOT / 'data'))
     if errors:
         print("PRODUCT QUALITY AUDIT FAILED")
         for error in errors:

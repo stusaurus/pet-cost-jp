@@ -19,6 +19,7 @@ async function open(html, id = '', options = {}) {
       window.matchMedia = () => ({ matches: !!options.reduced });
       if (options.household) window.localStorage.setItem('pet_cost_household_v1', JSON.stringify(options.household));
       if (options.profiles) window.localStorage.setItem('pet_cost_profiles_v1', JSON.stringify(options.profiles));
+      if (options.savedProducts) window.localStorage.setItem('pet_cost_saved_products_v1', JSON.stringify(options.savedProducts));
       if (options.foodPreferences) window.localStorage.setItem('pet_cost_food_preferences_v1', JSON.stringify(options.foodPreferences));
       if (options.storageError) Object.defineProperty(window, 'localStorage', { get() { throw new Error('storage disabled'); } });
     }
@@ -395,4 +396,21 @@ test('homepage starts with household choices and keeps price-gap analytics on th
     assert.equal(events(p, 'daily_spotlight_click').length, 0);
     assert.ok(!get(p, '.home-price-details').open);
   } finally { p.close(); }
+});
+
+test('unsaved profile choices carry to food and toy routes without personal fields',async()=>{
+ const p=await open(fs.readFileSync(path.join(root,'site/index.html'),'utf8'));
+ try{get(p,'[data-pet-select="dog"]').click();get(p,'[data-profile-age="adult"]').click();get(p,'[data-profile-size="small"]').click();const link=get(p,'[data-living-route="dog-food"]');assert.ok(link.href.includes('age=adult'));assert.ok(link.href.includes('size=small'));assert.ok(!link.href.includes('weight'));assert.equal(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'),null);}finally{p.close();}
+});
+test('save, restore, same-condition comparison, honest history and click attribution',async()=>{
+ const html=fs.readFileSync(path.join(root,'site/categories/pet-sheets/index.html'),'utf8');const p=await open(html,'pet-sheets');
+ try{
+  const rows=JSON.parse(get(p,'#decision-data').textContent).filter(r=>r.category==='pet-sheets');const first=rows[0], same=rows.find(r=>r.group===first.group&&r.key!==first.key), other=rows.find(r=>r.group!==first.group);
+  get(p,`[data-product-save="${first.key}"]`).click();assert.equal(JSON.parse(p.dom.window.localStorage.getItem('pet_cost_saved_products_v1'))[0],first.key);assert.ok(text(p,'[data-saved-products]').includes(first.name));
+  get(p,`[data-product-compare="${first.key}"]`).click();get(p,`[data-product-compare="${same.key}"]`).click();assert.equal(all(p,'.decision-grid article').length,2);
+  if(other){get(p,`[data-product-compare="${other.key}"]`).click();assert.equal(all(p,'.decision-grid article').length,2);assert.ok(text(p,'[data-decision-status]').includes('同じカテゴリ'));}
+  get(p,'.decision-grid [data-affiliate-link]').click();assert.equal(events(p,'affiliate_click').at(-1).conversion_source,'saved_comparison');assert.equal(events(p,'affiliate_click').at(-1).operator_test,'1');assert.equal(events(p,'product_save').length,1);assert.deepEqual(p.errors,[]);
+  assert.ok(get(p,'.observed-prices').textContent.includes('実際に取得した商品価格'));
+  const restored=await open(html,'pet-sheets',{savedProducts:[first.key,'no-longer-published']});try{assert.ok(text(restored,'[data-saved-products]').includes(first.name));assert.ok(text(restored,'[data-saved-products]').includes('掲載対象外'));assert.equal(get(restored,`[data-product-save="${first.key}"]`).getAttribute('aria-pressed'),'true');assert.deepEqual(restored.errors,[]);}finally{restored.close();}
+ }finally{p.close();}
 });
