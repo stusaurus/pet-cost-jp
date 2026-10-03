@@ -6,7 +6,7 @@ from pathlib import Path
 
 BASE = 'https://stusaurus.github.io/pet-cost-jp/'
 
-def catalog(site):
+def catalog(site, format_name=lambda value: value):
     products = []
     for path in sorted((site / 'data').glob('*.json')):
         if path.stem in ('price-history', 'decision-catalog'):
@@ -20,7 +20,7 @@ def catalog(site):
                 quantity = item.get('quantity', item.get('quantity_100g', 0))
                 key = hashlib.sha256(f'{category}|{direct}|{group}|{quantity}'.encode()).hexdigest()[:24]
                 products.append({'key': key, 'id': item['product_id'], 'category': category,
-                    'name': item.get('review_label', item['name']), 'image': item.get('image', ''),
+                    'name': item.get('review_label', format_name(item['name'])), 'image': item.get('image', ''),
                     'group': group, 'price': item['price'], 'quantity': quantity,
                     'unit': item.get('unit_price'), 'metric': '100g' if 'food' in category else data.get('category', {}).get('metric_label', ''),
                     'shipping': '送料込み' if str(item.get('postage_flag')) == '0' else '送料別・楽天で確認',
@@ -52,8 +52,8 @@ def regression_errors(site, previous):
                 errors.append(f'{key}: previously available conditions disappeared: {sorted(old_groups-new_groups)}')
     return errors
 
-def enrich(site, previous):
-    rows = catalog(site)
+def enrich(site, previous, format_name=lambda value: value):
+    rows = catalog(site, format_name)
     history_path = previous / 'price-history.json'
     history = json.loads(history_path.read_text()) if history_path.exists() else {}
     for row in rows:

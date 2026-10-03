@@ -534,7 +534,7 @@ def main():
     urls = [BASE_URL] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
-    enrich(SITE, ROOT / 'data')
+    enrich(SITE, ROOT / 'data', display_name)
     write_text(SITE / '404.html', '<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ページが見つかりません | ペット用品コスパ比較</title></head><body><main><h1>ページが見つかりません</h1><p>用品を選び直してください。</p><a href="'+BASE_URL+'">トップへ戻る</a></main></body></html>')
     copy_static_verification_files()
     print(f'Built {len(categories) + len(discovery_data)} category pages in {SITE}')
