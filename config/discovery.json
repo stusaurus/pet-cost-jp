@@ -7,7 +7,13 @@
     "publish_products": true,
     "keywords": [
       "ロイヤルカナン ミニ アダルト 2kg",
-      "ロイヤルカナン ミニ アダルト 8kg"
+      "ロイヤルカナン ミニ アダルト 8kg",
+      "ロイヤルカナン ミニ パピー 800g",
+      "ロイヤルカナン ミニ パピー 2kg",
+      "ロイヤルカナン ミディアム パピー 4kg",
+      "ロイヤルカナン ミディアム パピー 10kg",
+      "ロイヤルカナン ミディアム アダルト 4kg",
+      "ロイヤルカナン ミディアム アダルト 10kg"
     ],
     "food_families": {
       "mini-adult": {
@@ -19,6 +25,36 @@
         "nutrition": "complete",
         "target": "小型の成犬用・生後10か月以上。販売店により8歳までと表記。",
         "manufacturer_source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-adult-3001"
+      },
+      "mini-puppy": {
+        "label": "ロイヤルカナン ミニ パピー",
+        "species": "dog",
+        "age": "young",
+        "size": "small",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "小型犬の子犬用・生後10か月齢まで。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/dogs/products/retail-products/mini-puppy-3000"
+      },
+      "medium-puppy": {
+        "label": "ロイヤルカナン ミディアム パピー",
+        "species": "dog",
+        "age": "young",
+        "size": "medium",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "中型犬の子犬用・生後12か月齢まで。",
+        "manufacturer_source": "https://www.royalcanin.com/jp-shop/dogs/products/retail-products/medium-puppy-3003"
+      },
+      "medium-adult": {
+        "label": "ロイヤルカナン ミディアム アダルト",
+        "species": "dog",
+        "age": "adult",
+        "size": "medium",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "中型犬の成犬用・生後12か月齢から7歳まで。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/dogs/products/retail-products/medium-adult-3004"
       }
     },
     "approved_products": {
@@ -35,7 +71,7 @@
         "family": "mini-adult",
         "pack_grams": 2000,
         "pack_count": 1,
-        "quantity_100g": 20.0,
+        "quantity_100g": 20,
         "label": "ロイヤルカナン ミニ アダルト 2kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/89151/",
@@ -71,7 +107,7 @@
         "family": "mini-adult",
         "pack_grams": 8000,
         "pack_count": 1,
-        "quantity_100g": 80.0,
+        "quantity_100g": 80,
         "label": "ロイヤルカナン ミニ アダルト 8kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/89152/"
@@ -89,7 +125,7 @@
         "family": "mini-adult",
         "pack_grams": 800,
         "pack_count": 1,
-        "quantity_100g": 8.0,
+        "quantity_100g": 8,
         "label": "ロイヤルカナン ミニ アダルト 800g・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/157814/",
@@ -102,6 +138,166 @@
           "ステアライズド",
           "選べる"
         ]
+      },
+      "https://item.rakuten.co.jp/chanet/157811/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミニ",
+          "パピー",
+          "子犬",
+          "800g",
+          "3182550792929",
+          "小型犬"
+        ],
+        "forbidden_title_terms": [
+          "成犬",
+          "アダルト",
+          "シニア",
+          "8+",
+          "12+",
+          "選べる"
+        ],
+        "family": "mini-puppy",
+        "pack_grams": 800,
+        "pack_count": 1,
+        "quantity_100g": 8,
+        "label": "ロイヤルカナン ミニ パピー 800g・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/157811/"
+      },
+      "https://item.rakuten.co.jp/chanet/157706/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミニ",
+          "パピー",
+          "子犬",
+          "2kg",
+          "3182550793001",
+          "小型犬"
+        ],
+        "forbidden_title_terms": [
+          "成犬",
+          "アダルト",
+          "シニア",
+          "8+",
+          "12+",
+          "選べる"
+        ],
+        "family": "mini-puppy",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20,
+        "label": "ロイヤルカナン ミニ パピー 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/157706/"
+      },
+      "https://item.rakuten.co.jp/chanet/89162/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミディアム",
+          "パピー",
+          "子犬",
+          "4kg",
+          "3182550708180",
+          "中型犬"
+        ],
+        "forbidden_title_terms": [
+          "成犬",
+          "アダルト",
+          "シニア",
+          "7+",
+          "10+",
+          "選べる"
+        ],
+        "family": "medium-puppy",
+        "pack_grams": 4000,
+        "pack_count": 1,
+        "quantity_100g": 40,
+        "label": "ロイヤルカナン ミディアム パピー 4kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89162/"
+      },
+      "https://item.rakuten.co.jp/chanet/89163/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミディアム",
+          "パピー",
+          "子犬",
+          "10kg",
+          "3182550778077",
+          "中型犬"
+        ],
+        "forbidden_title_terms": [
+          "成犬",
+          "アダルト",
+          "シニア",
+          "7+",
+          "10+",
+          "選べる"
+        ],
+        "family": "medium-puppy",
+        "pack_grams": 10000,
+        "pack_count": 1,
+        "quantity_100g": 100,
+        "label": "ロイヤルカナン ミディアム パピー 10kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89163/"
+      },
+      "https://item.rakuten.co.jp/chanet/89164/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミディアム",
+          "アダルト",
+          "成犬",
+          "4kg",
+          "3182550708197",
+          "中型犬"
+        ],
+        "forbidden_title_terms": [
+          "パピー",
+          "シニア",
+          "7+",
+          "10+",
+          "選べる"
+        ],
+        "family": "medium-adult",
+        "pack_grams": 4000,
+        "pack_count": 1,
+        "quantity_100g": 40,
+        "label": "ロイヤルカナン ミディアム アダルト 4kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89164/"
+      },
+      "https://item.rakuten.co.jp/chanet/89165/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミディアム",
+          "アダルト",
+          "成犬",
+          "10kg",
+          "3182550774536",
+          "中型犬"
+        ],
+        "forbidden_title_terms": [
+          "パピー",
+          "シニア",
+          "7+",
+          "10+",
+          "選べる"
+        ],
+        "family": "medium-adult",
+        "pack_grams": 10000,
+        "pack_count": 1,
+        "quantity_100g": 100,
+        "label": "ロイヤルカナン ミディアム アダルト 10kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/89165/"
       }
     },
     "reviewed_lookups": [
@@ -116,6 +312,30 @@
       {
         "keyword": "ロイヤルカナン ミニ アダルト 8kg",
         "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミニ パピー 800g",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミニ パピー 2kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミディアム パピー 4kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミディアム パピー 10kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミディアム アダルト 4kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミディアム アダルト 10kg",
+        "shop_code": "chanet"
       }
     ]
   },
@@ -125,7 +345,10 @@
     "name": "キャットフード",
     "publish_products": true,
     "keywords": [
-      "ロイヤルカナン フィット 2kg"
+      "ロイヤルカナン フィット 2kg",
+      "ロイヤルカナン キトン 2kg",
+      "ロイヤルカナン インドア 2kg",
+      "ロイヤルカナン エイジング 11+ 2kg"
     ],
     "food_families": {
       "fit": {
@@ -137,6 +360,36 @@
         "nutrition": "complete",
         "target": "成猫用・生後12か月以上。販売店は12歳までと表記。旧パッケージは7歳まで表記の場合があります。",
         "manufacturer_source": "https://www.royalcanin.com/jp/cats/products/retail-products/fit-32-2520"
+      },
+      "kitten": {
+        "label": "ロイヤルカナン キトン",
+        "species": "cat",
+        "age": "young",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "成長後期の子猫用・生後12か月齢まで。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/cats/products/retail-products/kitten-2522"
+      },
+      "indoor": {
+        "label": "ロイヤルカナン インドア",
+        "species": "cat",
+        "age": "adult",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "室内で生活する成猫用・生後12か月齢から7歳まで。",
+        "manufacturer_source": "https://www.royalcanin.com/jp/cats/products/retail-products/fhn--2529"
+      },
+      "ageing-11": {
+        "label": "ロイヤルカナン エイジング 11+",
+        "species": "cat",
+        "age": "senior",
+        "size": "",
+        "form": "dry",
+        "nutrition": "complete",
+        "target": "11歳以上の高齢猫用。",
+        "manufacturer_source": "https://www.royalcanin.com/jp-shop/cats/products/retail-products/ageing-11%2B-2561"
       }
     },
     "approved_products": {
@@ -161,7 +414,7 @@
         "family": "fit",
         "pack_grams": 2000,
         "pack_count": 1,
-        "quantity_100g": 20.0,
+        "quantity_100g": 20,
         "label": "ロイヤルカナン フィット 2kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/75314/"
@@ -187,15 +440,101 @@
         "family": "fit",
         "pack_grams": 4000,
         "pack_count": 1,
-        "quantity_100g": 40.0,
+        "quantity_100g": 40,
         "label": "ロイヤルカナン フィット 4kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/75315/"
+      },
+      "https://item.rakuten.co.jp/chanet/75294/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "子猫",
+          "キトン",
+          "2kg",
+          "生後12",
+          "ドライ"
+        ],
+        "forbidden_title_terms": [
+          "ウェット",
+          "成猫用",
+          "エイジング",
+          "選べる"
+        ],
+        "family": "kitten",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20,
+        "label": "ロイヤルカナン キトン 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/75294/"
+      },
+      "https://item.rakuten.co.jp/dog-kan/9214405/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "猫",
+          "インドア",
+          "2kg",
+          "アダルト",
+          "成猫用",
+          "3182550704625"
+        ],
+        "forbidden_title_terms": [
+          "ウェット",
+          "キトン",
+          "シニア",
+          "エイジング",
+          "選べる"
+        ],
+        "family": "indoor",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20,
+        "label": "ロイヤルカナン インドア 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/dog-kan/9214405/"
+      },
+      "https://item.rakuten.co.jp/chanet/373234/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "猫",
+          "11歳以上",
+          "高齢猫",
+          "エイジング",
+          "11+",
+          "2kg"
+        ],
+        "forbidden_title_terms": [
+          "ウェット",
+          "ステアライズド",
+          "選べる"
+        ],
+        "family": "ageing-11",
+        "pack_grams": 2000,
+        "pack_count": 1,
+        "quantity_100g": 20,
+        "label": "ロイヤルカナン エイジング 11+ 2kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/373234/"
       }
     },
     "reviewed_lookups": [
       {
         "keyword": "ロイヤルカナン フィット",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン キトン 2kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン インドア 2kg",
+        "shop_code": "dog-kan"
+      },
+      {
+        "keyword": "ロイヤルカナン エイジング 11+ 2kg",
         "shop_code": "chanet"
       }
     ]
@@ -207,8 +546,8 @@
     "publish_products": true,
     "keywords": [
       "犬 おもちゃ ロープ 小型犬",
-      "犬 おもちゃ ボール 中型犬",
-      "犬 おもちゃ 知育 大型犬"
+      "犬 おもちゃ 知育 小型犬",
+      "犬 おもちゃ 噛む 小型犬"
     ],
     "approved_products": {
       "https://item.rakuten.co.jp/pet-para/943-67079/": {
@@ -227,8 +566,85 @@
         "warning": "超小型〜小型犬用。噛む力が強い犬には与えないでください。破損したら使用を中止し、飼い主が一緒に遊んでください。",
         "source": "https://item.rakuten.co.jp/pet-para/943-67079/",
         "label": "スリンキー ロープトイ（約20cm）"
+      },
+      "https://item.rakuten.co.jp/welrys/bmty-091/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "BITE ME",
+          "グッドナイト",
+          "ノーズワーク",
+          "知育トイ",
+          "小型犬"
+        ],
+        "play": "puzzle",
+        "age": "",
+        "size": "small",
+        "dimensions": "15cm×15cm",
+        "play_evidence": "ノーズワーク・知育トイ",
+        "size_evidence": "小型犬",
+        "warning": "布製の知育玩具です。破損や中材の誤飲に注意し、使用中は様子を確認してください。",
+        "source": "https://item.rakuten.co.jp/welrys/bmty-091/",
+        "label": "BITE ME グッドナイト ノーズワークプレイブック"
+      },
+      "https://item.rakuten.co.jp/idog/17865/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "犬",
+          "おもちゃ",
+          "iDog",
+          "知育トイ",
+          "チーズ",
+          "小型犬"
+        ],
+        "play": "puzzle",
+        "age": "",
+        "size": "small",
+        "dimensions": "約15cm×12cm×9cm",
+        "play_evidence": "知育トイ",
+        "size_evidence": "超小型犬・小型犬",
+        "warning": "布製のため強く噛む犬には向きません。破れや中材の露出があれば使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/idog/17865/",
+        "label": "iDog 知育トイ チーズとネズミ"
+      },
+      "https://item.rakuten.co.jp/merrily-shop/7111/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "犬",
+          "おもちゃ",
+          "ビール",
+          "小型犬",
+          "噛む"
+        ],
+        "play": "chew",
+        "age": "young",
+        "size": "small",
+        "dimensions": "高さ約20cm×厚み約4cm",
+        "play_evidence": "噛む・甘噛み",
+        "age_evidence": "パピー・子犬",
+        "size_evidence": "小型犬",
+        "warning": "ぬいぐるみ系です。噛みちぎりや中材の誤飲に注意し、破損時はすぐ使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/merrily-shop/7111/",
+        "label": "ビールボトル風トイ（約20cm）"
       }
-    }
+    },
+    "reviewed_lookups": [
+      {
+        "keyword": "スリンキー ロープ 20cm 小型犬",
+        "shop_code": "pet-para"
+      },
+      {
+        "keyword": "グッドナイト ノーズワーク プレイブック",
+        "shop_code": "welrys"
+      },
+      {
+        "keyword": "iDog 知育トイ チーズとネズミ",
+        "shop_code": "idog"
+      },
+      {
+        "keyword": "犬 おもちゃ ビール ボトル 小型犬",
+        "shop_code": "merrily-shop"
+      }
+    ]
   },
   "cat-toys": {
     "species": "cat",
@@ -237,8 +653,7 @@
     "publish_products": true,
     "keywords": [
       "猫 おもちゃ じゃらし",
-      "猫 おもちゃ トンネル",
-      "猫 おもちゃ 知育"
+      "猫 おもちゃ トンネル"
     ],
     "approved_products": {
       "https://item.rakuten.co.jp/nagaipet/ajd0033/": {
@@ -256,7 +671,78 @@
         "warning": "入口直径25cm・長さ117cm。ポンポンやワイヤーの破損、噛む・引っ掻く癖に注意。猫を入れたまま移動しないでください。",
         "source": "https://item.rakuten.co.jp/nagaipet/ajd0033/",
         "label": "S型キャットトンネル（入口直径25cm）"
+      },
+      "https://item.rakuten.co.jp/seikotsu/10000547/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "猫じゃらし",
+          "CTY-22033",
+          "約Φ20×22",
+          "猫",
+          "おもちゃ"
+        ],
+        "play": "teaser",
+        "age": "",
+        "size": "",
+        "dimensions": "約Φ20×22cm",
+        "play_evidence": "猫じゃらし",
+        "warning": "電動部品と飛び出すパーツがあります。破損や巻き込みに注意し、異常があれば使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/seikotsu/10000547/",
+        "label": "電動 尾っぽが飛び出す猫じゃらし CTY-22033"
+      },
+      "https://item.rakuten.co.jp/seikotsu/10000546/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "猫じゃらし",
+          "CTY-22032",
+          "約Φ20×21",
+          "猫",
+          "おもちゃ"
+        ],
+        "play": "teaser",
+        "age": "",
+        "size": "",
+        "dimensions": "約Φ20×21cm",
+        "play_evidence": "猫じゃらし",
+        "warning": "電動で転がる玩具です。段差や破損、部品の誤飲に注意し、異常があれば使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/seikotsu/10000546/",
+        "label": "ローリング猫じゃらし CTY-22032"
+      },
+      "https://item.rakuten.co.jp/petifam/6953182710868/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "猫",
+          "おもちゃ",
+          "猫じゃらし",
+          "M-PETS"
+        ],
+        "play": "teaser",
+        "age": "",
+        "size": "",
+        "dimensions": "全長約35cm",
+        "play_evidence": "猫じゃらし",
+        "warning": "小さな飾りや紐状部分の破損・誤飲に注意し、使用中は状態を確認してください。",
+        "source": "https://item.rakuten.co.jp/petifam/6953182710868/",
+        "label": "M-PETS キャットトイ 猫じゃらし"
       }
-    }
+    },
+    "reviewed_lookups": [
+      {
+        "keyword": "Nagaipet S型 トンネル 25CM",
+        "shop_code": "nagaipet"
+      },
+      {
+        "keyword": "CTY-22033 猫じゃらし",
+        "shop_code": "seikotsu"
+      },
+      {
+        "keyword": "CTY-22032 猫じゃらし",
+        "shop_code": "seikotsu"
+      },
+      {
+        "keyword": "M-PETS 猫じゃらし ねずみ さかな",
+        "shop_code": "petifam"
+      }
+    ]
   }
 }
