@@ -43,10 +43,10 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
     const p=await open(html,key);
     try{
       assert.ok(get(p,'[data-food-results]').hidden);
-      assert.equal(get(p,'[data-food-age="young"]').disabled,true);assert.equal(get(p,'[data-food-age="senior"]').disabled,true);assert.equal(get(p,'[data-food-age="adult"]').disabled,false);
-      get(p,'[data-food-age="adult"]').click();if(dog){assert.equal(get(p,'[data-food-size="small"]').disabled,false);assert.equal(get(p,'[data-food-size="medium"]').disabled,true);assert.equal(get(p,'[data-food-size="large"]').disabled,true);assert.ok(get(p,'[data-food-family-option]').hidden);get(p,'[data-food-size="small"]').click();}
-      assert.ok(!get(p,'[data-food-family-option]').hidden);assert.ok(get(p,'[data-food-results]').hidden);
-      get(p,'[data-food-family]').click();assert.ok(!get(p,'[data-food-results]').hidden);
+      assert.equal(get(p,'[data-food-age="adult"]').disabled,false);
+      get(p,'[data-food-age="adult"]').click();if(dog){assert.equal(get(p,'[data-food-size="small"]').disabled,false);assert.equal(get(p,'[data-food-size="large"]').disabled,true);assert.ok(get(p,`[data-food-family-option="${family}"]`).hidden);get(p,'[data-food-size="small"]').click();}
+      assert.ok(!get(p,`[data-food-family-option="${family}"]`).hidden);assert.ok(get(p,'[data-food-results]').hidden);
+      get(p,`[data-food-family="${family}"]`).click();assert.ok(!get(p,'[data-food-results]').hidden);
       assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'8000');
       get(p,'[data-food-order="price"]').click();assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'2000');
       get(p,'[data-food-order="amount"]').click();assert.equal(all(p,'.food-candidates [data-food-candidate]:not([hidden])')[0].dataset.grams,'8000');
@@ -63,7 +63,7 @@ test('food fit precedes family prices; buying styles, duration, privacy and volu
       get(p,'[data-profile-age="adult"]').click();if(dog){get(p,'[data-profile-size="large"]').click();assert.ok(get(p,'[data-food-results]').hidden);assert.equal(get(p,'[data-food-size="large"]').disabled,true);get(p,'[data-food-size="small"]').click();}
       get(p,'[data-food-clear]').click();assert.equal(p.dom.window.localStorage.getItem('pet_cost_food_preferences_v1'),null);assert.ok(get(p,'[data-food-results]').hidden);assert.deepEqual(p.errors,[]);
     }finally{p.close();}
-    const blocked=await open(html,key,{storageError:true});try{get(blocked,'[data-food-age="adult"]').click();if(dog)get(blocked,'[data-food-size="small"]').click();get(blocked,'[data-food-family]').click();get(blocked,'[data-food-save]').click();assert.ok(text(blocked,'[data-food-usage-status]').includes('保存できません'));assert.deepEqual(blocked.errors,[]);}finally{blocked.close();}
+    const blocked=await open(html,key,{storageError:true});try{get(blocked,'[data-food-age="adult"]').click();if(dog)get(blocked,'[data-food-size="small"]').click();get(blocked,`[data-food-family="${family}"]`).click();get(blocked,'[data-food-save]').click();assert.ok(text(blocked,'[data-food-usage-status]').includes('保存できません'));assert.deepEqual(blocked.errors,[]);}finally{blocked.close();}
   }
 });
 test('pet-first journey, voluntary profile storage and telemetry privacy', async () => {
@@ -424,6 +424,6 @@ test('save, restore, same-condition comparison, honest history and click attribu
 test('food comparison labels keep dog and cat suitability separate',async()=>{
  for(const category of ['dog-food','cat-food']){
   const p=await open(fs.readFileSync(path.join(root,`site/categories/${category}/index.html`),'utf8'),category);
-  try{get(p,'[data-food-age="adult"]').click();if(category==='dog-food')get(p,'[data-food-size="small"]').click();get(p,'[data-food-family]').click();const b=get(p,'[data-product-compare]');if(b){b.click();const label=text(p,'[data-product-comparison]');assert.ok(label.includes(category==='dog-food'?'成犬用':'成猫用'));assert.ok(!label.includes(category==='dog-food'?'成猫用':'成犬用'));}}finally{p.close();}
+  try{const family=category==='dog-food'?'mini-adult':'fit';get(p,'[data-food-age="adult"]').click();if(category==='dog-food')get(p,'[data-food-size="small"]').click();get(p,`[data-food-family="${family}"]`).click();const b=all(p,'[data-food-candidate]:not([hidden]) [data-product-compare]')[0];if(b){b.click();const label=text(p,'[data-product-comparison]');assert.ok(label.includes(category==='dog-food'?'成犬用':'成猫用'));assert.ok(!label.includes(category==='dog-food'?'成猫用':'成犬用'));}}finally{p.close();}
  }
 });
