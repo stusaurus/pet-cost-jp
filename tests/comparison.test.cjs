@@ -81,6 +81,8 @@ test('pet-first journey, voluntary profile storage and telemetry privacy', async
     const data=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'));assert.equal(data.dog.weight,'5.25');assert.equal(data.dog.age,'adult');
     assert.ok(!JSON.stringify(p.events).includes('5.25'));assert.ok(!JSON.stringify(p.events).includes('秘密の犬種'));
     get(p,'[data-pet-select="cat"]').click();assert.equal(all(p,'[data-pet-routes]:not([hidden]) [data-living-route]').length,4);
+    const resumeSource=get(p,'[data-pet-routes="cat"] [data-living-route="cat-litter"]');resumeSource.addEventListener('click',e=>e.preventDefault(),{once:true});resumeSource.click();
+    const recent=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_last_route_v1'));assert.equal(recent.species,'cat');assert.equal(recent.supply,'cat-litter');
     get(p,'[data-profile-clear]').click();assert.equal(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'),null);
     assert.deepEqual(p.errors,[]);
   } finally {p.close();}
@@ -119,11 +121,15 @@ function verify(p, category, items, group) {
     assert.ok(!get(p, '[data-empty-result]').hidden);
     assert.equal(all(p, '[data-top3-card]').length, 0);
     assert.ok(get(p, '[data-angle-detail]').hidden);
+    assert.ok(get(p, '[data-mobile-best]').hidden);
     return;
   }
   assert.equal(text(p, '[data-featured-unit]'), yen(expected[0].unit_price));
   assert.equal(text(p, '[data-answer-median-value]'), yen(middle));
   assert.equal(get(p, '[data-featured-box] [data-affiliate-link]').dataset.itemId, expected[0].product_id);
+  assert.equal(get(p, '[data-mobile-best]').hidden, false);
+  assert.equal(get(p, '[data-mobile-best-link]').dataset.itemId, expected[0].product_id);
+  assert.equal(get(p, '[data-mobile-best-link]').dataset.conversionSource, 'mobile_best_bar');
   const top = all(p, '[data-top3-card]');
   assert.deepEqual(top.map(x => x.dataset.itemId), expected.slice(0, 3).map(x => x.product_id));
   const scale = Math.max(middle, ...expected.slice(0, 3).map(x => x.unit_price), 1);
