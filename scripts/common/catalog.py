@@ -77,6 +77,20 @@ def inspect(raw, config):
         # Automatic title evidence is insufficient for public food approval.
         return {'name':title, 'quantity_100g':q['quantity'], 'age':next(iter(ages))}, '要メーカー照合'
     if not re.search('おもちゃ|玩具|トイ|toy|じゃらし|トンネル', t): return reject('用品違い')
+    review=config.get('approved_products',{}).get(direct)
+    if review:
+        play=review.get('play',''); age=review.get('age',''); size=review.get('size',''); dimensions=review.get('dimensions','')
+        if play not in PLAY or age not in ('','young','adult','senior') or size not in ('','small','medium','large'): return reject('個別照合の対象条件不正')
+        if not dimensions or not re.search(r'\d',dimensions): return reject('個別照合の寸法不明')
+        evidence += [
+            {'attribute':'play','quote':review.get('play_evidence',play),'source':review['source'],'method':'個別照合'},
+            {'attribute':'dimensions','quote':dimensions,'source':review['source'],'method':'個別照合'}
+        ]
+        if age: evidence.append({'attribute':'age','quote':review.get('age_evidence',age),'source':review['source'],'method':'個別照合'})
+        if size: evidence.append({'attribute':'size','quote':review.get('size_evidence',size),'source':review['source'],'method':'個別照合'})
+        item={**raw,'product_id':product_id(title,raw.get('shop','')),'species':config['species'],'play':play,'age':age,'size':size,'dimensions':dimensions,'evidence':evidence}
+        if not reviewed(item,config): return reject('個別照合未確認・期限切れ')
+        return item,''
     plays = {k:v for k,v in matching(t, PLAY).items() if v}
     # Two incompatible type labels often indicate selectable listings or SEO stuffing.
     if len(plays) != 1: return reject('遊びタイプ不明・混在')
