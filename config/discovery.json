@@ -300,6 +300,33 @@
         "label": "ロイヤルカナン ミディアム アダルト 10kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/89165/"
+      },
+      "https://item.rakuten.co.jp/gooddoglife/3182550774536/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "ミディアム",
+          "アダルト",
+          "10kg",
+          "中型犬",
+          "成犬",
+          "総合栄養食"
+        ],
+        "forbidden_title_terms": [
+          "パピー",
+          "シニア",
+          "8+",
+          "10+",
+          "選べる",
+          "ウェット"
+        ],
+        "family": "medium-adult",
+        "pack_grams": 10000,
+        "pack_count": 1,
+        "quantity_100g": 100,
+        "label": "ロイヤルカナン ミディアム アダルト 10kg・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/gooddoglife/3182550774536/"
       }
     },
     "reviewed_lookups": [
@@ -338,6 +365,10 @@
       {
         "keyword": "ロイヤルカナン ミディアム アダルト 10kg",
         "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン ミディアム アダルト 10kg 3182550774536",
+        "shop_code": "gooddoglife"
       }
     ]
   },
@@ -521,6 +552,56 @@
         "label": "ロイヤルカナン エイジング 11+ 2kg・1袋",
         "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
         "source": "https://item.rakuten.co.jp/chanet/373234/"
+      },
+      "https://item.rakuten.co.jp/sweet-pet/77687269/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "キトン",
+          "子猫",
+          "生後12",
+          "400g",
+          "猫"
+        ],
+        "forbidden_title_terms": [
+          "ウェット",
+          "成猫",
+          "エイジング",
+          "選べる",
+          "療法"
+        ],
+        "family": "kitten",
+        "pack_grams": 400,
+        "pack_count": 1,
+        "quantity_100g": 4,
+        "label": "ロイヤルカナン キトン 400g・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/sweet-pet/77687269/"
+      },
+      "https://item.rakuten.co.jp/chanet/373228/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "ロイヤルカナン",
+          "猫",
+          "11歳以上",
+          "高齢猫",
+          "エイジング",
+          "11+",
+          "400g"
+        ],
+        "forbidden_title_terms": [
+          "ウェット",
+          "ステアライズド",
+          "選べる",
+          "療法"
+        ],
+        "family": "ageing-11",
+        "pack_grams": 400,
+        "pack_count": 1,
+        "quantity_100g": 4,
+        "label": "ロイヤルカナン エイジング 11+ 400g・1袋",
+        "warning": "対象年齢・原材料・新旧パッケージを購入前に確認してください。日数は保存期限を示すものではありません。開封後はメーカーの保存方法に従ってください。",
+        "source": "https://item.rakuten.co.jp/chanet/373228/"
       }
     },
     "reviewed_lookups": [
@@ -538,6 +619,14 @@
       },
       {
         "keyword": "ロイヤルカナン エイジング 11+ 2kg",
+        "shop_code": "chanet"
+      },
+      {
+        "keyword": "ロイヤルカナン FHN キトン 400g 77687269",
+        "shop_code": "sweet-pet"
+      },
+      {
+        "keyword": "ロイヤルカナン エイジング 11+ 400g",
         "shop_code": "chanet"
       }
     ]
@@ -628,6 +717,24 @@
         "warning": "ぬいぐるみ系です。噛みちぎりや中材の誤飲に注意し、破損時はすぐ使用を中止してください。",
         "source": "https://item.rakuten.co.jp/merrily-shop/7111/",
         "label": "ビールボトル風トイ（約20cm）"
+      },
+      "https://item.rakuten.co.jp/aiboshi/e-tpu2/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "フレックスボール",
+          "高反発力",
+          "小型犬用",
+          "犬用おもちゃ"
+        ],
+        "play": "chase",
+        "age": "",
+        "size": "small",
+        "dimensions": "直径約6.3cm",
+        "play_evidence": "高反発ボール・追いかけ遊び",
+        "size_evidence": "小型犬用",
+        "warning": "高反発ボールです。口に対して小さすぎないか確認し、破損や欠けがあれば使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/aiboshi/e-tpu2/",
+        "label": "フレックスボール S（直径約6.3cm）"
       }
     },
     "reviewed_lookups": [
@@ -646,6 +753,10 @@
       {
         "keyword": "犬 おもちゃ ビール ボトル 小型犬",
         "shop_code": "merrily-shop"
+      },
+      {
+        "keyword": "フレックスボール 高反発力 小型犬",
+        "shop_code": "aiboshi"
       }
     ]
   },
@@ -727,6 +838,43 @@
         "warning": "小さな飾りや紐状部分の破損・誤飲に注意し、使用中は状態を確認してください。",
         "source": "https://item.rakuten.co.jp/petifam/6953182710868/",
         "label": "M-PETS キャットトイ 猫じゃらし"
+      },
+      "https://item.rakuten.co.jp/petstown/babyfurball/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "猫",
+          "おもちゃ",
+          "ベビーファーボール",
+          "3P",
+          "ボール"
+        ],
+        "play": "chase",
+        "age": "",
+        "size": "",
+        "dimensions": "直径約4cm",
+        "play_evidence": "転がるファーボール",
+        "warning": "小さな鈴入りボールです。破損や誤飲に注意し、遊んだ後は状態を確認してください。",
+        "source": "https://item.rakuten.co.jp/petstown/babyfurball/",
+        "label": "ベビーファーボール 3P（直径約4cm）"
+      },
+      "https://item.rakuten.co.jp/ohstore/2b2whi8kwo/": {
+        "reviewed_on": "2026-10-05",
+        "required_title_terms": [
+          "猫",
+          "ボール",
+          "自動",
+          "USB",
+          "知育玩具",
+          "ブルー"
+        ],
+        "play": "puzzle",
+        "age": "",
+        "size": "",
+        "dimensions": "直径4.3cm",
+        "play_evidence": "自動障害物回避・知育玩具",
+        "warning": "充電式の自動玩具です。破損、充電部の異常、小部品の誤飲に注意し、異常があれば使用を中止してください。",
+        "source": "https://item.rakuten.co.jp/ohstore/2b2whi8kwo/",
+        "label": "USB充電式 自動知育ボール（直径4.3cm）"
       }
     },
     "reviewed_lookups": [
@@ -745,6 +893,14 @@
       {
         "keyword": "M-PETS 猫じゃらし ねずみ さかな",
         "shop_code": "petifam"
+      },
+      {
+        "keyword": "ベビーファーボール 3P 猫",
+        "shop_code": "petstown"
+      },
+      {
+        "keyword": "猫ボール 自動 USB 知育 ブルー",
+        "shop_code": "ohstore"
       }
     ]
   }
