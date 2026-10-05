@@ -1,12 +1,17 @@
 (() => {
   document.addEventListener('DOMContentLoaded', () => {
     const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
-    const KEY='pet_cost_profiles_v1', speciesLabels={dog:'犬',cat:'猫'};
+    const KEY='pet_cost_profiles_v1', LAST_ROUTE_KEY='pet_cost_last_route_v1', speciesLabels={dog:'犬',cat:'猫'};
     const track=(n,d={})=>window.petCostTrack?.(n,d);
     const validPet=p=>p==='dog'||p==='cat';
     const clean=p=>({age:['young','adult','senior'].includes(p?.age)?p.age:'',size:['small','medium','large'].includes(p?.size)?p.size:'',weight:/^\d{1,3}(\.\d{1,2})?$/.test(p?.weight||'')&&Number(p.weight)>0&&Number(p.weight)<=200?p.weight:'',breed:typeof p?.breed==='string'?p.breed.slice(0,40):''});
     let pets={dog:clean({}),cat:clean({})}, selected=$('[data-discovery-species]')?.dataset.discoverySpecies||$('[data-profile]')?.dataset.species||'', saved=false, play='';
     try {const data=JSON.parse(localStorage.getItem(KEY)||'{}');if(data?.version===1){pets={dog:clean(data.dog),cat:clean(data.cat)};saved=true;if(!selected&&validPet(data.selected))selected=data.selected;}}catch(_){}
+    let lastRoute={};
+    try {
+      const recent=JSON.parse(localStorage.getItem(LAST_ROUTE_KEY)||'{}');
+      if(validPet(recent?.species)&&typeof recent?.supply==='string'&&Number.isFinite(Number(recent?.at))&&Date.now()-Number(recent.at)<1000*60*60*24*30) lastRoute=recent;
+    } catch(_){}
     const store=()=>{try{if(saved)localStorage.setItem(KEY,JSON.stringify({version:1,selected,...pets}));else localStorage.removeItem(KEY);return true;}catch(_){return false;}};
     // Carry explicit age/size choices across pages without persisting personal fields.
     const routeParams=new URLSearchParams(location.search);
@@ -82,6 +87,39 @@
       }
       $('[data-toy-empty]').hidden=!play||count>0;
     }
+    function renderResume(){
+      const journey=$('#pet-journey');
+      if(!journey)return;
+      let card=$('[data-resume-card]');
+      const route=lastRoute.supply&&validPet(lastRoute.species)?$('[data-pet-routes="'+lastRoute.species+'"] [data-living-route="'+lastRoute.supply+'"]'):null;
+      if(!route){if(card)card.remove();return;}
+      const routeNames={'dog-food':'ごはん','cat-food':'ごはん','pet-sheets':'トイレシーツ','cat-litter':'猫砂','system-toilet-sheets':'トイレシート','dog-toys':'おもちゃ','cat-toys':'おもちゃ'};
+      if(!card){
+        card=document.createElement('aside');
+        card.className='resume-card';
+        card.dataset.resumeCard='1';
+        const copy=document.createElement('div');
+        copy.className='resume-copy';
+        const eyebrow=document.createElement('span');
+        eyebrow.className='resume-eyebrow';
+        eyebrow.textContent='前回の続き';
+        const title=document.createElement('strong');
+        title.dataset.resumeTitle='1';
+        const note=document.createElement('span');
+        note.className='resume-note';
+        note.textContent='前回選んだ入口から、すぐ再開できます。';
+        copy.append(eyebrow,title,note);
+        const link=document.createElement('a');
+        link.className='resume-link';
+        link.dataset.resumeRoute='1';
+        link.textContent='続きから見る →';
+        card.append(copy,link);
+        journey.parentNode.insertBefore(card,journey);
+      }
+      const title=$('[data-resume-title]',card),link=$('[data-resume-route]',card);
+      title.textContent=speciesLabels[lastRoute.species]+'の'+(routeNames[lastRoute.supply]||'用品');
+      link.href=route.href;
+    }
     function render(){
       $$('[data-living-route]').forEach(n=>{const u=new URL(n.href),p=pets[selected]||{};u.searchParams.delete('age');u.searchParams.delete('size');if(p.age)u.searchParams.set('age',p.age);if(p.size)u.searchParams.set('size',p.size);n.href=u.href;});
       $$('[data-pet-select]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.petSelect===selected)));
@@ -92,6 +130,7 @@
       $$('[data-profile-summary]').forEach(n=>n.textContent=selected?speciesLabels[selected]+(pets[selected].age?' · 年齢を設定済み':' · 年齢未指定')+(saved?' · 端末に保存':' · このページで利用'):'犬・猫を選んでから設定できます');
       updateToys();
       updateFood();
+      renderResume();
     }
     function changed(field){const ok=store();if(foodOptions.length)storeFood();$('[data-profile-message]')?.replaceChildren(document.createTextNode(saved?(ok?'この端末に保存しました。':'端末に保存できません。このページでは使えます。'):'このページで使用中。保存は任意です。'));render();track('pet_profile_change',{species:selected,profile_field:field});}
     document.addEventListener('click',e=>{
@@ -101,7 +140,13 @@
       if(e.target.closest('[data-profile-age-clear]')&&validPet(selected)){pets[selected].age='';changed('age');}
       if(e.target.closest('[data-profile-size-clear]')&&selected==='dog'){pets.dog.size='';changed('size');}
       if(e.target.closest('[data-profile-clear]')){pets={dog:clean({}),cat:clean({})};saved=false;store();render();if($('[data-profile-message]'))$('[data-profile-message]').textContent='プロフィールを削除しました。';track('pet_profile_clear');}
-      const route=e.target.closest('[data-living-route]');if(route){track('pet_supply_select',{species:selected,supply:route.dataset.livingRoute});const legacy={'pet-sheets':1,'cat-litter':1,'system-toilet-sheets':1};if(legacy[route.dataset.livingRoute])track('pet_category_select',{category_id:route.dataset.livingRoute,conversion_source:'pet_start'});}
+      const route=e.target.closest('[data-living-route]');if(route){
+        lastRoute={species:selected,supply:route.dataset.livingRoute,at:Date.now()};
+        try{localStorage.setItem(LAST_ROUTE_KEY,JSON.stringify(lastRoute));}catch(_){}
+        track('pet_supply_select',{species:selected,supply:route.dataset.livingRoute});
+        const legacy={'pet-sheets':1,'cat-litter':1,'system-toilet-sheets':1};if(legacy[route.dataset.livingRoute])track('pet_category_select',{category_id:route.dataset.livingRoute,conversion_source:'pet_start'});
+      }
+      const resume=e.target.closest('[data-resume-route]');if(resume){track('pet_resume_click',{species:lastRoute.species||'',supply:lastRoute.supply||''});}
       const b=e.target.closest('[data-play-select]');if(b){play=b.dataset.playSelect;$$('[data-play-select]').forEach(n=>n.setAttribute('aria-pressed',String(n===b)));updateToys();track('pet_play_select',{species:selected,play_type:play,result_count:$$('[data-toy-candidate]:not([hidden])').length});}
       const fa=e.target.closest('[data-food-age]');if(fa){pets[selected].age=fa.dataset.foodAge;changed('age');storeFood();track('pet_food_condition_select',{species:selected,condition_type:'age'});}
       const fs=e.target.closest('[data-food-size]');if(fs){pets[selected].size=fs.dataset.foodSize;changed('size');storeFood();track('pet_food_condition_select',{species:selected,condition_type:'size'});}
