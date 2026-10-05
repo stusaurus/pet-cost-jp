@@ -63,7 +63,27 @@
     const metric = $('[data-metric]')?.dataset.metric || 'per_sheet';
     const metricLabel = $('[data-metric-label]')?.dataset.metricLabel || '1枚';
     const quantityLabel = row => quantity(row).toLocaleString('ja-JP', { maximumFractionDigits: 6 }) + (metric === 'per_liter' ? 'L' : '枚');
-    const allRows = $$('[data-product-row]').sort((a, b) => unit(a) - unit(b));
+    const allRows = $('[data-product-row]').sort((a, b) => unit(a) - unit(b));
+    const mobileBest = (() => {
+      if (!category || !allRows.length) return null;
+      const bar = element('aside', 'mobile-best');
+      bar.hidden = true;
+      bar.dataset.mobileBest = '1';
+      bar.setAttribute('aria-label', '現在の条件の最安商品');
+      const copy = element('div', 'mobile-best-copy');
+      const label = element('span', 'mobile-best-label', '現在の条件の最安');
+      label.dataset.mobileBestLabel = '1';
+      const price = element('strong', 'mobile-best-price', '-');
+      price.dataset.mobileBestPrice = '1';
+      const sub = element('span', 'mobile-best-sub', '');
+      sub.dataset.mobileBestSub = '1';
+      copy.append(label, price, sub);
+      const link = element('a', 'btn mobile-best-link', '楽天で確認');
+      link.dataset.mobileBestLink = '1';
+      bar.append(copy, link);
+      document.body.appendChild(bar);
+      return bar;
+    })();
     let visibleRows = [];
     let activeGroup = '';
     let activeLabel = '';
@@ -156,6 +176,17 @@
       link.target = '_blank';
       link.rel = 'nofollow sponsored noopener';
       Object.assign(link.dataset, { affiliateLink: '1', merchant: 'rakuten', categoryId: category, itemId: row.dataset.itemId || '', itemName: row.dataset.itemName || '', metric, unitPrice: String(unit(row)), position: String(position), conversionSource: source });
+    }
+    function updateMobileBest() {
+      if (!mobileBest) return;
+      const row = visibleRows[0];
+      mobileBest.hidden = !row;
+      document.body.classList.toggle('has-mobile-best', !!row);
+      if (!row) return;
+      text('[data-mobile-best-label]', (activeGroup === 'all' ? '素材指定なし' : activeLabel) + 'の現在最安', mobileBest);
+      text('[data-mobile-best-price]', formatYen(unit(row)) + ' / ' + metricLabel, mobileBest);
+      text('[data-mobile-best-sub]', '商品総額 ' + formatYen(total(row)) + ' · ' + (row.dataset.shipping || '送料は楽天で確認'), mobileBest);
+      affiliate($('[data-mobile-best-link]', mobileBest), row, 1, 'mobile_best_bar');
     }
     function reasons(row) {
       const result = [];
@@ -318,7 +349,7 @@
       text('[data-list-context]', activeLabel + ' · ' + visibleRows.length + '件 · ' + metricLabel + 'あたり');
       text('[data-calc-condition]', activeLabel);
       $$('[data-empty-result], [data-list-empty]').forEach(node => { node.hidden = !!visibleRows.length; });
-      updateFeatured(); updateTop3(); updateAngles(); updateUsage(); saveHome();
+      updateFeatured(); updateTop3(); updateAngles(); updateUsage(); updateMobileBest(); saveHome();
       if (calcActive) calculate(false);
       if (feedback) { respond($('[data-featured-box]')); respond($('[data-top3-strip]')); respond($('[data-angle-detail]')); respond($('[data-comparison-sticky]')); respond($('[data-result-status]')); }
     }
