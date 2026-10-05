@@ -63,7 +63,7 @@
     const metric = $('[data-metric]')?.dataset.metric || 'per_sheet';
     const metricLabel = $('[data-metric-label]')?.dataset.metricLabel || '1枚';
     const quantityLabel = row => quantity(row).toLocaleString('ja-JP', { maximumFractionDigits: 6 }) + (metric === 'per_liter' ? 'L' : '枚');
-    const allRows = $('[data-product-row]').sort((a, b) => unit(a) - unit(b));
+    const allRows = [...document.querySelectorAll('[data-product-row]')].sort((a, b) => unit(a) - unit(b));
     const mobileBest = (() => {
       if (!category || !allRows.length) return null;
       const bar = element('aside', 'mobile-best');
