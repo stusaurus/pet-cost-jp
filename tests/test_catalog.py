@@ -52,7 +52,8 @@ class CatalogTest(unittest.TestCase):
                 item=result['items'][0]
                 self.assertEqual(item['quantity_100g'],review['pack_grams']*review['pack_count']/100)
                 self.assertFalse(audit({key:result},{key:config}))
-                for change in [{'unit_price':1},{'pack_count':8},{'age':'young'},{'family':'other'},{'review_source':'https://example.com/'}]:
+                changes=[{'unit_price':1},{'pack_count':8},{'age':'senior' if item.get('age')!='senior' else 'adult'},{'family':'other'},{'review_source':'https://example.com/'}]
+                for change in changes:
                     self.assertTrue(audit({key:{'items':[{**item,**change}]}},{key:config}),change)
                 for suffix in (' 選べる',' 療法食',' アダルト8+',' 子犬 子猫',' シニア',' 500g',' ウェット',' フリーズドライ',' 半生',' 一般食',' 妊娠 授乳'):
                     self.assertFalse(collect([{**row,'name':row['name']+suffix}],config)['items'],suffix)
