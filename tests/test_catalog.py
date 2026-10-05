@@ -55,7 +55,8 @@ class CatalogTest(unittest.TestCase):
                 changes=[{'unit_price':1},{'pack_count':8},{'age':'senior' if item.get('age')!='senior' else 'adult'},{'family':'other'},{'review_source':'https://example.com/'}]
                 for change in changes:
                     self.assertTrue(audit({key:{'items':[{**item,**change}]}},{key:config}),change)
-                for suffix in (' 選べる',' 療法食',' アダルト8+',' 子犬 子猫',' シニア',' 500g',' ウェット',' フリーズドライ',' 半生',' 一般食',' 妊娠 授乳'):
+                wrong_age={'young':' シニア','adult':' 子犬 子猫','senior':' アダルト'}[item['age']]
+                for suffix in (' 選べる',' 療法食',' アダルト8+',wrong_age,' 500g',' ウェット',' フリーズドライ',' 半生',' 一般食',' 妊娠 授乳'):
                     self.assertFalse(collect([{**row,'name':row['name']+suffix}],config)['items'],suffix)
                 self.assertFalse(collect([{**row,'price':float('inf')}],config)['items'])
                 expired={**config,'approved_products':{direct:{**review,'reviewed_on':'2020-01-01'}}}
