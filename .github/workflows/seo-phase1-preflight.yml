@@ -1,0 +1,31 @@
+name: SEO phase one preflight
+on:
+  pull_request:
+    branches: [main]
+    paths: ['scripts/**', 'src/**', 'tests/**', '.github/workflows/seo-phase1-preflight.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Validate cached product rendering, SEO and interaction logic
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py'
+          python scripts/build_site.py --reuse-data
+          python scripts/validate_seo_files.py
+          python scripts/audit_products.py
+          npm ci --ignore-scripts
+          PET_COST_TEST_SITE=1 npm test
+          python - <<'PY'
+          from pathlib import Path
+          text=(Path("site")/"categories/pet-sheets/index.html").read_text()
+          assert "レギュラー・ワイド・スーパーワイドのサイズ別に" in text
+          PY
