@@ -334,6 +334,32 @@ def footer():
     return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
 
 
+def category_choice_guide(category):
+    """Visible, product-neutral advice: never imply an unselected size is cheapest."""
+    notes = {
+        'pet-sheets': (
+            'ペットシーツを選ぶときの確認ポイント',
+            'レギュラー・ワイド・スーパーワイドは別の条件です。実際に使うサイズを選んでから1枚単価を比較し、吸収力・厚さは販売ページの仕様で確認してください。',
+            '猫砂の素材別単価を比べる', 'cat-litter',
+        ),
+        'cat-litter': (
+            '猫砂の価格を比べるときの確認ポイント',
+            '紙・おから・木・鉱物では使い方や処理方法が異なります。素材をそろえて1L単価を比較し、kg表記だけの商品を勝手にL換算しません。',
+            'システムトイレ用シートを比べる', 'system-toilet-sheets',
+        ),
+        'system-toilet-sheets': (
+            'システムトイレ用シートを選ぶときの確認ポイント',
+            '1枚単価だけでなく、本体に対応するシリーズ・寸法・必要な交換頻度を確認してください。対応が不明な商品は無理に同じランキングへ混ぜません。',
+            '猫砂の素材別単価を比べる', 'cat-litter',
+        ),
+    }
+    title, explanation, link_label, target = notes[category['id']]
+    return f'''<section class="section method-section" aria-label="選ぶ前に確かめたいこと">
+<h2>{esc(title)}</h2><p>{esc(explanation)}</p>
+<p><a class="text-link" href="{BASE_URL}categories/{target}/">{esc(link_label)} →</a></p>
+</section>'''
+
+
 def category_page(category, items, categories, updated):
     initial = visible_default_items(category, items)
     stats = comparison_stats(initial)
@@ -404,6 +430,7 @@ def category_page(category, items, categories, updated):
         <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最安単価と最小総額の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは価格の順位です。吸収力・消臭力・原材料・ペットとの相性の評価ではありません。</p></details>
         <h2>よくある質問</h2>{faq_html(category)}
       </section></div>
+      {category_choice_guide(category)}
     </main>{footer()}{mobile_dock(categories, category['id'])}'''
     title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
     desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
