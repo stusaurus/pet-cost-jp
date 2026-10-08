@@ -57,7 +57,7 @@ class RenderTests(unittest.TestCase):
         self.assertIn("ペットシーツを選ぶときの確認ポイント", text)
         self.assertIn("実際に使うサイズを選んでから1枚単価を比較", text)
         self.assertIn(build_site.BASE_URL + "categories/cat-litter/", text)
-        self.assertEqual(text.count('data-affiliate-link'), 4)
+        self.assertEqual(len(Page(text).with_attr('data-affiliate-link')), 4)
 
     def test_even_median_and_reasons_use_current_condition(self):
         rows = [dict(self.item, product_id=str(i), unit_price=u, price=u * 200) for i, u in enumerate([4, 6, 10, 20])]
