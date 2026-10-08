@@ -341,12 +341,17 @@ def category_page(category, items, categories, updated):
     prompt = {'pet-sheets': '使っているサイズは？', 'cat-litter': '普段使っている素材は？', 'system-toilet-sheets': '使っているトイレは？'}[category['id']]
     fit_note = {'pet-sheets': 'いつものサイズだけで比較します。厚さ・吸収力は商品ごとに確かめてください。', 'cat-litter': 'いつもの素材・用途だけで比較します。kgからLへの推測換算はしません。', 'system-toilet-sheets': '本体に合うシリーズだけで比較します。寸法・対応機種は購入前に商品ページで確認してください。'}[category['id']]
     suffix = 'L' if category['metric'] == 'per_liter' else '枚'
+    search_intro = {
+        'pet-sheets': 'レギュラー・ワイド・スーパーワイドのサイズ別に、ペットシーツの1枚単価と購入総額を比較します。',
+        'cat-litter': '紙・おから・木・鉱物など素材別に、猫砂の1L単価と購入総額を比較します。',
+        'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価と交換費用を比較します。',
+    }[category['id']]
     schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     body = f'''{nav(categories, category['id'])}
-    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">うちの条件で、次の買い足しを。</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
+    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
       {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
