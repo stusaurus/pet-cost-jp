@@ -24,6 +24,24 @@ class Page(HTMLParser):
 
 
 class RenderTests(unittest.TestCase):
+    def test_sheet_overview_separates_all_sizes_and_keeps_shipping_unknown(self):
+        category = build_site.load_categories()[0]
+        regular = dict(name='レギュラー 100枚', price=1000, quantity=100.0,
+                       unit_price=10.0, group='regular', postage_flag=1)
+        wide = dict(name='ワイド 20枚', price=600, quantity=20.0,
+                    unit_price=30.0, group='wide', postage_flag=0)
+        text = build_site.sheet_size_overview(category, [regular, wide])
+        cards = text.split('data-size-summary=')[1:]
+        self.assertEqual(len(cards), 3)
+        self.assertIn('レギュラー 100枚', cards[0])
+        self.assertNotIn('ワイド 20枚', cards[0])
+        self.assertIn('ワイド 20枚', cards[1])
+        self.assertIn('送料別', cards[0])
+        self.assertIn('送料込み', cards[1])
+        self.assertIn('掲載候補がありません', cards[2])
+        self.assertNotIn('data-size-overview="super_wide"', cards[2])
+        self.assertEqual(build_site.sheet_size_overview(build_site.load_categories()[1], []), '')
+
     def setUp(self):
         self.categories = build_site.load_categories()
         self.category = self.categories[0]

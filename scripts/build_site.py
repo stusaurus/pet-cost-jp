@@ -217,6 +217,37 @@ def filter_buttons(category, items):
     return '<div class="filters">' + buttons(category.get('groups', {})) + '</div>'
 
 
+def sheet_size_overview(category, items):
+    """Visible, independent size summaries from the same accepted catalog."""
+    if category['id'] != 'pet-sheets':
+        return ''
+    cards = []
+    for group in ('regular', 'wide', 'super_wide'):
+        matches = [item for item in items if item.get('group') == group]
+        label = group_label(category, group)
+        if not matches:
+            content = '<p>現在、安全に単価比較できる掲載候補がありません。</p>'
+        else:
+            best = min(matches, key=lambda item: (item['unit_price'], item['price']))
+            smallest = min(matches, key=lambda item: (item['price'], item['unit_price']))
+            content = (f'<p>{len(matches)}件を同じサイズ内で比較</p>'
+                       f'<p><strong>掲載単価最小 {yen(best["unit_price"])} / 1枚</strong></p>'
+                       f'<p>{quantity_text(category, best)}・商品価格 {yen(best["price"])}'
+                       f'・{esc(shipping_label(best.get("postage_flag")))}</p>'
+                       '<details><summary>商品名・少額で買う候補を見る</summary>'
+                       f'<p>単価最小の商品：{esc(display_name(best["name"]))}</p>'
+                       f'<p>商品価格が最小の候補：{yen(smallest["price"])} / '
+                       f'{quantity_text(category, smallest)}・{esc(shipping_label(smallest.get("postage_flag")))}</p></details>'
+                       f'<a class="text-link" href="#comparison-conditions" data-size-overview="{group}">'
+                       f'{esc(label)}だけで詳しく比較 →</a>')
+        cards.append(f'<article class="size-overview-card" data-size-summary="{group}"><h3>{esc(label)}</h3>{content}</article>')
+    return ('<section class="section size-overview" aria-labelledby="size-overview-heading">'
+            '<h2 id="size-overview-heading">いつものサイズの価格と買う量を確認</h2>'
+            '<p>サイズごとに別の比較です。単価と商品価格が最小の候補は異なる場合があります。'
+            '送料別・送料不明の送料は加算していません。吸収力・厚さ・トレーへの適合は購入前に確認してください。</p>'
+            '<div class="size-overview-grid">' + ''.join(cards) + '</div></section>')
+
+
 def usage_panel(category):
     period, label, suffix, example = {
         'pet-sheets': ('day', '1日に何枚使いますか？', '枚 / 日', '5'),
@@ -381,6 +412,7 @@ def category_page(category, items, categories, updated):
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
+      {sheet_size_overview(category, items)}
       {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>

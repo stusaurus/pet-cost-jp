@@ -433,6 +433,11 @@
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
     if (category && filter) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {
+      const sizeOverview = event.target.closest('[data-size-overview]');
+      if (sizeOverview) {
+        const group = sizeOverview.dataset.sizeOverview;
+        $$('[data-group-button]').find(button => button.dataset.group === group)?.click();
+      }
       const groupButton = event.target.closest('[data-group-button]');
       if (groupButton) {
         if (groupButton.getAttribute('aria-pressed') === 'true') return;

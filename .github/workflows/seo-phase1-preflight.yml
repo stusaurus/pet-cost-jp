@@ -29,3 +29,15 @@ jobs:
           text=(Path("site")/"categories/pet-sheets/index.html").read_text()
           assert "レギュラー・ワイド・スーパーワイドのサイズ別に" in text
           PY
+      - name: Verify sheet selection at 320, 390 and 1440 pixels
+        run: |
+          npm install --prefix /tmp/sheet-qa --no-audit --no-fund playwright@1.56.1 lighthouse@12.8.2
+          /tmp/sheet-qa/node_modules/.bin/playwright install --with-deps chromium
+          NODE_PATH=/tmp/sheet-qa/node_modules node scripts/check_sheet_presentation.cjs
+      - name: Save unpublished sheet comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sheet-presentation-evidence
+          path: audit-results/sheet-presentation/
+          retention-days: 14
