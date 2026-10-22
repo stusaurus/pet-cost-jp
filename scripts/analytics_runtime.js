@@ -69,9 +69,9 @@
       const bar = element('aside', 'mobile-best');
       bar.hidden = true;
       bar.dataset.mobileBest = '1';
-      bar.setAttribute('aria-label', '現在の条件の最安商品');
+      bar.setAttribute('aria-label', '掲載単価最小の商品（送料別商品の送料は未加算）');
       const copy = element('div', 'mobile-best-copy');
-      const label = element('span', 'mobile-best-label', '現在の条件の最安');
+      const label = element('span', 'mobile-best-label', '掲載単価最小');
       label.dataset.mobileBestLabel = '1';
       const price = element('strong', 'mobile-best-price', '-');
       price.dataset.mobileBestPrice = '1';
@@ -183,16 +183,16 @@
       mobileBest.hidden = !row;
       document.body.classList.toggle('has-mobile-best', !!row);
       if (!row) return;
-      text('[data-mobile-best-label]', (activeGroup === 'all' ? '素材指定なし' : activeLabel) + 'の現在最安', mobileBest);
+      text('[data-mobile-best-label]', (activeGroup === 'all' ? '素材指定なし' : activeLabel) + 'の掲載単価最小', mobileBest);
       text('[data-mobile-best-price]', formatYen(unit(row)) + ' / ' + metricLabel, mobileBest);
       text('[data-mobile-best-sub]', '商品総額 ' + formatYen(total(row)) + ' · ' + (row.dataset.shipping || '送料は楽天で確認'), mobileBest);
       affiliate($('[data-mobile-best-link]', mobileBest), row, 1, 'mobile_best_bar');
     }
     function reasons(row) {
       const result = [];
-      if (unit(row) > 0 && Math.abs(unit(row) - stats.min) < 1e-9) result.push(['unit', '単価最安']);
+      if (unit(row) > 0 && Math.abs(unit(row) - stats.min) < 1e-9) result.push(['unit', '商品価格の単価最小']);
       if (stats.median > 0 && unit(row) < stats.median * .98) result.push(['median', relativeLabel(unit(row), stats.median)]);
-      if (total(row) > 0 && Math.abs(total(row) - stats.minTotal) < 1e-9) result.push(['total', '支払総額が最小']);
+      if (total(row) > 0 && Math.abs(total(row) - stats.minTotal) < 1e-9) result.push(['total', '商品価格が最小']);
       if (quantity(row) > 0 && Math.abs(quantity(row) - stats.maxQuantity) < 1e-9) result.push(['bulk', '最大容量']);
       return result;
     }
@@ -216,7 +216,9 @@
       if (!row) return;
       text('[data-featured-condition]', (activeGroup === 'all' ? '素材を問わず：' : 'あなたの条件：') + activeLabel + ' · ' + visibleRows.length + '件を比較');
       const tied = visibleRows.filter(r => Math.abs(unit(r) - stats.min) < 1e-9).length;
-      text('[data-featured-badge]', tied > 1 ? '現在最安（同単価 ' + tied + '件）' : activeGroup === 'all' && category === 'cat-litter' ? '素材を問わず比較した最安' : 'うちの条件なら、現在最安');
+      const priceScope = row.dataset.shipping === '送料込み' ? '送料込み' : '送料未加算';
+      const rankLabel = (activeGroup === 'all' && category === 'cat-litter' ? '素材を問わず比較した' : 'この条件の') + '掲載単価最小（' + priceScope + '）';
+      text('[data-featured-badge]', rankLabel + (tied > 1 ? '（同単価 ' + tied + '件）' : ''));
       text('[data-featured-unit]', formatYen(unit(row)));
       text('[data-featured-diff]', relativeLabel(unit(row), stats.median));
       text('[data-featured-gap-amount]', formatYen(stats.median - unit(row)) + ' / ' + metricLabel + 'の差');
@@ -266,6 +268,7 @@
         const meta = element('div', 'top3-meta');
         meta.appendChild(element('span', '', '商品総額 ' + formatYen(total(row))));
         meta.appendChild(element('span', '', relativeLabel(unit(row), stats.median)));
+        meta.appendChild(element('span', '', row.dataset.shipping || '送料は楽天で確認'));
         copy.appendChild(meta);
         link.appendChild(copy);
         const chart = element('div', 'top3-chart');
