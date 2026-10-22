@@ -231,11 +231,11 @@ def reason_badges(item, items, middle):
         return []
     reasons = []
     if item['unit_price'] == min(x['unit_price'] for x in items):
-        reasons.append(('unit', '単価最安'))
+        reasons.append(('unit', '商品価格の単価最小'))
     if middle and item['unit_price'] < middle*.98:
         reasons.append(('median', relative_price_label(item['unit_price'], middle)))
     if item['price'] == min(x['price'] for x in items):
-        reasons.append(('total', '支払総額が最小'))
+        reasons.append(('total', '商品価格が最小'))
     if item['quantity'] == max(x['quantity'] for x in items):
         reasons.append(('bulk', '最大容量'))
     return reasons
@@ -244,7 +244,7 @@ def reason_badges(item, items, middle):
 def price_chart(value, middle, metric, prefix='', style_class='price-chart'):
     maximum = max(value or 0, middle or 0, 1)
     rows = []
-    for key, label, price in [('min', '現在最安', value), ('median', '掲載中央値', middle)]:
+    for key, label, price in [('min', '掲載単価最小', value), ('median', '掲載中央値', middle)]:
         reference = ' is-reference' if key == 'median' else ''
         bar_hook, value_hook = (f'data-{prefix}-{key}-bar', f'data-{prefix}-{key}-value') if prefix else ('', '')
         rows.append(f'<div class="chart-row"><span>{label}</span><span class="bar-track"><i class="bar-fill{reference}" style="--bar:{(price or 0)/maximum*100:.2f}%" {bar_hook}></i></span><b class="chart-value" {value_hook}>{yen(price)}</b></div>')
@@ -258,10 +258,11 @@ def featured_box(category, item, items=None):
     attrs = affiliate_attrs(category, item, 1, 'featured_product') if item else 'data-affiliate-link'
     image = f'<img class="featured-img" data-featured-image src="{esc(item.get("image", ""))}" alt="{esc(display_name(item["name"]))}" width="64" height="64">' if item and item.get('image') else '<img class="featured-img" data-featured-image alt="" width="64" height="64" hidden>'
     reason_html = ''.join(f'<span class="cover-reason{" is-primary" if i == 0 else ""}" data-reason-role="{role}">{esc(text)}</span>' for i, (role, text) in enumerate(reason_badges(item, items, middle) if item else []) if role != 'median')
+    shipping_scope = '送料込み' if item and str(item.get('postage_flag')) == '0' else '送料未加算'
     return f'''<div class="answer-surface featured" data-featured-box {'hidden' if not item else ''}>
       <p class="answer-condition" data-featured-condition>{esc(label)} · {len(items)}件を比較</p>
       <div class="answer-layout"><div class="answer-data">
-        <h2 class="answer-heading" data-featured-badge>この条件の最安</h2>
+        <h2 class="answer-heading" data-featured-badge>掲載単価最小（{shipping_scope}）</h2>
         <div class="answer-price-line"><strong class="featured-unit" data-featured-unit>{yen(item['unit_price']) if item else '-'}</strong><span class="metric">/ {esc(category['metric_label'])}</span></div>
         <div class="answer-diff"><strong class="featured-diff" data-featured-diff>{esc(relative_price_label(item['unit_price'], middle)) if item else ''}</strong><span class="diff-amount" data-featured-gap-amount>{yen(middle-item['unit_price']) if item else '-'} / {esc(category['metric_label'])}の差</span></div>
         {price_chart(item['unit_price'] if item else 0, middle, category['metric_label'], 'answer')}
@@ -269,7 +270,7 @@ def featured_box(category, item, items=None):
         <div class="answer-reasons"><p class="reason-title">なぜ、この単価になる？</p><p class="reason-formula" data-featured-formula>{yen(item['price']) + ' ÷ ' + quantity_text(category, item) if item else '-'} = {yen(item['unit_price']) if item else '-'}</p><div class="cover-reasons" data-featured-reasons aria-label="安さの理由">{reason_html}</div><details class="answer-proof"><summary>数量・比較の根拠を見る</summary><p class="reason-copy">商品名で確認できた総数量を使って計算しています。サイズ・素材・対応シリーズが曖昧な候補は掲載せず、更新ごとに分類・数量・単価・重複を監査しています。品質やペットとの相性を保証するものではありません。</p></details></div>
       <div class="usage-outcome" data-featured-usage hidden></div></div><div class="answer-product">{image}<div><h3 class="featured-title" data-featured-title>{esc(display_name(item['name'])) if item else ''}</h3><p class="featured-shop" data-featured-shop>{esc(item.get('shop')) if item else ''}</p></div>
         <div class="answer-checkout"><p class="featured-total" data-featured-total>商品総額 {yen(item['price']) if item else '-'}</p><p class="featured-quantity" data-featured-quantity>{quantity_text(category, item) + ' · ' + esc(item['quantity_evidence']) if item else ''}</p><p class="shipping" data-featured-shipping>{shipping_label(item.get('postage_flag')) if item else ''}</p><div class="featured-action"><a class="btn" {attrs}>楽天で確認</a></div></div>
-      </div></div><p class="answer-caveat">単価の比較です。品質・吸収力・相性の順位ではありません。送料別の商品は送料を加算していません。</p></div>'''
+      </div></div><p class="answer-caveat">掲載商品価格を数量で割った単価の比較です。送料別商品の送料は未加算のため、支払総額の最安順位ではありません。品質・吸収力・相性の順位でもありません。</p></div>'''
 
 
 def snapshot_cards(category, items):
@@ -279,7 +280,7 @@ def snapshot_cards(category, items):
     for rank, item in enumerate(items[:3], 1):
         delta = item['unit_price'] - items[0]['unit_price']
         difference = '単価が最小' if rank == 1 else ('1位と同じ単価' if abs(delta) < 1e-9 else f"1位より +{yen(delta)} / {category['metric_label']}")
-        parts.append(f'''<a class="top3-card" data-top3-card {affiliate_attrs(category, item, rank, 'top3_snapshot')}><span class="top3-rank">{rank}</span><div class="top3-copy"><span class="top3-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></span><span class="top3-difference">{esc(difference)}</span><span class="top3-name">{esc(display_name(item['name']))}</span><div class="top3-meta"><span>商品総額 {yen(item['price'])}</span><span>{esc(relative_price_label(item['unit_price'], middle))}</span></div></div><div class="top3-chart"><span class="bar-track"><i class="bar-fill" style="--bar:{item['unit_price']/maximum*100:.2f}%"></i></span><div class="top3-chart-label"><span>{'最小' if rank == 1 else '同じ尺度で比較'}</span><span>楽天で確認</span></div></div></a>''')
+        parts.append(f'''<a class="top3-card" data-top3-card {affiliate_attrs(category, item, rank, 'top3_snapshot')}><span class="top3-rank">{rank}</span><div class="top3-copy"><span class="top3-unit">{yen(item['unit_price'])}<small> / {esc(category['metric_label'])}</small></span><span class="top3-difference">{esc(difference)}</span><span class="top3-name">{esc(display_name(item['name']))}</span><div class="top3-meta"><span>商品総額 {yen(item['price'])}</span><span>{esc(relative_price_label(item['unit_price'], middle))}</span><span>{esc(shipping_label(item.get('postage_flag')))}</span></div></div><div class="top3-chart"><span class="bar-track"><i class="bar-fill" style="--bar:{item['unit_price']/maximum*100:.2f}%"></i></span><div class="top3-chart-label"><span>{'最小' if rank == 1 else '同じ尺度で比較'}</span><span>楽天で確認</span></div></div></a>''')
     return ''.join(parts)
 
 
@@ -393,7 +394,7 @@ def category_page(category, items, categories, updated):
       <div data-comparison-results hidden>
       <aside class="comparison-sticky" data-comparison-sticky aria-label="現在の比較条件"><div class="comparison-sticky-inner">
         <a class="sticky-cell sticky-condition" href="#comparison-conditions" aria-label="比較条件を変更"><span class="sticky-label" data-sticky-condition-title>比較例の条件</span><strong class="sticky-value" data-sticky-condition>{esc(label)}</strong></a>
-        <div class="sticky-cell sticky-price"><span class="sticky-label">現在最安</span><strong class="sticky-value" data-sticky-min>{yen(stats['min'])} / {esc(category['metric_label'])}</strong></div>
+        <div class="sticky-cell sticky-price"><span class="sticky-label">掲載単価最小</span><strong class="sticky-value" data-sticky-min>{yen(stats['min'])} / {esc(category['metric_label'])}</strong></div>
         <div class="sticky-cell sticky-gap"><span class="sticky-label">中央値との差</span><strong class="sticky-value" data-sticky-gap>{relative_price_label(stats['min'], stats['median'])}</strong></div>
         <div class="sticky-cell sticky-count"><span class="sticky-label">表示件数</span><strong class="sticky-value" data-sticky-count>{len(initial)}件</strong></div><a class="sticky-jump" href="#product-ranking" aria-label="商品ランキングへ移動">一覧</a>
       </div></aside>
@@ -404,7 +405,7 @@ def category_page(category, items, categories, updated):
       </section>
       <section class="section snapshot-section" id="top-three" aria-labelledby="top3-heading">
         <div class="section-head"><div><div class="step-label"><span class="step-number">02</span>うちに合う買い方を比べる</div><h2 id="top3-heading">1位・2位・3位、どのくらい違う？</h2><p class="section-sub">バーの長さは単価。同じ尺度、0円から表示しています。</p></div></div>
-        <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial)}</div><p class="snapshot-note">同じ単価なら、バーも同じ長さ。順位は価格順で、品質のおすすめではありません。</p>
+        <div class="top3-strip" data-top3-strip>{snapshot_cards(category, initial)}</div><p class="snapshot-note">同じ単価なら、バーも同じ長さ。送料別商品の送料は未加算です。順位は商品価格順で、支払総額や品質のおすすめではありません。</p>
       </section>
       <section class="section buying-section" id="comparison-angles" aria-labelledby="angle-heading">
         <div class="section-head"><div><p class="section-eyebrow">暮らしに合わせて、選び方も。</p><h2 id="angle-heading">次の買い足し、どう買う？</h2><p class="section-sub">今日はどれを大切にしますか？ 押すと、その選び方の候補へ。</p></div><a class="text-link" href="#comparison-conditions" data-open-usage>使用量を入れる</a></div>
@@ -412,7 +413,7 @@ def category_page(category, items, categories, updated):
         <p class="angle-note">品質のおすすめではなく、数値による選び方です。同じ商品が複数の候補になることもあります。商品総額に送料別の送料は未加算です。</p>
       </section>
       <section class="section" id="product-ranking" aria-labelledby="ranking-heading">
-        <div class="section-head list-heading"><div><div class="step-label"><span class="step-number">03</span>買う量と今回の出費を確かめる</div><h2 id="ranking-heading">うちの条件で、単価が安い順</h2><p class="section-sub" data-list-context>{esc(label)} · {len(initial)}件 · {esc(category['metric_label'])}あたり</p></div><a class="text-link" href="#comparison-conditions">条件を変更</a></div>
+        <div class="section-head list-heading"><div><div class="step-label"><span class="step-number">03</span>買う量と今回の出費を確かめる</div><h2 id="ranking-heading">うちの条件で、商品価格の単価が安い順</h2><p class="section-sub" data-list-context>{esc(label)} · {len(initial)}件 · {esc(category['metric_label'])}あたり</p></div><a class="text-link" href="#comparison-conditions">条件を変更</a></div>
         <div class="product-grid" data-product-grid>{product_rows(items, category)}</div><p class="empty-result" data-list-empty {'hidden' if initial else ''}>比較できる商品がありません。</p>
       </section>
       <section class="section calc-section" id="store-calculator" aria-labelledby="calculator-heading">
@@ -427,7 +428,7 @@ def category_page(category, items, categories, updated):
       </section>
       <section class="section method-section" id="comparison-method" aria-label="比較方法とよくある質問">
         <details class="method-details"><summary>比較するときのポイント</summary>{guide_html(category)}</details>
-        <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最安単価と最小総額の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは価格の順位です。吸収力・消臭力・原材料・ペットとの相性の評価ではありません。</p></details>
+        <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最安単価と最小総額の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは送料別商品の送料を加算しない商品価格の単価順位です。支払総額の順位ではなく、吸収力・消臭力・原材料・ペットとの相性の評価でもありません。</p></details>
         <h2>よくある質問</h2>{faq_html(category)}
       </section></div>
       {category_choice_guide(category)}
