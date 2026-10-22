@@ -130,7 +130,7 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(entries[0]['data-gap-percent'], '31')
         self.assertIn('data-spotlight-link', entries[0])
         self.assertIn('この条件 8件', source)
-        self.assertIn('現在掲載商品の最安と中央値の差', source)
+        self.assertIn('掲載単価の最小値と中央値の差', source)
         self.assertIn('WebSite', source)
         self.assertLess(source.index('いつもの用品をすぐ比べる'), source.index('今日の価格差も見る'))
         self.assertIn('data-pet-category="pet-sheets"', source)
