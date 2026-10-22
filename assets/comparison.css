@@ -697,3 +697,8 @@ summary::-webkit-details-marker { display: none; }
   }
   body.has-mobile-best .footer{padding-bottom:158px}
 }
+/* Independently classified sizes, visible before a visitor selects a condition. */
+.size-overview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.size-overview-card{min-width:0;padding:20px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--surface,#fff);overflow-wrap:anywhere}
+.size-overview-card h3{margin-top:0}.size-overview-card p{font-size:14px;line-height:1.7}.size-overview-card .text-link{display:inline-block}
+@media(max-width:700px){.size-overview-grid{grid-template-columns:1fr}.size-overview-card{padding:16px}}
