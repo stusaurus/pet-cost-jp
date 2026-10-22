@@ -287,11 +287,11 @@ def snapshot_cards(category, items):
 def angle_picks(items):
     if not items:
         return []
-    return [('unit', '長く使って安く', '単価重視', min(items, key=lambda x: (x['unit_price'], x['price']))), ('total', '今日は出費を抑える', '支払総額重視', min(items, key=lambda x: (x['price'], x['unit_price']))), ('bulk', '買い足す回数を減らす', 'まとめ買い重視', max(items, key=lambda x: (x['quantity'], -x['unit_price'])))]
+    return [('unit', '長く使って安く', '単価重視', min(items, key=lambda x: (x['unit_price'], x['price']))), ('total', '今日は出費を抑える', '商品価格重視', min(items, key=lambda x: (x['price'], x['unit_price']))), ('bulk', '買い足す回数を減らす', 'まとめ買い重視', max(items, key=lambda x: (x['quantity'], -x['unit_price'])))]
 
 
 def angle_cards(category, items):
-    picks = angle_picks(items) or [('unit', '長く使って安く', '単価重視', None), ('total', '今日は出費を抑える', '支払総額重視', None), ('bulk', '買い足す回数を減らす', 'まとめ買い重視', None)]
+    picks = angle_picks(items) or [('unit', '長く使って安く', '単価重視', None), ('total', '今日は出費を抑える', '商品価格重視', None), ('bulk', '買い足す回数を減らす', 'まとめ買い重視', None)]
     def value(role, item):
         if not item:
             return '-'
@@ -369,9 +369,9 @@ def category_page(category, items, categories, updated):
     fit_note = {'pet-sheets': 'いつものサイズだけで比較します。厚さ・吸収力は商品ごとに確かめてください。', 'cat-litter': 'いつもの素材・用途だけで比較します。kgからLへの推測換算はしません。', 'system-toilet-sheets': '本体に合うシリーズだけで比較します。寸法・対応機種は購入前に商品ページで確認してください。'}[category['id']]
     suffix = 'L' if category['metric'] == 'per_liter' else '枚'
     search_intro = {
-        'pet-sheets': 'レギュラー・ワイド・スーパーワイドのサイズ別に、ペットシーツの1枚単価と購入総額を比較します。',
-        'cat-litter': '紙・おから・木・鉱物など素材別に、猫砂の1L単価と購入総額を比較します。',
-        'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価と交換費用を比較します。',
+        'pet-sheets': 'レギュラー・ワイド・スーパーワイドのサイズ別に、ペットシーツの1枚単価・商品価格・送料条件を比較します。',
+        'cat-litter': '紙・おから・木・鉱物など素材別に、猫砂の1L単価・商品価格・送料条件を比較します。',
+        'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。',
     }[category['id']]
     schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
@@ -428,7 +428,7 @@ def category_page(category, items, categories, updated):
       </section>
       <section class="section method-section" id="comparison-method" aria-label="比較方法とよくある質問">
         <details class="method-details"><summary>比較するときのポイント</summary>{guide_html(category)}</details>
-        <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最安単価と最小総額の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは送料別商品の送料を加算しない商品価格の単価順位です。支払総額の順位ではなく、吸収力・消臭力・原材料・ペットとの相性の評価でもありません。</p></details>
+        <details class="method-details"><summary>このランキングの作り方</summary><p class="method">楽天市場の商品名に明記された枚数・容量だけを使い、「掲載商品価格 ÷ 総数量」で単価を計算します。</p><ul class="method method-list"><li>サイズ・容量が一意に確定できない選択式商品は除外</li><li>kgしかない猫砂はLへ推測換算しない</li><li>中古・訳あり・定期便・ふるさと納税などは除外</li><li>同じ商品ファミリーは最小単価と最小商品価格の最大2件まで</li><li>中央値は単価を安い順に並べた中央の値。偶数件では中央2件の平均</li><li>表示単価は小数点以下を丸めています。順位と価格差は丸める前の値で計算</li></ul><p class="method">これは送料別商品の送料を加算しない商品価格の単価順位です。支払総額の順位ではなく、吸収力・消臭力・原材料・ペットとの相性の評価でもありません。</p></details>
         <h2>よくある質問</h2>{faq_html(category)}
       </section></div>
       {category_choice_guide(category)}
@@ -446,7 +446,7 @@ def homepage(categories, summaries, updated):
         gap = s.get('deal_percent', 0)
         entries.append(f'''<a class="category-entry {category_theme(category['id'])}" data-editorial-category="{category['id']}" data-editorial-position="{position}" data-spotlight-link data-category-id="{category['id']}" data-gap-percent="{gap}" href="{BASE_URL}categories/{category['id']}/">
           <div class="entry-top"><span class="entry-icon">{icon(category['id'])}</span><h3>{esc(short_name(category))}</h3></div><p class="entry-condition">{esc(s.get('default_label', ''))} · {esc(category['metric_label'])}あたりで比較</p>
-          <div class="entry-price-wrap"><p class="entry-caption">この条件の現在最安</p><p class="entry-price">{yen(s.get('min'))}<small> / {category['metric_label']}</small></p></div>
+          <div class="entry-price-wrap"><p class="entry-caption">この条件の掲載単価最小</p><p class="entry-price">{yen(s.get('min'))}<small> / {category['metric_label']}</small></p></div>
           <div class="entry-gap"><b>{gap}%</b><span>掲載中央値より低い</span></div><div class="entry-chart">{price_chart(s.get('min'), s.get('median'), category['metric_label'], style_class='price-chart')}</div>
           <div class="entry-cta"><span>条件を選んで比較</span><span class="entry-count">この条件 {s.get('default_count', 0)}件</span></div>
         </a>''')
@@ -466,7 +466,7 @@ def homepage(categories, summaries, updated):
       {trust_strip('comparison-standards')}
       <section class="home-journey" aria-label="うちの使い方で比較する流れ"><div><span class="journey-icon">{icon('fit')}</span><h3>うちで使える？</h3><p>いつものサイズ・素材・本体から。<br>使える条件だけで価格を比較。</p></div><div><span class="journey-icon">{icon('audit')}</span><h3>どのくらい持つ？</h3><p>使用量を入れれば、期間と月の費用に。<br>単価を、暮らしの数字へ。</p></div><div><span class="journey-icon">{icon('bulk')}</span><h3>買い足すならどれ？</h3><p>今回の出費も、まとめ買いも。<br>うちに合う買い方を選ぶ。</p></div></section>
       <p class="home-usage-note">使用量の入力は任意。条件・使用量は、この端末に保存されます。</p>
-      <details class="home-price-details" data-daily-spotlight><summary><span>今日の価格差も見る</span><span class="updated">最終更新 {esc(updated)}</span></summary><p class="section-sub">代表条件での比較例。価格差が大きい順に表示しています。</p><div class="category-entry-grid">{''.join(entries)}</div><p class="home-price-note">価格差は、表示した条件の「現在掲載商品の最安と中央値の差」です。過去価格や値下げを示すものではありません。ご自身の条件は、カテゴリを開いて選んでください。</p></details>
+      <details class="home-price-details" data-daily-spotlight><summary><span>今日の価格差も見る</span><span class="updated">最終更新 {esc(updated)}</span></summary><p class="section-sub">代表条件での比較例。価格差が大きい順に表示しています。</p><div class="category-entry-grid">{''.join(entries)}</div><p class="home-price-note">価格差は、表示した条件の「掲載単価の最小値と中央値の差」です。過去価格や値下げを示すものではありません。ご自身の条件は、カテゴリを開いて選んでください。</p></details>
       <section class="home-tools"><details class="home-standards" id="comparison-standards"><summary><span class="standards-icon">{icon('fit')}</span><span>気持ちよく選ぶために、<br><b>比較の基準をそろえています。</b></span><span class="disclosure-mark" aria-hidden="true">+</span></summary><div class="standards-body"><p>サイズ・素材・対応シリーズを混ぜずに比較。数量が曖昧な選択式商品、中古・訳あり商品は除外し、更新ごとに数量・分類・単価・重複を監査しています。</p><p>単価順位は、品質やペットとの相性のおすすめではありません。送料別の送料は未加算。購入前に楽天で仕様・送料・現在価格を確認してください。</p></div></details><div class="store-home-note"><span class="standards-icon">{icon('quantity')}</span><div><h3>お店で見つけた、いつもの用品も。</h3><p>各カテゴリの店頭比較で、値段と数量を同じ単位に。うちの条件の商品と比べられます。</p></div></div></section>
     </main>{footer()}{mobile_dock(categories)}'''
     return shell(f'{SITE_NAME} | うちの条件・使い方で比べる', 'ペットシーツのサイズ、猫砂の素材、システムトイレ本体に合う条件から価格比較。使用量を入れると持つ期間と30日分の費用も分かります。', body, schema=schema)
