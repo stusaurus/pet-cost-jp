@@ -30,6 +30,24 @@ async function open(html, id = '', options = {}) {
 }
 const get = (p, selector) => p.document.querySelector(selector);
 const all = (p, selector) => [...p.document.querySelectorAll(selector)];
+test('visible sheet size overview opens only its own classified comparison', async () => {
+  const p=await open(fs.readFileSync(path.join(root,'site/categories/pet-sheets/index.html'),'utf8'),'pet-sheets');
+  try {
+    assert.equal(all(p,'[data-size-summary]').length,3);
+    assert.ok(!get(p,'[data-size-summary]').closest('[hidden]'));
+    for(const link of all(p,'[data-size-overview]')){
+      link.click();
+      assert.equal(get(p,'[data-group-button][aria-pressed="true"]').dataset.group,link.dataset.sizeOverview);
+      assert.ok(!get(p,'[data-comparison-results]').hidden);
+      const rows=all(p,'[data-product-row]:not([hidden])');assert.ok(rows.length);
+      assert.ok(rows.every(row=>row.dataset.group===link.dataset.sizeOverview));
+      const event=p.events.filter(event=>event[1]==='comparison_filter').at(-1);
+      assert.equal(event[2].filter_value,link.dataset.sizeOverview);
+      assert.equal(event[2].operator_test,'1');
+    }
+    assert.deepEqual(p.errors,[]);
+  } finally {p.close();}
+});
 const text = (p, s) => get(p, s).textContent;
 const events = (p, name) => p.events.filter(e => e[0] === 'event' && e[1] === name).map(e => e[2]);
 const median = xs => { const s = [...xs].sort((a, b) => a - b); const m = Math.floor(s.length / 2); return s.length ? s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2 : 0; };
