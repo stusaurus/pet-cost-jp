@@ -243,6 +243,26 @@ for (const { category, items } of payloads) {
 function render(category, items) {
   return execFileSync('python3', ['-c', "import sys,json;sys.path.insert(0,'scripts');import build_site;p=json.load(sys.stdin);print(build_site.category_page(p['category'],p['items'],[p['category']],'2026-09-30 07:00 JST'))"], { cwd: root, input: JSON.stringify({ category, items }), env: { ...process.env, GA_MEASUREMENT_ID: '' }, encoding: 'utf8' });
 }
+test('shipping-extra lead item stays price-only in dynamic ranking, TOP3 and mobile', async () => {
+  const category = categories[0];
+  const base = payloads[0].items[0];
+  const extra = { ...base, product_id: 'shipping-extra', group: 'regular', postage_flag: 1, unit_price: 3, price: 300, quantity: 100 };
+  const included = { ...base, product_id: 'shipping-included', group: 'regular', postage_flag: 0, unit_price: 4, price: 400, quantity: 100 };
+  const p = await open(render(category, [extra, included]), category.id);
+  try {
+    get(p, '[data-group-button][data-group="regular"]').click();
+    assert.ok(text(p, '[data-featured-badge]').includes('送料未加算'));
+    assert.ok(text(p, '[data-mobile-best-label]').includes('掲載単価最小'));
+    assert.ok(text(p, '[data-mobile-best-sub]').includes('送料別'));
+    assert.ok(text(p, '[data-top3-card] .top3-meta').includes('送料別'));
+    assert.ok(text(p, '[data-product-row]:not([hidden]) [data-value-badges]').includes('商品価格が最小'));
+    assert.ok(!p.document.body.textContent.includes('支払総額が最小'));
+    assert.deepEqual(p.errors, []);
+    get(p, '[data-group-button][data-group="wide"]').click();
+    assert.equal(get(p, '[data-featured-box]').hidden, true);
+  } finally { p.close(); }
+});
+
 test('tied minima, even median, one-item and empty groups have honest states', async () => {
   const category = { ...categories[0], groups: { regular: 'レギュラー', wide: 'ワイド', super_wide: 'スーパーワイド' } };
   const base = payloads[0].items[0];
