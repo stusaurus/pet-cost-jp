@@ -248,7 +248,8 @@ test('shipping-extra lead item stays price-only in dynamic ranking, TOP3 and mob
   const base = payloads[0].items[0];
   const extra = { ...base, product_id: 'shipping-extra', group: 'regular', postage_flag: 1, unit_price: 3, price: 300, quantity: 100 };
   const included = { ...base, product_id: 'shipping-included', group: 'regular', postage_flag: 0, unit_price: 4, price: 400, quantity: 100 };
-  const p = await open(render(category, [extra, included]), category.id);
+  const wide = { ...base, product_id: 'shipping-wide', group: 'wide', postage_flag: 0, unit_price: 8, price: 800, quantity: 100 };
+  const p = await open(render(category, [extra, included, wide]), category.id);
   try {
     get(p, '[data-group-button][data-group="regular"]').click();
     assert.ok(text(p, '[data-featured-badge]').includes('送料未加算'));
@@ -259,7 +260,9 @@ test('shipping-extra lead item stays price-only in dynamic ranking, TOP3 and mob
     assert.ok(!p.document.body.textContent.includes('支払総額が最小'));
     assert.deepEqual(p.errors, []);
     get(p, '[data-group-button][data-group="wide"]').click();
-    assert.equal(get(p, '[data-featured-box]').hidden, true);
+    assert.ok(text(p, '[data-featured-badge]').includes('送料込み'));
+    assert.ok(!text(p, '[data-featured-badge]').includes('送料未加算'));
+    assert.equal(get(p, '[data-featured-box] [data-affiliate-link]').dataset.itemId, 'shipping-wide');
   } finally { p.close(); }
 });
 
