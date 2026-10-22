@@ -232,11 +232,12 @@ def sheet_size_overview(category, items):
             smallest = min(matches, key=lambda item: (item['price'], item['unit_price']))
             content = (f'<p>{len(matches)}件を同じサイズ内で比較</p>'
                        f'<p><strong>掲載単価最小 {yen(best["unit_price"])} / 1枚</strong></p>'
-                       f'<p>{esc(display_name(best["name"]))}</p>'
                        f'<p>{quantity_text(category, best)}・商品価格 {yen(best["price"])}'
                        f'・{esc(shipping_label(best.get("postage_flag")))}</p>'
+                       '<details><summary>商品名・少額で買う候補を見る</summary>'
+                       f'<p>単価最小の商品：{esc(display_name(best["name"]))}</p>'
                        f'<p>商品価格が最小の候補：{yen(smallest["price"])} / '
-                       f'{quantity_text(category, smallest)}・{esc(shipping_label(smallest.get("postage_flag")))}</p>'
+                       f'{quantity_text(category, smallest)}・{esc(shipping_label(smallest.get("postage_flag")))}</p></details>'
                        f'<a class="text-link" href="#comparison-conditions" data-size-overview="{group}">'
                        f'{esc(label)}だけで詳しく比較 →</a>')
         cards.append(f'<article class="size-overview-card" data-size-summary="{group}"><h3>{esc(label)}</h3>{content}</article>')
