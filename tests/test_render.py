@@ -69,6 +69,21 @@ class RenderTests(unittest.TestCase):
         self.assertIn('bulk', badges)
         self.assertNotIn('median', dict(build_site.reason_badges(rows[2], rows, 8)))
 
+    def test_shipping_unknown_is_not_claimed_as_lowest_payable_total(self):
+        postage_extra = dict(self.item, product_id='shipping-extra', postage_flag=1,
+                             price=300, quantity=100.0, unit_price=3.0)
+        included = dict(self.item, product_id='shipping-included', postage_flag=0,
+                        price=400, quantity=100.0, unit_price=4.0)
+        html = self.render([postage_extra, included])
+        self.assertIn('掲載単価最小（送料未加算）', html)
+        self.assertIn('支払総額の最安順位ではありません', html)
+        self.assertIn('送料別・金額は楽天で確認', html)
+        self.assertNotIn('支払総額が最小', html)
+        self.assertIn('商品価格が最小', html)
+        self.assertEqual(
+            build_site.comparison_stats([postage_extra, included])['min'], 3.0)
+        self.assertIn('掲載単価最小（送料込み）', self.render([included]))
+
     def test_empty_condition_has_no_product_advertisement(self):
         page = Page(self.render([]))
         self.assertIn('hidden', page.with_attr('data-featured-box')[0])
