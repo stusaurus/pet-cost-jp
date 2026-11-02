@@ -20,6 +20,10 @@ const server=http.createServer((req,res)=>{
    const response=await page.goto('http://127.0.0.1:8776/pet-cost-jp/categories/pet-sheets/?test=1',{waitUntil:'networkidle'});
    assert.equal(response.status(),200);
    assert.equal(await page.locator('[data-size-summary]').count(),3);
+   const monthlyGuide=page.locator('.monthly-sheet-guide');
+   assert(await monthlyGuide.isVisible());
+   assert.equal(await monthlyGuide.locator('.monthly-sheet-examples li').count(),4);
+   assert((await monthlyGuide.innerText()).includes('30日で150枚'));
    assert(await page.locator('[data-size-summary]').first().isVisible());
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
    const canonical=await page.locator('link[rel=canonical]').getAttribute('href');
@@ -34,15 +38,32 @@ const server=http.createServer((req,res)=>{
     assert((await purchase.getAttribute('rel')).includes('sponsored'));
     assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
    }
-   await page.locator('[data-usage-panel] > summary').click();
+   const usagePanel=page.locator('[data-usage-panel]');
+   assert(await usagePanel.evaluate(el=>el.open===true),'Sheet usage must expand after size choice');
    await page.locator('[data-usage-input]').fill('5');
    await page.locator('[data-usage-form] button[type=submit]').click();
    assert((await page.locator('[data-row-usage]:visible').count())>0);
+   const first=page.locator('[data-product-row]:visible').first();
+   const setSize=Number(await first.getAttribute('data-quantity'));
+   const productPrice=Number(await first.getAttribute('data-total-price'));
+   const shipping=await first.getAttribute('data-shipping');
+   const sets=Math.ceil(150/setSize),leftover=sets*setSize-150;
+   const plan=page.locator('[data-featured-usage] [data-sheet-purchase-plan]');
+   assert(await plan.isVisible(),'Published purchase plan should show after input');
+   const details=await plan.innerText();
+   assert(details.includes('150枚'));
+   assert(details.includes(sets+'セット'));
+   assert(details.includes(leftover+'枚'));
+   assert(details.includes('¥'+(sets*productPrice).toLocaleString('ja-JP')));
+   assert(details.includes(shipping==='送料込み'?'送料込み表示':'送料未加算'));
+   await plan.scrollIntoViewIfNeeded();
+   await page.screenshot({path:path.join(out,'purchase-plan-'+width+'.png'),animations:'disabled'});
    assert.equal(errors.length,0,errors.join(','));
    await page.screenshot({path:path.join(out,`comparison-${width}.png`),fullPage:true,animations:'disabled'});
    await page.locator('[data-size-summary]').first().scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,`overview-${width}.png`),animations:'disabled'});
-   records.push({width,status:response.status(),canonical,errors,overflow:false});await context.close();
+   records.push({width,status:response.status(),canonical,errors,overflow:false,
+     purchasePlanVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
   }
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({status:'PASS',records},null,2));
   const {default:lighthouse}=await import(require.resolve('lighthouse'));
