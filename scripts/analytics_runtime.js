@@ -111,6 +111,41 @@
       const supply = usagePeriod === 'month' ? (duration < .1 ? '0.1か月未満' : '約' + span + 'か月分') : usagePeriod === 'week' ? (duration < .1 ? '0.1週間未満' : '約' + span + '週間分') : days < 1 ? '1日未満' : '約' + daysText(days) + '分';
       return { days, supply, monthly: unit(row) * usage * 30 / periodDays };
     }
+    function appendSheetPurchasePlan(mount, row) {
+      if (category !== 'pet-sheets' || !row || !usage ||
+          typeof window.petCostSheetPurchase !== 'function') return;
+      const plan = window.petCostSheetPurchase(quantity(row), total(row), usage);
+      if (!plan) return;
+      const container = element('section', 'sheet-purchase-plan');
+      container.dataset.sheetPurchasePlan = '1';
+      container.setAttribute('aria-label', '30日分を買うときの商品代金');
+      container.appendChild(element('strong', 'sheet-purchase-title', '30日分を購入するなら'));
+      const metrics = element('div', 'sheet-purchase-metrics');
+      const cells = [
+        ['必要枚数', plan.sheetsRequired.toLocaleString('ja-JP') + '枚'],
+        ['購入するセット数', plan.setsToBuy.toLocaleString('ja-JP') + 'セット'],
+        ['余る枚数', plan.remainingSheets.toLocaleString('ja-JP') + '枚'],
+      ];
+      for (const [label, amount] of cells) {
+        const cell = element('div', 'sheet-purchase-metric');
+        cell.append(element('span', '', label), element('b', '', amount));
+        metrics.appendChild(cell);
+      }
+      const cashCell = element('div', 'sheet-purchase-metric sheet-purchase-cash');
+      const priceLabel = row.dataset.shipping === '送料込み'
+        ? '購入時の掲載価格（送料込み表示）'
+        : '購入時の商品代金（送料未加算）';
+      cashCell.append(element('span', '', priceLabel),
+                      element('b', '', monthlyYen(plan.purchaseTotal)));
+      metrics.appendChild(cashCell);
+      container.appendChild(metrics);
+      container.appendChild(element('p', 'sheet-purchase-note',
+        '同じ商品を' + plan.setsToBuy + 'セット購入する計算です。価格は取得時点の参考値。' +
+        '地域別の追加送料・在庫・販売単位・吸収力は販売店でご確認ください。' +
+        '月の消費額の目安とは異なります。'));
+      mount.appendChild(container);
+    }
+
     function renderUsage(mount, row) {
       if (!mount) return;
       const values = usageValues(row);
@@ -123,6 +158,7 @@
       const cost = element('div', 'usage-metric'); cost.appendChild(element('span', '', '月の費用（30日分）')); cost.appendChild(element('b', '', '約' + monthlyYen(values.monthly))); metrics.appendChild(cost);
       mount.appendChild(metrics);
       mount.appendChild(element('p', 'usage-footnote', '新品を使い始めてから' + (values.days < 1 ? '1日未満' : '約' + daysText(values.days)) + 'で使い切る計算。送料別の送料は未加算。'));
+      appendSheetPurchasePlan(mount, row);
     }
     function updateUsage() {
       const note = $('[data-usage-scale-note]'); if (note) note.hidden = !usage;
@@ -325,7 +361,10 @@
       const results = $('[data-comparison-results]'), start = $('[data-condition-start]'), usagePanel = $('[data-usage-panel]');
       if (results) results.hidden = false;
       if (start) start.hidden = true;
-      if (usagePanel) usagePanel.hidden = false;
+      if (usagePanel) {
+        usagePanel.hidden = false;
+        if (category === 'pet-sheets') usagePanel.open = true;
+      }
       visibleRows = allRows.filter(row => group === 'all' || row.dataset.group === group);
       const prices = visibleRows.map(unit).filter(x => x > 0).sort((a, b) => a - b);
       const length = prices.length, middle = Math.floor(length / 2);

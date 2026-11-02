@@ -468,3 +468,75 @@ test('food comparison labels keep dog and cat suitability separate',async()=>{
   try{const family=category==='dog-food'?'mini-adult':'fit';get(p,'[data-food-age="adult"]').click();if(category==='dog-food')get(p,'[data-food-size="small"]').click();get(p,`[data-food-family="${family}"]`).click();const b=all(p,'[data-food-candidate]:not([hidden]) [data-product-compare]')[0];if(b){b.click();const label=text(p,'[data-product-comparison]');assert.ok(label.includes(category==='dog-food'?'成犬用':'成猫用'));assert.ok(!label.includes(category==='dog-food'?'成猫用':'成犬用'));}}finally{p.close();}
  }
 });
+
+
+test('sheet purchase calculation rounds up actual sets and separates consumption from checkout', () => {
+  const { calculateSheetPurchase } = require('../scripts/sheet_purchase_plan.js');
+  const plan = calculateSheetPurchase(100, 1000, 5);
+  assert.deepEqual(plan, {
+    sheetsRequired:150, sheetsPerSet:100, setsToBuy:2, purchaseTotal:2000,
+    remainingSheets:50, daysPerSet:20, consumptionCost:1500
+  });
+  assert.equal(calculateSheetPurchase(800, 3280, 5).setsToBuy,1);
+  assert.equal(calculateSheetPurchase(100, 1000, 0),null);
+  assert.equal(calculateSheetPurchase(99.5, 1000, 5),null);
+  assert.equal(calculateSheetPurchase(100, -10, 5),null);
+  assert.equal(calculateSheetPurchase(100, 1000, 1e12),null);
+});
+
+test('pet sheets display purchased sets and payable price for exactly the selected size', async () => {
+  const category=categories[0], base=payloads[0].items[0];
+  const regular={...base,product_id:'actual-reg',group:'regular',
+    quantity:100,price:1000,unit_price:10,postage_flag:0};
+  const wide={...base,product_id:'actual-wide',group:'wide',
+    quantity:80,price:900,unit_price:11.25,postage_flag:1};
+  const p=await open(render(category,[regular,wide]),category.id);
+  try{
+    const guide=get(p,'#monthly-sheet-guide-heading');
+    assert.ok(guide && guide.textContent.includes('1か月に何枚必要'));
+    assert.equal(all(p,'.monthly-sheet-examples li').length,4);
+    assert.ok(text(p,'.monthly-sheet-guide').includes('30日で150枚'));
+    assert.equal(get(p,'[data-comparison-results]').hidden,true);
+    get(p,'[data-group-button][data-group="regular"]').click();
+    const panel=get(p,'[data-usage-panel]');
+    assert.equal(panel.hidden,false);
+    assert.equal(panel.open,true);
+    assert.equal(get(p,'[data-featured-usage]').hidden,true);
+    const input=get(p,'[data-usage-input]');
+    input.value='5';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    let output=get(p,'[data-featured-usage] [data-sheet-purchase-plan]');
+    assert.ok(output);
+    for(const s of ['150枚','2セット','50枚','¥2,000','送料込み表示'])
+      assert.ok(output.textContent.includes(s),s+' missing');
+    assert.ok(text(p,'[data-featured-usage]').includes('約¥1,500'));
+    assert.ok(text(p,'[data-angle-usage]').includes('2セット'));
+    get(p,'[data-group-button][data-group="wide"]').click();
+    output=get(p,'[data-featured-usage] [data-sheet-purchase-plan]');
+    assert.ok(output);
+    for(const s of ['150枚','2セット','10枚','¥1,800','送料未加算'])
+      assert.ok(output.textContent.includes(s),s+' missing after group change');
+    assert.equal(events(p,'pet_usage_change').length,0);
+    input.value='0';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-featured-usage]').hidden,true);
+    assert.equal(get(p,'[data-sheet-purchase-plan]'),null);
+    assert.deepEqual(p.errors,[]);
+  }finally{p.close();}
+});
+
+test('purchase planner is absent from cat litter and system toilet sheets', async () => {
+  for(const category of categories.slice(1)){
+    const p=await open(fs.readFileSync(path.join(root,'site/categories',category.id,'index.html'),'utf8'),category.id);
+    try {
+      assert.equal(get(p,'.monthly-sheet-guide'),null);
+      const group=get(p,'[data-group-button]');
+      if(!group)continue;
+      group.click();
+      assert.ok(!get(p,'[data-usage-panel]').hidden);
+      assert.equal(get(p,'[data-usage-panel]').open,false);
+      const input=get(p,'[data-usage-input]');
+      input.value='5';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+      assert.equal(get(p,'[data-sheet-purchase-plan]'),null);
+      assert.deepEqual(p.errors,[]);
+    }finally{p.close();}
+  }
+});

@@ -24,6 +24,19 @@ class Page(HTMLParser):
 
 
 class RenderTests(unittest.TestCase):
+
+    def test_monthly_sheet_guide_is_crawlable_and_only_used_for_sheets(self):
+        pages = [build_site.category_page(c, [dict(self.item, group=c.get('default_group', 'regular'))],
+                                         self.categories, '2026-11-02 07:00 JST')
+                 for c in self.categories]
+        self.assertIn('ペットシーツは1か月に何枚必要？', pages[0])
+        self.assertIn('30日で<b>150枚</b>', pages[0])
+        self.assertIn('購入するときは商品ごとの総枚数で切り上げます', pages[0])
+        self.assertIn('30日分の購入セット数・商品代金を計算する', pages[0])
+        for page in pages[1:]:
+            self.assertNotIn('<section class="section monthly-sheet-guide"', page)
+            self.assertNotIn('購入するときは商品ごとの総枚数で切り上げます', page)
+
     def test_sheet_overview_separates_all_sizes_and_keeps_shipping_unknown(self):
         category = build_site.load_categories()[0]
         regular = dict(name='レギュラー 100枚', price=1000, quantity=100.0,

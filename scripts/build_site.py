@@ -59,7 +59,8 @@ def load_fixture(category_id):
 
 def analytics_head():
     measurement = os.environ.get('GA_MEASUREMENT_ID', '').strip()
-    runtime = (ROOT / 'scripts' / 'analytics_runtime.js').read_text(encoding='utf-8')
+    runtime = (ROOT / 'scripts' / 'sheet_purchase_plan.js').read_text(encoding='utf-8') + '\n'
+    runtime += (ROOT / 'scripts' / 'analytics_runtime.js').read_text(encoding='utf-8')
     runtime += '\n' + (ROOT / 'scripts' / 'living_runtime.js').read_text(encoding='utf-8')
     runtime += '\n' + (ROOT / 'scripts' / 'decision_runtime.js').read_text(encoding='utf-8')
     if not measurement:
@@ -248,13 +249,34 @@ def sheet_size_overview(category, items):
             '<div class="size-overview-grid">' + ''.join(cards) + '</div></section>')
 
 
+def monthly_pet_sheet_guide():
+    """Show a crawlable use-case answer before requiring a size selection."""
+    examples = [(1, 30), (3, 90), (5, 150), (10, 300)]
+    cells = ''.join(
+        f'<li><strong>1日{per_day}枚</strong><span>30日で<b>{per_month}枚</b></span></li>'
+        for per_day, per_month in examples
+    )
+    return f'''<section class="section monthly-sheet-guide" aria-labelledby="monthly-sheet-guide-heading">
+<div class="monthly-sheet-head"><div><p class="step-label">買う前に、必要な枚数を確認</p>
+<h2 id="monthly-sheet-guide-heading">ペットシーツは1か月に何枚必要？</h2>
+<p>1日に使う枚数 × 30日で必要枚数を計算できます。これは使い方を決める目安ではなく、
+実際の使用量に合わせた買い足し計画です。</p></div></div>
+<ul class="monthly-sheet-examples" aria-label="1日あたりの使用枚数別の30日必要枚数">{cells}</ul>
+<p class="monthly-sheet-next"><a href="#comparison-conditions" class="text-link">使っているサイズを選び、30日分の必要セット数と購入額を計算する →</a></p>
+<p class="condition-note">購入するときは商品ごとの総枚数で切り上げます。30日で150枚必要でも、
+100枚入りなら2セット購入して50枚残る計算です。吸収力・厚さ・トレーのサイズは別途確認してください。</p>
+</section>'''
+
+
 def usage_panel(category):
     period, label, suffix, example = {
         'pet-sheets': ('day', '1日に何枚使いますか？', '枚 / 日', '5'),
         'cat-litter': ('month', '1か月に何L使いますか？', 'L / 月', '10'),
         'system-toilet-sheets': ('week', '1週間に何枚交換しますか？', '枚 / 週', '1'),
     }[category['id']]
-    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>うちの使用量で見る</span><span class="usage-teaser" data-usage-teaser>任意 · どのくらい持つ？</span></summary><form data-usage-form data-usage-period="{period}" novalidate><div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p><p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の費用が分かります。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
+    heading = '30日分の購入セット数・商品代金を計算する' if category['id'] == 'pet-sheets' else 'うちの使用量で見る'
+    teaser = '必要な枚数から購入個数まで' if category['id'] == 'pet-sheets' else '任意 · どのくらい持つ？'
+    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>{heading}</span><span class="usage-teaser" data-usage-teaser>{teaser}</span></summary><form data-usage-form data-usage-period="{period}" novalidate><div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p><p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の消費額の目安が分かります。ペットシーツは必要購入セット数・商品代金も計算します。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
 
 
 def reason_badges(item, items, middle):
@@ -413,6 +435,7 @@ def category_page(category, items, categories, updated):
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
       {sheet_size_overview(category, items)}
+      {monthly_pet_sheet_guide() if category['id'] == 'pet-sheets' else ''}
       {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>

@@ -702,3 +702,31 @@ summary::-webkit-details-marker { display: none; }
 .size-overview-card{min-width:0;padding:20px;border:1px solid var(--line,#ddd);border-radius:16px;background:var(--surface,#fff);overflow-wrap:anywhere}
 .size-overview-card h3{margin-top:0}.size-overview-card p{font-size:14px;line-height:1.7}.size-overview-card .text-link{display:inline-block}
 @media(max-width:700px){.size-overview-grid{grid-template-columns:1fr}.size-overview-card{padding:16px}}
+
+/* STEP80: useful 30-day sheet requirements visible before any interaction. */
+.monthly-sheet-guide{border:1px solid #dae3d6;background:linear-gradient(130deg,#eff5ec,#fffefa);border-radius:18px;padding:22px 24px;margin-block:20px 30px}
+.monthly-sheet-guide h2{font-size:clamp(21px,3vw,29px);line-height:1.35;margin:6px 0 12px}
+.monthly-sheet-guide .monthly-sheet-head p:not(.step-label){max-width:70ch;color:var(--muted);font-size:14px;line-height:1.8}
+.monthly-sheet-examples{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;list-style:none;margin:18px 0 14px;padding:0}
+.monthly-sheet-examples li{min-width:0;background:#fff;border:1px solid #dee7dc;border-radius:12px;padding:13px 12px;display:flex;flex-direction:column;gap:8px}
+.monthly-sheet-examples li>strong{font-size:13px;color:var(--theme)}
+.monthly-sheet-examples li>span{display:block;font-size:12px;line-height:1.5;color:var(--muted)}
+.monthly-sheet-examples li b{display:block;font-size:23px;line-height:1.35;color:var(--ink)}
+.monthly-sheet-next{font-size:14px;margin:14px 0 12px;font-weight:700}
+.monthly-sheet-guide .condition-note{font-size:12px;line-height:1.8;margin-bottom:0}
+.sheet-purchase-plan{margin-top:16px;padding:16px;border:1px solid #bfd9c9;background:#f0f7f0;border-radius:13px}
+.sheet-purchase-title{font-size:15px;display:block;margin:0 0 12px;color:var(--theme)}
+.sheet-purchase-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.sheet-purchase-metric{min-width:0;padding:10px 11px;border:1px solid #d9e9d9;border-radius:9px;background:#fff;display:flex;flex-direction:column;gap:4px}
+.sheet-purchase-metric span{font-size:11px;line-height:1.5;color:var(--muted)}
+.sheet-purchase-metric b{font-size:clamp(18px,2.2vw,23px);font-variant-numeric:tabular-nums;line-height:1.35;color:var(--ink);overflow-wrap:anywhere}
+.sheet-purchase-cash{background:#e3f0e2}
+.sheet-purchase-note{margin:11px 0 0;font-size:11px;line-height:1.7;color:var(--muted)}
+@media(max-width:700px){
+ .monthly-sheet-guide{padding:18px 14px;margin-block:16px 25px}
+ .monthly-sheet-examples{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .monthly-sheet-examples li{padding:12px 11px}
+ .monthly-sheet-examples li b{font-size:22px}
+ .sheet-purchase-plan{padding:13px}
+ .sheet-purchase-metric{padding:9px}
+}
