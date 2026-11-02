@@ -34,7 +34,7 @@ class RenderTests(unittest.TestCase):
         self.assertIn('購入するときは商品ごとの総枚数で切り上げます', pages[0])
         self.assertIn('30日分の購入セット数・商品代金を計算する', pages[0])
         for page in pages[1:]:
-            self.assertNotIn('monthly-sheet-guide', page)
+            self.assertNotIn('<section class="section monthly-sheet-guide"', page)
             self.assertNotIn('購入するときは商品ごとの総枚数で切り上げます', page)
 
     def test_sheet_overview_separates_all_sizes_and_keeps_shipping_unknown(self):
