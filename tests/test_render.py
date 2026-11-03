@@ -25,6 +25,16 @@ class Page(HTMLParser):
 
 class RenderTests(unittest.TestCase):
 
+    def test_home_starts_with_direct_purchase_comparison_and_optional_species_path(self):
+        home = build_site.homepage(self.categories, {}, '2026-11-04 08:00 JST')
+        self.assertIn('href="#categories">商品をすぐ比べる', home)
+        self.assertIn('href="#pet-journey">犬・猫から選ぶ', home)
+        self.assertLess(home.index('href="#categories">商品をすぐ比べる'),
+                        home.index('id="pet-journey"'))
+        self.assertIn('id="categories"', home)
+        self.assertIn('使用量を入れれば', home)
+
+
     def test_monthly_sheet_guide_is_crawlable_and_only_used_for_sheets(self):
         pages = [build_site.category_page(c, [dict(self.item, group=c.get('default_group', 'regular'))],
                                          self.categories, '2026-11-02 07:00 JST')
