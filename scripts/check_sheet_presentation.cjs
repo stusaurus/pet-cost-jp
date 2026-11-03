@@ -56,6 +56,27 @@ const server=http.createServer((req,res)=>{
    assert(details.includes(leftover+'枚'));
    assert(details.includes('¥'+(sets*productPrice).toLocaleString('ja-JP')));
    assert(details.includes(shipping==='送料込み'?'送料込み表示':'送料未加算'));
+   // Real published rows: exclude shipping-unknown offers from 30-day checkout choice.
+   const eligible=await page.locator('[data-product-row]:visible').evaluateAll(rows=>rows
+     .filter(row=>row.dataset.shipping==='送料込み')
+     .map(row=>({id:row.dataset.itemId,quantity:Number(row.dataset.quantity),
+       price:Number(row.dataset.totalPrice)}))
+     .filter(row=>Number.isSafeInteger(row.quantity)&&row.quantity>0&&row.price>0));
+   const cashChoice=page.locator('[data-angle-role="total"]');
+   if(eligible.length>=2){
+     const expected=[...eligible].sort((a,b)=>
+       Math.ceil(150/a.quantity)*a.price-Math.ceil(150/b.quantity)*b.price||
+       a.price/a.quantity-b.price/b.quantity||a.price-b.price)[0];
+     assert.match(await cashChoice.innerText(),/30日分の購入額/);
+     await cashChoice.click();
+     assert.equal(await page.locator('[data-angle-link]').getAttribute('data-item-id'),expected.id);
+     assert.match(await page.locator('[data-angle-reason]').innerText(),/送料込み表示/);
+     assert((await cashChoice.innerText()).includes('¥'+(Math.ceil(150/expected.quantity)*expected.price).toLocaleString('ja-JP')));
+   }else{
+     assert.match(await cashChoice.innerText(),/今日は出費を抑える/);
+     assert(!(await cashChoice.innerText()).includes('30日分の購入額'));
+   }
+   await cashChoice.screenshot({path:path.join(out,'checkout-choice-'+width+'.png'),animations:'disabled'});
    await plan.scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,'purchase-plan-'+width+'.png'),animations:'disabled'});
    assert.equal(errors.length,0,errors.join(','));

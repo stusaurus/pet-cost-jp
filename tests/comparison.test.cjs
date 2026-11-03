@@ -523,6 +523,50 @@ test('pet sheets display purchased sets and payable price for exactly the select
   }finally{p.close();}
 });
 
+test('pet sheet 30-day checkout choice uses only postage-included offers and responds to usage', async () => {
+  const category=categories[0],base=payloads[0].items[0];
+  const item=(id,group,quantity,price,postage_flag)=>({
+    ...base,product_id:id,group,quantity,price,unit_price:price/quantity,postage_flag
+  });
+  const offers=[
+    item('monthly-small','regular',100,1000,0),
+    item('monthly-large','regular',180,1650,0),
+    item('monthly-cheap-shipping','regular',100,600,1),
+    item('wide-only-included','wide',100,1100,0),
+    item('wide-unknown-shipping','wide',100,500,1)
+  ];
+  const p=await open(render(category,offers),category.id);
+  try {
+    get(p,'[data-group-button][data-group="regular"]').click();
+    get(p,'[data-angle-role="total"]').click();
+    assert.equal(get(p,'[data-angle-link]').dataset.itemId,'monthly-cheap-shipping');
+    assert.ok(text(p,'[data-angle-reason]').includes('1セットの商品価格'));
+    const input=get(p,'[data-usage-input]');
+    input.value='5';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-angle-link]').dataset.itemId,'monthly-large');
+    assert.ok(text(p,'[data-angle-reason]').includes('30日分の購入額が最小'));
+    assert.ok(text(p,'[data-angle-role="total"]').includes('¥1,650'));
+    assert.ok(text(p,'[data-angle-role="total"]').includes('送料込み表示の2商品'));
+    assert.ok(text(p,'[data-angle-usage]').includes('1セット'));
+    assert.ok(!text(p,'[data-angle-explain]').includes('送料別の商品を最安扱い'));
+    input.value='1';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-angle-link]').dataset.itemId,'monthly-small');
+    assert.ok(text(p,'[data-angle-role="total"]').includes('¥1,000'));
+    input.value='0';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-angle-link]').dataset.itemId,'monthly-cheap-shipping');
+    assert.ok(text(p,'[data-angle-reason]').includes('1セットの商品価格'));
+    input.value='5';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    get(p,'[data-group-button][data-group="wide"]').click();
+    assert.equal(get(p,'[data-angle-link]').dataset.itemId,'wide-unknown-shipping');
+    assert.ok(!text(p,'[data-angle-reason]').includes('30日分の購入額が最小'));
+    assert.ok(text(p,'[data-angle-explain]').includes('30日分の総購入額の比較ではありません'));
+    assert.equal(events(p,'comparison_angle_select').length,1);
+    assert.equal(events(p,'pet_usage_change').length,0);
+    assert.ok(!JSON.stringify(p.events).includes('monthly-cheap-shipping","usage'));
+    assert.deepEqual(p.errors,[]);
+  }finally{p.close();}
+});
+
 test('purchase planner is absent from cat litter and system toilet sheets', async () => {
   for(const category of categories.slice(1)){
     const p=await open(fs.readFileSync(path.join(root,'site/categories',category.id,'index.html'),'utf8'),category.id);
