@@ -602,6 +602,10 @@ def main():
         result['updated'] = result.get('updated', '') if args.reuse_data else updated
         discovery_data[key] = result
         body = catalog_body(key, config, result, nav(categories), footer(), mobile_dock(categories))
+        if key == 'dog-food':
+            from a8_dog_food import inject_dog_food_ad, check_ad_integrity
+            body = inject_dog_food_ad(body)
+            check_ad_integrity(body)
         schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL}, {'@type': 'ListItem', 'position': 2, 'name': config['name'], 'item': f'{BASE_URL}categories/{key}/'}]}
         if config.get('kind') == 'food':
             fit = '年齢・体格' if config.get('species') == 'dog' else '年齢'
