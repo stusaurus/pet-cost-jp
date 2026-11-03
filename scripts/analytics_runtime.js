@@ -360,7 +360,7 @@
       const cashSub = $('.angle-sub', cashButton);
       if (cashLabel) cashLabel.textContent = monthly ? '30日分の購入額を抑える' : '今日は出費を抑える';
       if (cashSub) cashSub.textContent = monthly ? '送料込み表示の' + monthly.count + '商品から比較' : '1セットの商品価格重視';
-      $('[data-angle-card]', grid).forEach(button => {
+      $$('[data-angle-card]', grid).forEach(button => {
         const role = button.dataset.angleRole, row = picks[role];
         button.setAttribute('aria-pressed', String(role === angleRole));
         text('[data-angle-value]', role === 'unit' ? formatYen(unit(row)) + ' / ' + metricLabel : role === 'total' ? formatYen(monthly ? monthly.best.plan.purchaseTotal : total(row)) : quantityLabel(row), button);
