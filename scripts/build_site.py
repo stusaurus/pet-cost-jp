@@ -604,8 +604,13 @@ def main():
         body = catalog_body(key, config, result, nav(categories), footer(), mobile_dock(categories))
         if key == 'dog-food':
             from a8_dog_food import inject_dog_food_ad, check_ad_integrity
+            from a8_mogwan import inject_mogwan_ad, check_mogwan_ad_integrity
             body = inject_dog_food_ad(body)
             check_ad_integrity(body)
+            body = inject_mogwan_ad(body)
+            # Preserve both existing and new advertiser tracking originals.
+            check_ad_integrity(body)
+            check_mogwan_ad_integrity(body)
         schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL}, {'@type': 'ListItem', 'position': 2, 'name': config['name'], 'item': f'{BASE_URL}categories/{key}/'}]}
         if config.get('kind') == 'food':
             fit = '年齢・体格' if config.get('species') == 'dog' else '年齢'

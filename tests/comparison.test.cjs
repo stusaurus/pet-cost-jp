@@ -577,3 +577,79 @@ test('A8 small-dog-food creative is absent from cat food and pet sheet listings'
     assert.equal(html.includes('a8mat=4BGCF1+8NZ7B6+4PA6+BWVTE'), false);
   }
 });
+
+
+test('official Mogwan A8 link and tracking pixel coexist with prior small-dog ad without ranking injection', async () => {
+  const source=fs.readFileSync(path.join(root,'site/categories/dog-food/index.html'),'utf8');
+  const p=await open(source,'dog-food');
+  try {
+    const mogwan=get(p,'#a8-mogwan'), prior=get(p,'#a8-small-dog-food');
+    assert.ok(mogwan && prior);
+    assert.match(mogwan.textContent,/広告｜A8.netアフィリエイト/);
+    assert.match(mogwan.textContent,/楽天の掲載商品ランキング・価格比較結果には含めていません/);
+    assert.equal(all(p,'a[href^="https://px.a8.net"]').length,2);
+    const link=mogwan.querySelector('a[href^="https://px.a8.net/svt/ejp?"]');
+    assert.equal(link.getAttribute('href'),'https://px.a8.net/svt/ejp?a8mat=4BGCF1+8M6WHU+3J8+1BMW42');
+    assert.equal(link.getAttribute('rel'),'nofollow');
+    assert.equal(link.textContent,'手作りレシピを厳選食材で再現！栄養満点愛情フード『モグワン』');
+    assert.equal(mogwan.querySelector('img').getAttribute('src'),'https://www13.a8.net/0.gif?a8mat=4BGCF1+8M6WHU+3J8+1BMW42');
+    assert.equal(prior.querySelector('img').getAttribute('src'),'https://www14.a8.net/0.gif?a8mat=4BGCF1+8NZ7B6+4PA6+BWVTE');
+    assert.equal(all(p,'[data-food-candidate] a[data-affiliate-link][href^="https://px.a8.net"]').length,0);
+    link.dispatchEvent(new p.dom.window.MouseEvent('click',{bubbles:true,cancelable:true}));
+    const clicks=p.events.filter(e=>e[0]==='event'&&e[1]==='affiliate_click'&&e[2].program==='mogwan');
+    assert.equal(clicks.length,1);
+    assert.equal(clicks[0][2].affiliate,'a8');
+    assert.equal(clicks[0][2].category_id,'dog-food');
+    assert.equal(clicks[0][2].site_id,'pet-cost-jp');
+    assert.equal(clicks[0][2].operator_test,'1');
+    assert.equal(clicks[0][2].conversion_source,'mogwan_sponsored_cost_planner');
+    assert.deepEqual(p.errors,[]);
+  } finally {p.close();}
+});
+
+test('Mogwan cost calculator uses user-entered 30-day bag counts, payable shipping, and surplus', async () => {
+  const html=fs.readFileSync(path.join(root,'site/categories/dog-food/index.html'),'utf8');
+  const p=await open(html,'dog-food');
+  try {
+    const form=get(p,'#mogwan-cost-form'),result=get(p,'#mogwan-cost-results');
+    const field=(name,value)=>form.elements.namedItem(name).value=String(value);
+    const submit=()=>form.dispatchEvent(new p.dom.window.Event('submit',{bubbles:true,cancelable:true}));
+    submit();
+    assert.equal(result.hidden,true);
+    assert.match(get(p,'#mogwan-cost-error').textContent,/正しい整数/);
+
+    field('bag_grams',1800);field('bag_price',5000);
+    field('shipping',800);field('daily_grams',125);
+    submit();
+    assert.equal(result.hidden,false);
+    assert.equal(get(p,'[data-mogwan="bags"]').textContent,'3袋');
+    assert.equal(get(p,'[data-mogwan="payment"]').textContent,'15,800円');
+    assert.equal(get(p,'[data-mogwan="surplus"]').textContent,'1,650g');
+    assert.equal(get(p,'[data-mogwan="consumed"]').textContent,'10,417円');
+    const uses=p.events.filter(e=>e[0]==='event'&&e[1]==='mogwan_cost_planner_use');
+    assert.equal(uses.length,1);
+    assert.equal(uses[0][2].operator_test,'1');
+    assert.equal(uses[0][2].bag_grams,undefined);
+    assert.equal(uses[0][2].bag_price,undefined);
+    assert.equal(uses[0][2].daily_grams,undefined);
+
+    field('daily_grams',0);submit();
+    assert.equal(result.hidden,true);
+    assert.match(get(p,'#mogwan-cost-error').textContent,/正しい整数/);
+    field('daily_grams',100);field('shipping',0);submit();
+    assert.equal(get(p,'[data-mogwan="bags"]').textContent,'2袋');
+    assert.equal(get(p,'[data-mogwan="payment"]').textContent,'10,000円');
+    assert.equal(get(p,'[data-mogwan="surplus"]').textContent,'600g');
+    assert.deepEqual(p.errors,[]);
+  } finally {p.close();}
+});
+
+test('Mogwan A8 advertising and calculator stay absent from cat food and sheets', async () => {
+  for(const category of ['cat-food','pet-sheets','system-toilet-sheets']){
+    const file=path.join(root,'site/categories',category,'index.html');
+    if(!fs.existsSync(file))continue;
+    const source=fs.readFileSync(file,'utf8');
+    assert.equal(source.includes('4BGCF1+8M6WHU+3J8+1BMW42'),false);
+    assert.equal(source.includes('mogwan-cost-form'),false);
+  }
+});

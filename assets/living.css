@@ -218,3 +218,26 @@
 .pet-sponsor-creative a:focus-visible{outline:3px solid #9db89e;outline-offset:3px}
 .pet-sponsor-disclaimer{font-size:12px;color:#56675b}
 @media(max-width:600px){.pet-sponsor{margin:23px 0;padding:18px 15px}.pet-sponsor-creative a{max-width:none}}
+
+
+/* Mogwan sponsored choice: explicit purchase cash flow, not a food ranking. */
+.pet-sponsor--mogwan{background:#fffdf5;border-color:#d7d8bd}
+.pet-sponsor--mogwan .pet-sponsor-creative a{background:#4c6436}
+.pet-sponsor--mogwan .pet-sponsor-creative a:hover{background:#3c512b}
+.pet-sponsor-calculator{margin:20px 0 8px}
+.pet-sponsor-calculator fieldset{padding:15px 16px 18px;border:1px solid #c3d3b6;border-radius:12px;background:#fff}
+.pet-sponsor-calculator legend{padding:0 7px;font-size:16px;font-weight:800;line-height:1.55}
+.pet-sponsor-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pet-sponsor-fields label{display:grid;gap:7px;font-size:13px;font-weight:750;line-height:1.5;min-width:0}
+.pet-sponsor-fields input{width:100%;min-width:0;min-height:48px;background:#fff;border:1px solid #9db5a1;border-radius:9px;padding:10px;font:inherit;font-size:16px}
+.pet-sponsor-calculator button{width:100%;min-height:48px;margin:16px 0 0;background:#3c6241;border:0;border-radius:9px;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+.pet-sponsor-calculator button:hover{background:#2c5032}
+.pet-sponsor-calculator input:focus-visible,.pet-sponsor-calculator button:focus-visible{outline:3px solid #9cbcac;outline-offset:3px}
+.pet-sponsor-results[hidden]{display:none!important}
+.pet-sponsor-results{margin:16px 0;padding:16px;background:#f7f9ef;border-radius:11px}
+.pet-sponsor-results>p:first-child{font-size:15px;font-weight:800}
+.pet-sponsor-results dl{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.pet-sponsor-results dl>div{border:1px solid #d5e2cf;padding:11px;border-radius:9px;background:#fff}
+.pet-sponsor-results dt{font-size:12px;line-height:1.6}
+.pet-sponsor-results dd{font-size:clamp(17px,3.1vw,25px);margin:5px 0 0;font-weight:850}
+@media(max-width:600px){.pet-sponsor-fields{grid-template-columns:1fr}.pet-sponsor-results dl{grid-template-columns:1fr}.pet-sponsor-calculator fieldset{padding:12px}.pet-sponsor--mogwan .pet-sponsor-creative a{max-width:none}}
