@@ -336,7 +336,7 @@
       // With just one verified offer there is no meaningful checkout comparison.
       if (candidates.length < 2) return null;
       candidates.sort((a, b) => a.plan.purchaseTotal - b.plan.purchaseTotal ||
-        unit(a.row) - unit(b.row) || total(a.row) - total(b.row);
+        unit(a.row) - unit(b.row) || total(a.row) - total(b.row));
       return { best: candidates[0], count: candidates.length };
     }
     function anglePicks(monthly = sheetMonthlyChoice()) {
