@@ -198,7 +198,9 @@
       usage = value;
       input.setAttribute('aria-invalid', String(!empty && value === null));
       if (error) { error.hidden = empty || value !== null; error.textContent = '0より大きい、いつもの使用量を入力してください。'; }
-      saveHome(); updateUsage();
+      saveHome();
+      if (category === 'pet-sheets') updateAngles();
+      updateUsage();
       if (emit && (empty || value !== null) && lastUsageEvent !== String(value)) {
         lastUsageEvent = String(value);
         send('pet_usage_change', { category_id: category, filter_value: activeGroup, usage_period: usagePeriod, usage_enabled: value !== null });
@@ -321,11 +323,27 @@
         strip.appendChild(link);
       });
     }
-    function anglePicks() {
+    // Only compare 30-day checkout totals within the same size and among offers
+    // explicitly displayed as postage-included. Do not rank missing postage as ¥0.
+    function sheetMonthlyChoice() {
+      if (category !== 'pet-sheets' || !(usage > 0) ||
+          typeof window.petCostSheetPurchase !== 'function') return null;
+      const candidates = visibleRows.filter(row => row.dataset.shipping === '送料込み')
+        .map(row => ({
+          row,
+          plan: window.petCostSheetPurchase(quantity(row), total(row), usage)
+        })).filter(candidate => candidate.plan && Number.isFinite(candidate.plan.purchaseTotal));
+      // With just one verified offer there is no meaningful checkout comparison.
+      if (candidates.length < 2) return null;
+      candidates.sort((a, b) => a.plan.purchaseTotal - b.plan.purchaseTotal ||
+        unit(a.row) - unit(b.row) || total(a.row) - total(b.row);
+      return { best: candidates[0], count: candidates.length };
+    }
+    function anglePicks(monthly = sheetMonthlyChoice()) {
       if (!visibleRows.length) return {};
       return {
         unit: [...visibleRows].sort((a, b) => unit(a) - unit(b) || total(a) - total(b))[0],
-        total: [...visibleRows].sort((a, b) => total(a) - total(b) || unit(a) - unit(b))[0],
+        total: monthly?.best.row || [...visibleRows].sort((a, b) => total(a) - total(b) || unit(a) - unit(b))[0],
         bulk: [...visibleRows].sort((a, b) => quantity(b) - quantity(a) || unit(a) - unit(b))[0]
       };
     }
@@ -335,19 +353,25 @@
       if (!grid || !detail) return;
       grid.hidden = detail.hidden = !visibleRows.length;
       if (!visibleRows.length) return;
-      const picks = anglePicks();
-      $$('[data-angle-card]', grid).forEach(button => {
+      const monthly = sheetMonthlyChoice();
+      const picks = anglePicks(monthly);
+      const cashButton = $('[data-angle-role="total"]', grid);
+      const cashLabel = $('.angle-label', cashButton);
+      const cashSub = $('.angle-sub', cashButton);
+      if (cashLabel) cashLabel.textContent = monthly ? '30日分の購入額を抑える' : '今日は出費を抑える';
+      if (cashSub) cashSub.textContent = monthly ? '送料込み表示の' + monthly.count + '商品から比較' : '1セットの商品価格重視';
+      $('[data-angle-card]', grid).forEach(button => {
         const role = button.dataset.angleRole, row = picks[role];
         button.setAttribute('aria-pressed', String(role === angleRole));
-        text('[data-angle-value]', role === 'unit' ? formatYen(unit(row)) + ' / ' + metricLabel : role === 'total' ? formatYen(total(row)) : quantityLabel(row), button);
+        text('[data-angle-value]', role === 'unit' ? formatYen(unit(row)) + ' / ' + metricLabel : role === 'total' ? formatYen(monthly ? monthly.best.plan.purchaseTotal : total(row)) : quantityLabel(row), button);
       });
       const row = picks[angleRole];
       text('[data-angle-name]', name(row));
-      text('[data-angle-reason]', { unit: 'この条件で、単価が最小', total: 'この条件で、掲載商品価格が最小', bulk: 'この条件で、購入できる総数量が最大' }[angleRole]);
+      text('[data-angle-reason]', angleRole === 'total' && monthly ? '送料込み表示の候補内で、30日分の購入額が最小' : { unit: 'この条件で、単価が最小', total: 'この条件で、1セットの商品価格が最小', bulk: 'この条件で、購入できる総数量が最大' }[angleRole]);
       text('[data-angle-unit]', formatYen(unit(row)));
       text('[data-angle-total]', formatYen(total(row)));
       text('[data-angle-quantity]', quantityLabel(row));
-      let explanation = angleRole === 'unit' ? '1枚・1Lの負担を抑える選び方。購入額・送料も一緒に確認してください。' : angleRole === 'total' ? '掲載商品価格は最小。1枚・1Lの単価も確認すると、買う量とのバランスが分かります。' : '買う量をまとめる選び方。保管場所と、今回払う商品総額も確認してください。';
+      let explanation = angleRole === 'unit' ? '1枚・1Lの負担を抑える選び方。購入額・送料も一緒に確認してください。' : angleRole === 'total' && monthly ? '1日あたりの入力枚数×30日を満たす購入セット数で比較。送料込み表示の' + monthly.count + '商品の掲載価格から算出しました。別送料の商品は除外し、地域別の追加送料・在庫は楽天で確認してください。' : angleRole === 'total' ? '1セットの商品価格が最小。30日分の総購入額の比較ではありません。送料別の場合、送料は加算されていません。' : '買う量をまとめる選び方。保管場所と、今回払う商品総額も確認してください。';
       if (angleRole !== 'unit' && row === picks.unit) explanation = '単価最安と同じ商品です。' + explanation;
       text('[data-angle-explain]', explanation);
       affiliate($('[data-angle-link]'), row, visibleRows.indexOf(row) + 1, 'comparison_angle_' + angleRole);
