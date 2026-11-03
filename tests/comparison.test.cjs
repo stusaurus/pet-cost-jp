@@ -540,3 +540,40 @@ test('purchase planner is absent from cat litter and system toilet sheets', asyn
     }finally{p.close();}
   }
 });
+
+
+test('A8 small-dog-food creative is correctly disclosed, preserves original tracking pixel, and records a test click', async () => {
+  const source = fs.readFileSync(path.join(root, 'site/categories/dog-food/index.html'), 'utf8');
+  const p = await open(source, 'dog-food');
+  try {
+    const frame = get(p, '#a8-small-dog-food');
+    assert.ok(frame, 'A8 sponsored card must be present on dog food page');
+    assert.ok(frame.textContent.includes('広告｜A8.netアフィリエイト'));
+    assert.ok(frame.textContent.includes('楽天の掲載商品ランキングや価格・品質の比較結果には含めていません'));
+    const affiliate = frame.querySelector('a[href^="https://px.a8.net/svt/ejp?"]');
+    assert.ok(affiliate);
+    assert.equal(affiliate.getAttribute('href'), 'https://px.a8.net/svt/ejp?a8mat=4BGCF1+8NZ7B6+4PA6+BWVTE');
+    assert.equal(affiliate.getAttribute('rel'), 'nofollow');
+    assert.equal(affiliate.textContent, '小型犬が食べやすい楕円形の小粒');
+    const pixel = frame.querySelector('img');
+    assert.equal(pixel.getAttribute('src'), 'https://www14.a8.net/0.gif?a8mat=4BGCF1+8NZ7B6+4PA6+BWVTE');
+    assert.equal(pixel.getAttribute('width'), '1');
+    assert.equal(pixel.getAttribute('height'), '1');
+    assert.equal(p.document.querySelectorAll('[data-food-candidate] a[data-affiliate-link][href^="https://px.a8.net"]').length, 0);
+    affiliate.dispatchEvent(new p.dom.window.MouseEvent('click', { bubbles:true, cancelable:true }));
+    const clickEvents = p.events.filter(e => e[0] === 'event' && e[1] === 'affiliate_click' && e[2].affiliate === 'a8');
+    assert.equal(clickEvents.length, 1);
+    assert.equal(clickEvents[0][2].site_id, 'pet-cost-jp');
+    assert.equal(clickEvents[0][2].category_id, 'dog-food');
+    assert.equal(clickEvents[0][2].conversion_source, 'small_dog_food_sponsored_card');
+    assert.equal(clickEvents[0][2].operator_test, '1');
+    assert.deepEqual(p.errors, []);
+  } finally { p.close(); }
+});
+
+test('A8 small-dog-food creative is absent from cat food and pet sheet listings', async () => {
+  for (const category of ['cat-food', 'pet-sheets']) {
+    const html = fs.readFileSync(path.join(root, 'site/categories',category,'index.html'), 'utf8');
+    assert.equal(html.includes('a8mat=4BGCF1+8NZ7B6+4PA6+BWVTE'), false);
+  }
+});
