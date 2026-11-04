@@ -35,6 +35,18 @@ class RenderTests(unittest.TestCase):
         self.assertIn('使用量を入れれば', home)
 
 
+    def test_food_play_index_links_are_visible_but_do_not_precede_priority_comparisons(self):
+        page=build_site.homepage(self.categories, {}, '2026-11-04 08:00 JST')
+        links=Page(page).with_attr('href')
+        for category_id in ('dog-food','cat-food','dog-toys','cat-toys'):
+            url=build_site.BASE_URL+'categories/'+category_id+'/'
+            self.assertTrue(any(a.get('href')==url for a in links),url)
+        self.assertIn('aria-label="犬猫のごはん・遊びの用品"',page)
+        self.assertLess(page.index('id="categories"'),page.index('class="home-extra-categories"'))
+        self.assertIn('デオトイレ',page)
+        self.assertIn('各ページで確認してください',page)
+        self.assertIn('min-height:44px',build_site.CSS)
+
     def test_monthly_sheet_guide_is_crawlable_and_only_used_for_sheets(self):
         pages = [build_site.category_page(c, [dict(self.item, group=c.get('default_group', 'regular'))],
                                          self.categories, '2026-11-02 07:00 JST')
