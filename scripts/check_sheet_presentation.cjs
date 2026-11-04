@@ -76,6 +76,34 @@ const server=http.createServer((req,res)=>{
      assert.match(await cashChoice.innerText(),/今日は出費を抑える/);
      assert(!(await cashChoice.innerText()).includes('30日分の購入額'));
    }
+   const stockInput=page.locator('[data-sheet-stock-input]');
+   assert.equal(await stockInput.inputValue(),'0');
+   await stockInput.fill('150');
+   assert((await plan.innerText()).includes('今は買い足し不要'));
+   assert((await plan.innerText()).includes('0セット'));
+   assert((await plan.innerText()).includes('¥0'));
+   await cashChoice.click();
+   assert.match(await page.locator('[data-angle-reason]').innerText(),/手持ちシーツだけ/);
+   assert.equal(await page.locator('[data-angle-link]').isVisible(),false);
+   await plan.screenshot({path:path.join(out,'no-buy-'+width+'.png'),animations:'disabled'});
+   await stockInput.fill('40');
+   assert((await plan.innerText()).includes('110枚'));
+   assert((await plan.innerText()).includes(Math.ceil(110/setSize)+'セット'));
+   assert((await plan.innerText()).includes('¥'+(Math.ceil(110/setSize)*productPrice).toLocaleString('ja-JP')));
+   assert.equal(await page.locator('[data-angle-link]').isVisible(),true);
+   await stockInput.fill('-1');
+   assert.equal(await page.locator('[data-sheet-stock-error]').isVisible(),true);
+   assert.equal(await plan.count(),0);
+   await stockInput.fill('0');
+   assert.equal(await plan.isVisible(),true);
+   const currentGroup=await page.locator('[data-group-button][aria-pressed=true]').getAttribute('data-group');
+   await stockInput.fill('150');
+   const nextGroup=await page.locator('[data-group-button]').evaluateAll((buttons,selected)=>buttons.map(b=>b.dataset.group).find(g=>g!==selected),currentGroup);
+   if(nextGroup){
+     await page.locator('[data-group-button][data-group="'+nextGroup+'"]').click();
+     assert.equal(await stockInput.inputValue(),'0');
+     assert.equal(await page.locator('[data-sheet-stock-error]').isVisible(),false);
+   }
    await cashChoice.screenshot({path:path.join(out,'checkout-choice-'+width+'.png'),animations:'disabled'});
    await plan.scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,'purchase-plan-'+width+'.png'),animations:'disabled'});
@@ -84,7 +112,7 @@ const server=http.createServer((req,res)=>{
    await page.locator('[data-size-summary]').first().scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,`overview-${width}.png`),animations:'disabled'});
    records.push({width,status:response.status(),canonical,errors,overflow:false,
-     purchasePlanVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
+     purchasePlanVerified:true,stockNoBuyVerified:true,stockFitResetVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
   }
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({status:'PASS',records},null,2));
   const {default:lighthouse}=await import(require.resolve('lighthouse'));
