@@ -198,7 +198,7 @@
       const input = $('[data-sheet-stock-input]'), error = $('[data-sheet-stock-error]');
       if (!input) return;
       const raw = input.value.trim();
-      const valid = /^\\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) && Number(raw) <= 100000;
+      const valid = /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) && Number(raw) <= 100000;
       stockValid = valid;
       if (valid) stockSheets = Number(raw);
       input.setAttribute('aria-invalid', String(!valid));
