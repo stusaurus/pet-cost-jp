@@ -402,6 +402,15 @@
       if (angleLink) angleLink.hidden = angleRole === 'total' && noBuy;
     }
     function applyGroup(group, feedback = false) {
+      if (category === 'pet-sheets' && activeGroup && activeGroup !== group) {
+        // Inventory for regular-size sheets must never carry over to wide-size offers.
+        stockSheets = 0;
+        stockValid = true;
+        const stockInput = $('[data-sheet-stock-input]');
+        if (stockInput) { stockInput.value = '0'; stockInput.setAttribute('aria-invalid', 'false'); }
+        const stockError = $('[data-sheet-stock-error]');
+        if (stockError) { stockError.hidden = true; stockError.textContent = ''; }
+      }
       activeGroup = group;
       const active = $('[data-group-button][data-group="' + group + '"]');
       activeLabel = active?.dataset.groupLabel || '現在の条件';
