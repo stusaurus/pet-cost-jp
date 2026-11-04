@@ -22,6 +22,21 @@
       consumptionCost:required*productPrice/sheetsPerSet
     };
   }
-  if(typeof module==='object'&&module.exports) module.exports={calculateSheetPurchase};
-  if(root) root.petCostSheetPurchase=calculateSheetPurchase;
+  // Stock is scoped to the selected sheet size and never implies cross-size fit.
+  // Keep the original function unchanged for existing consumers and tests.
+  function calculateSheetPurchaseWithStock(sheetsPerSet,productPrice,sheetsPerDay,stockSheets=0,days=30){
+    const initial=calculateSheetPurchase(sheetsPerSet,productPrice,sheetsPerDay,days);
+    if(!initial || !Number.isSafeInteger(stockSheets) || stockSheets<0 || stockSheets>100000) return null;
+    const shortage=Math.max(0,initial.sheetsRequired-stockSheets);
+    const setsToBuy=Math.ceil(shortage/sheetsPerSet);
+    const purchaseTotal=setsToBuy*productPrice;
+    if(!Number.isFinite(purchaseTotal) || purchaseTotal<0) return null;
+    return {
+      ...initial, stockSheets, shortage, setsToBuy, purchaseTotal,
+      remainingSheets:stockSheets+setsToBuy*sheetsPerSet-initial.sheetsRequired,
+      noBuy:setsToBuy===0
+    };
+  }
+  if(typeof module==='object'&&module.exports) module.exports={calculateSheetPurchase,calculateSheetPurchaseWithStock};
+  if(root){root.petCostSheetPurchase=calculateSheetPurchase;root.petCostSheetPurchaseWithStock=calculateSheetPurchaseWithStock;}
 })(typeof window!=='undefined'?window:null);
