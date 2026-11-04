@@ -518,6 +518,14 @@ def homepage(categories, summaries, updated):
       <header class="home-intro"><div class="home-intro-copy"><p class="home-kicker">ごはんも、遊びも、いつもの用品も。</p><h1>いつもの用品を、<br><em>うちの条件で比べよう。</em></h1><p class="home-note">いつもの用品を、使える条件から比較。<br>使用量を入れれば、何日もつか・30日分の費用も分かります。</p><nav class="hero-quick-actions" aria-label="商品選びの近道"><a class="hero-start" href="#categories">商品をすぐ比べる <span aria-hidden="true">↓</span></a><a class="hero-secondary" href="#pet-journey">犬・猫から選ぶ →</a></nav></div><figure class="home-scene"><img class="home-photo" src="{BASE_URL}assets/living/home.webp" alt="朝の光の中、犬と猫がラグでくつろぐ。ごはんと遊びの道具が自然にある暮らし" width="1200" height="800" fetchpriority="high"><figcaption>その子に使えるものを、その家の暮らしで。</figcaption></figure></header>
       {journey()}
       <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">条件が決まっている方へ</p><h2 id="categories-heading">いつもの用品をすぐ比べる</h2></div><span class="section-count">サイズ・素材・本体から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
+      <nav class="home-extra-categories" aria-label="犬猫のごはん・遊びの用品">
+        <strong>ごはん・遊びの用品も比較</strong>
+        <a href="{BASE_URL}categories/dog-food/">犬のごはん →</a>
+        <a href="{BASE_URL}categories/cat-food/">猫のごはん →</a>
+        <a href="{BASE_URL}categories/dog-toys/">犬のおもちゃ →</a>
+        <a href="{BASE_URL}categories/cat-toys/">猫のおもちゃ →</a>
+        <small>対応商品が確認できる範囲で表示します。価格と適合条件は各ページで確認してください。</small>
+      </nav>
       {trust_strip('comparison-standards')}
       <section class="home-journey" aria-label="うちの使い方で比較する流れ"><div><span class="journey-icon">{icon('fit')}</span><h3>うちで使える？</h3><p>いつものサイズ・素材・本体から。<br>使える条件だけで価格を比較。</p></div><div><span class="journey-icon">{icon('audit')}</span><h3>どのくらい持つ？</h3><p>使用量を入れれば、期間と月の費用に。<br>単価を、暮らしの数字へ。</p></div><div><span class="journey-icon">{icon('bulk')}</span><h3>買い足すならどれ？</h3><p>今回の出費も、まとめ買いも。<br>うちに合う買い方を選ぶ。</p></div></section>
       <p class="home-usage-note">使用量の入力は任意。条件・使用量は、この端末に保存されます。</p>
