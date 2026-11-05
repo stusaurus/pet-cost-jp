@@ -257,3 +257,10 @@
 .home-extra-categories a:focus-visible{outline:3px solid #1a695b;outline-offset:2px}
 .home-extra-categories small{flex:1 0 100%;line-height:1.6;color:#4b5d52}
 @media(max-width:600px){.home-extra-categories{padding:12px}.home-extra-categories a{font-size:12px}}
+
+/* Monthly sheet planning entry: readable, keyboard accessible, and compact on mobile. */
+.home-monthly-sheet-entry{margin:10px 0 18px;padding:18px 20px;border:1px solid #dbe5db;border-radius:16px;background:rgba(255,255,255,.82)}
+.home-monthly-sheet-entry h2{margin:0 0 7px;font-size:clamp(17px,2.6vw,22px);line-height:1.4}
+.home-monthly-sheet-entry p{margin:0 0 9px;line-height:1.7;color:#4b5d52}
+.home-monthly-sheet-entry a:focus-visible{outline:3px solid #1a695b;outline-offset:3px;border-radius:4px}
+@media(max-width:600px){.home-monthly-sheet-entry{padding:14px 15px}}
