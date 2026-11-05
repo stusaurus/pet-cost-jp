@@ -521,7 +521,7 @@ def homepage(categories, summaries, updated):
       <section class="home-monthly-sheet-entry" aria-label="ペットシーツの必要枚数から探す">
         <h2>ペットシーツ、1か月で何枚使う？</h2>
         <p>いつもの1日の使用枚数から、30日分の必要枚数を計算できます。使っているサイズを選ぶと、掲載商品の購入セット数と商品代金も比べられます。交換頻度をおすすめするものではありません。</p>
-        <a class="hero-secondary" data-pet-category="pet-sheets" href="{BASE_URL}categories/pet-sheets/#monthly-sheet-guide-heading">30日分の枚数から比較する →</a>
+        <a class="hero-secondary" data-monthly-sheet-entry href="{BASE_URL}categories/pet-sheets/#monthly-sheet-guide-heading">30日分の枚数から比較する →</a>
       </section>
       <nav class="home-extra-categories" aria-label="犬猫のごはん・遊びの用品">
         <strong>ごはん・遊びの用品も比較</strong>
