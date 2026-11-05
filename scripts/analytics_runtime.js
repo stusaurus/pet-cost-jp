@@ -94,6 +94,8 @@
     const periodDays = { day: 1, week: 7, month: 30 }[usagePeriod];
     const periodLabel = { day: '1日', week: '1週間', month: '1か月' }[usagePeriod];
     let usage = null;
+    let stockSheets = 0; // Non-persistent, current size only.
+    let stockValid = true;
     let lastUsageEvent = 'null';
     const decimal = value => value.toLocaleString('ja-JP', { maximumFractionDigits: 1 });
     const daysText = value => value < 1 ? '1日未満' : decimal(value) + '日';
@@ -113,16 +115,18 @@
     }
     function appendSheetPurchasePlan(mount, row) {
       if (category !== 'pet-sheets' || !row || !usage ||
-          typeof window.petCostSheetPurchase !== 'function') return;
-      const plan = window.petCostSheetPurchase(quantity(row), total(row), usage);
+          !stockValid || typeof window.petCostSheetPurchaseWithStock !== 'function') return;
+      const plan = window.petCostSheetPurchaseWithStock(quantity(row), total(row), usage, stockSheets);
       if (!plan) return;
       const container = element('section', 'sheet-purchase-plan');
       container.dataset.sheetPurchasePlan = '1';
       container.setAttribute('aria-label', '30日分を買うときの商品代金');
-      container.appendChild(element('strong', 'sheet-purchase-title', '30日分を購入するなら'));
+      container.appendChild(element('strong', 'sheet-purchase-title', plan.noBuy ? '今は買い足し不要' : '在庫を引いた30日分の買い足し'));
       const metrics = element('div', 'sheet-purchase-metrics');
       const cells = [
         ['必要枚数', plan.sheetsRequired.toLocaleString('ja-JP') + '枚'],
+        ['手持ち在庫', plan.stockSheets.toLocaleString('ja-JP') + '枚'],
+        ['不足枚数', plan.shortage.toLocaleString('ja-JP') + '枚'],
         ['購入するセット数', plan.setsToBuy.toLocaleString('ja-JP') + 'セット'],
         ['余る枚数', plan.remainingSheets.toLocaleString('ja-JP') + '枚'],
       ];
@@ -140,7 +144,7 @@
       metrics.appendChild(cashCell);
       container.appendChild(metrics);
       container.appendChild(element('p', 'sheet-purchase-note',
-        '同じ商品を' + plan.setsToBuy + 'セット購入する計算です。価格は取得時点の参考値。' +
+        (plan.noBuy ? '今のサイズの手持ち在庫で、30日分の予定量をまかなえます。追加購入は不要です。' : '同じ商品を' + plan.setsToBuy + 'セット購入する計算です。') + '価格は取得時点の参考値。' +
         '地域別の追加送料・在庫・販売単位・吸収力は販売店でご確認ください。' +
         '月の消費額の目安とは異なります。'));
       mount.appendChild(container);
@@ -188,6 +192,22 @@
           const track = element('span', 'bar-track'); const bar = element('i', 'bar-fill'); setBar(bar, values.days, maxDays); track.appendChild(bar); mount.appendChild(track);
         }
       });
+    }
+    function setSheetStock() {
+      if (category !== 'pet-sheets') return;
+      const input = $('[data-sheet-stock-input]'), error = $('[data-sheet-stock-error]');
+      if (!input) return;
+      const raw = input.value.trim();
+      const valid = /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) && Number(raw) <= 100000;
+      stockValid = valid;
+      if (valid) stockSheets = Number(raw);
+      input.setAttribute('aria-invalid', String(!valid));
+      if (error) {
+        error.hidden = valid;
+        error.textContent = valid ? '' : '0〜100000枚の整数で入力してください。購入額は計算しません。';
+      }
+      updateAngles();
+      updateUsage();
     }
     function setUsage(emit = false, clear = false) {
       const input = $('[data-usage-input]'), error = $('[data-usage-error]');
@@ -326,12 +346,13 @@
     // Only compare 30-day checkout totals within the same size and among offers
     // explicitly displayed as postage-included. Do not rank missing postage as ¥0.
     function sheetMonthlyChoice() {
-      if (category !== 'pet-sheets' || !(usage > 0) ||
-          typeof window.petCostSheetPurchase !== 'function') return null;
+      if (category !== 'pet-sheets' || !(usage > 0) || !stockValid ||
+          stockSheets >= Math.ceil(usage * 30) ||
+          typeof window.petCostSheetPurchaseWithStock !== 'function') return null;
       const candidates = visibleRows.filter(row => row.dataset.shipping === '送料込み')
         .map(row => ({
           row,
-          plan: window.petCostSheetPurchase(quantity(row), total(row), usage)
+          plan: window.petCostSheetPurchaseWithStock(quantity(row), total(row), usage, stockSheets)
         })).filter(candidate => candidate.plan && Number.isFinite(candidate.plan.purchaseTotal));
       // With just one verified offer there is no meaningful checkout comparison.
       if (candidates.length < 2) return null;
@@ -354,29 +375,42 @@
       grid.hidden = detail.hidden = !visibleRows.length;
       if (!visibleRows.length) return;
       const monthly = sheetMonthlyChoice();
+      const noBuy = category === 'pet-sheets' && usage > 0 && stockValid && stockSheets >= Math.ceil(usage * 30);
       const picks = anglePicks(monthly);
       const cashButton = $('[data-angle-role="total"]', grid);
       const cashLabel = $('.angle-label', cashButton);
       const cashSub = $('.angle-sub', cashButton);
-      if (cashLabel) cashLabel.textContent = monthly ? '30日分の購入額を抑える' : '今日は出費を抑える';
-      if (cashSub) cashSub.textContent = monthly ? '送料込み表示の' + monthly.count + '商品から比較' : '1セットの商品価格重視';
+      if (cashLabel) cashLabel.textContent = noBuy ? '今は買い足し不要' : monthly ? '30日分の購入額を抑える' : '今日は出費を抑える';
+      if (cashSub) cashSub.textContent = noBuy ? 'このサイズの在庫で30日分をまかなえます' : monthly ? '送料込み表示の' + monthly.count + '商品から比較' : '1セットの商品価格重視';
       $$('[data-angle-card]', grid).forEach(button => {
         const role = button.dataset.angleRole, row = picks[role];
         button.setAttribute('aria-pressed', String(role === angleRole));
-        text('[data-angle-value]', role === 'unit' ? formatYen(unit(row)) + ' / ' + metricLabel : role === 'total' ? formatYen(monthly ? monthly.best.plan.purchaseTotal : total(row)) : quantityLabel(row), button);
+        text('[data-angle-value]', role === 'unit' ? formatYen(unit(row)) + ' / ' + metricLabel : role === 'total' && noBuy ? '¥0（追加購入なし）' : role === 'total' ? formatYen(monthly ? monthly.best.plan.purchaseTotal : total(row)) : quantityLabel(row), button);
       });
       const row = picks[angleRole];
       text('[data-angle-name]', name(row));
-      text('[data-angle-reason]', angleRole === 'total' && monthly ? '送料込み表示の候補内で、30日分の購入額が最小' : { unit: 'この条件で、単価が最小', total: 'この条件で、1セットの商品価格が最小', bulk: 'この条件で、購入できる総数量が最大' }[angleRole]);
+      text('[data-angle-reason]', angleRole === 'total' && noBuy ? '手持ちシーツだけで30日分をまかなえます' : angleRole === 'total' && monthly ? '送料込み表示の候補内で、30日分の購入額が最小' : { unit: 'この条件で、単価が最小', total: 'この条件で、1セットの商品価格が最小', bulk: 'この条件で、購入できる総数量が最大' }[angleRole]);
       text('[data-angle-unit]', formatYen(unit(row)));
       text('[data-angle-total]', formatYen(total(row)));
       text('[data-angle-quantity]', quantityLabel(row));
       let explanation = angleRole === 'unit' ? '1枚・1Lの負担を抑える選び方。購入額・送料も一緒に確認してください。' : angleRole === 'total' && monthly ? '1日あたりの入力枚数×30日を満たす購入セット数で比較。送料込み表示の' + monthly.count + '商品の掲載価格から算出しました。別送料の商品は除外し、地域別の追加送料・在庫は楽天で確認してください。' : angleRole === 'total' ? '1セットの商品価格が最小。30日分の総購入額の比較ではありません。送料別の場合、送料は加算されていません。' : '買う量をまとめる選び方。保管場所と、今回払う商品総額も確認してください。';
-      if (angleRole !== 'unit' && row === picks.unit) explanation = '単価最安と同じ商品です。' + explanation;
+      if (angleRole === 'total' && noBuy) explanation = '今のサイズの手持ちが30日分を満たすため、買い足す必要はありません。掲載商品は比較参考です。';
+      if (angleRole !== 'unit' && !noBuy && row === picks.unit) explanation = '単価最安と同じ商品です。' + explanation;
       text('[data-angle-explain]', explanation);
       affiliate($('[data-angle-link]'), row, visibleRows.indexOf(row) + 1, 'comparison_angle_' + angleRole);
+      const angleLink = $('[data-angle-link]');
+      if (angleLink) angleLink.hidden = angleRole === 'total' && noBuy;
     }
     function applyGroup(group, feedback = false) {
+      if (category === 'pet-sheets' && activeGroup && activeGroup !== group) {
+        // Inventory for regular-size sheets must never carry over to wide-size offers.
+        stockSheets = 0;
+        stockValid = true;
+        const stockInput = $('[data-sheet-stock-input]');
+        if (stockInput) { stockInput.value = '0'; stockInput.setAttribute('aria-invalid', 'false'); }
+        const stockError = $('[data-sheet-stock-error]');
+        if (stockError) { stockError.hidden = true; stockError.textContent = ''; }
+      }
       activeGroup = group;
       const active = $('[data-group-button][data-group="' + group + '"]');
       activeLabel = active?.dataset.groupLabel || '現在の条件';
@@ -493,6 +527,8 @@
     $('[data-usage-form]')?.addEventListener('submit', event => { event.preventDefault(); setUsage(true); });
     $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
     $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
+    $('[data-sheet-stock-input]')?.addEventListener('input', setSheetStock);
+    $('[data-sheet-stock-input]')?.addEventListener('change', setSheetStock);
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
     if (category && filter) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {

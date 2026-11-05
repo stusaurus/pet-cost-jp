@@ -697,3 +697,70 @@ test('Mogwan A8 advertising and calculator stay absent from cat food and sheets'
     assert.equal(source.includes('mogwan-cost-form'),false);
   }
 });
+
+test('sheet stock calculation uses only matching-size usable sheets and never invents a purchase', () => {
+  const { calculateSheetPurchaseWithStock } = require('../scripts/sheet_purchase_plan.js');
+  const order=calculateSheetPurchaseWithStock(100,1000,5,30);
+  assert.equal(order.sheetsRequired,150);
+  assert.equal(order.stockSheets,30);
+  assert.equal(order.shortage,120);
+  assert.equal(order.setsToBuy,2);
+  assert.equal(order.purchaseTotal,2000);
+  assert.equal(order.remainingSheets,80);
+  assert.equal(order.noBuy,false);
+  const noBuy=calculateSheetPurchaseWithStock(100,1000,5,150);
+  assert.equal(noBuy.setsToBuy,0);
+  assert.equal(noBuy.purchaseTotal,0);
+  assert.equal(noBuy.shortage,0);
+  assert.equal(noBuy.remainingSheets,0);
+  assert.equal(noBuy.noBuy,true);
+  assert.equal(calculateSheetPurchaseWithStock(100,1000,5,180).remainingSheets,30);
+  for(const stock of [-1,1.5,100001,NaN,Infinity])assert.equal(calculateSheetPurchaseWithStock(100,1000,5,stock),null);
+  assert.equal(calculateSheetPurchaseWithStock(100,-1,5,30),null);
+});
+
+test('sheet stock produces a no-buy verdict, adjusts checkout and resets when sheet size changes',async()=>{
+  const category=categories[0],base=payloads[0].items[0];
+  const regular={...base,product_id:'stock-regular',group:'regular',
+    quantity:100,price:1000,unit_price:10,postage_flag:0};
+  const wide={...base,product_id:'stock-wide',group:'wide',
+    quantity:80,price:900,unit_price:11.25,postage_flag:1};
+  const p=await open(render(category,[regular,wide]),category.id);
+  try {
+    const changes=()=>events(p,'pet_usage_change').length;
+    get(p,'[data-group-button][data-group="regular"]').click();
+    const usage=get(p,'[data-usage-input]'),stock=get(p,'[data-sheet-stock-input]');
+    assert.ok(stock);
+    assert.equal(stock.value,'0');
+    usage.value='5';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.ok(text(p,'[data-featured-usage]').includes('2セット'));
+    stock.value='40';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    let result=text(p,'[data-featured-usage] [data-sheet-purchase-plan]');
+    for(const value of ['必要枚数','150枚','手持ち在庫','40枚','不足枚数','110枚','2セット','¥2,000','90枚'])
+      assert.ok(result.includes(value),value+' missing');
+    stock.value='150';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    result=text(p,'[data-featured-usage] [data-sheet-purchase-plan]');
+    assert.ok(result.includes('今は買い足し不要'));
+    assert.ok(result.includes('0セット'));
+    assert.ok(result.includes('¥0'));
+    get(p,'[data-angle-role="total"]').click();
+    assert.ok(text(p,'[data-angle-reason]').includes('手持ちシーツだけ'));
+    assert.equal(get(p,'[data-angle-link]').hidden,true);
+    assert.ok(text(p,'[data-angle-role="total"]').includes('¥0'));
+    assert.equal(p.dom.window.localStorage.getItem('pet_cost_household_v1').includes('"stock"'),false);
+    assert.equal(changes(),0);
+    stock.value='invalid';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-sheet-stock-error]').hidden,false);
+    assert.equal(get(p,'[data-sheet-purchase-plan]'),null);
+    assert.ok(!text(p,'[data-angle-reason]').includes('手持ちシーツだけ'));
+    stock.value='150';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    get(p,'[data-group-button][data-group="wide"]').click();
+    assert.equal(stock.value,'0');
+    assert.equal(get(p,'[data-sheet-stock-error]').hidden,true);
+    result=text(p,'[data-featured-usage] [data-sheet-purchase-plan]');
+    assert.ok(result.includes('2セット'));
+    assert.ok(result.includes('送料未加算'));
+    assert.equal(get(p,'[data-angle-link]').hidden,false);
+    assert.deepEqual(p.errors,[]);
+  }finally{p.close();}
+});
