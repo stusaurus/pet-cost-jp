@@ -166,7 +166,7 @@
     }
     function updateUsage() {
       if (category === 'pet-sheets') {
-        $('[data-usage-preset]').forEach(button => {
+        document.querySelectorAll('[data-usage-preset]').forEach(button => {
           const selected = Number(button.dataset.usagePreset) === usage;
           button.setAttribute('aria-pressed', String(selected));
         });
