@@ -1,0 +1,36 @@
+name: Pet sheet one-tap usage QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_site.py'
+      - 'scripts/analytics_runtime.js'
+      - 'assets/living.css'
+      - 'tests/test_sheet_usage_presets.py'
+      - '.github/workflows/pet-sheet-usage-qa.yml'
+permissions:
+  contents: read
+jobs:
+  sheet-usage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prove sheet presets do not bypass fit, user usage or stock math
+        run: python3 -m unittest discover -s tests -p 'test_sheet_usage_presets.py' -v
+      - name: Validate unchanged all-category runtime syntax
+        run: node --check scripts/analytics_runtime.js
+      - name: Build pages offline from previously validated product data
+        run: |
+          python3 scripts/build_site.py --reuse-data
+          grep -F 'data-usage-preset="3"' site/categories/pet-sheets/index.html
+          grep -F 'data-sheet-stock-input' site/categories/pet-sheets/index.html
+          if grep -Fq 'data-usage-preset=' site/categories/cat-litter/index.html; then
+            echo "Unexpected sheet preset in cat litter" >&2
+            exit 1
+          fi
