@@ -277,7 +277,20 @@ def usage_panel(category):
     heading = '30日分の購入セット数・商品代金を計算する' if category['id'] == 'pet-sheets' else 'うちの使用量で見る'
     teaser = '必要な枚数から購入個数まで' if category['id'] == 'pet-sheets' else '任意 · どのくらい持つ？'
     sheet_stock_field = "<div class=\"sheet-stock-field\" data-sheet-stock-field><label class=\"input-label\" for=\"pet-sheet-stock\">いつものサイズの手持ちシーツ（0〜100000枚）</label><span class=\"usage-input-wrap\"><input id=\"pet-sheet-stock\" class=\"input\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" data-sheet-stock-input value=\"0\" aria-describedby=\"sheet-stock-help sheet-stock-error\"><span>枚</span></span><p id=\"sheet-stock-help\" class=\"condition-note\">選んだサイズで使えるシーツだけ入力してください。在庫枚数はこのページだけで使い、保存しません。</p><p id=\"sheet-stock-error\" data-sheet-stock-error class=\"calc-message\" role=\"status\" hidden></p></div>" if category['id'] == 'pet-sheets' else ''
-    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>{heading}</span><span class="usage-teaser" data-usage-teaser>{teaser}</span></summary><form data-usage-form data-usage-period="{period}" novalidate><div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p>{sheet_stock_field}<p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の消費額の目安が分かります。ペットシーツは手持ち在庫を差し引き、必要購入セット数・商品代金を計算します。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
+    sheet_usage_presets = (
+        '<fieldset class="sheet-usage-presets" data-sheet-usage-presets>'
+        '<legend>いつも1日に使う枚数を選ぶ</legend>'
+        '<div class="sheet-usage-presets-options">'
+        + ''.join(
+            f'<button type="button" class="sheet-usage-preset" data-usage-preset="{count}"'
+            f' aria-pressed="false">{count}枚/日</button>'
+            for count in (1, 3, 5, 10)
+        )
+        + '</div><p>数字はおすすめの交換頻度ではありません。'
+        '実際に使っている枚数を選ぶか、下の入力欄から正確に入力してください。</p>'
+        '</fieldset>'
+    ) if category['id'] == 'pet-sheets' else ''
+    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>{heading}</span><span class="usage-teaser" data-usage-teaser>{teaser}</span></summary><form data-usage-form data-usage-period="{period}" novalidate>{sheet_usage_presets}<div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p>{sheet_stock_field}<p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の消費額の目安が分かります。ペットシーツは手持ち在庫を差し引き、必要購入セット数・商品代金を計算します。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
 
 
 def reason_badges(item, items, middle):
