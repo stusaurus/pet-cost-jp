@@ -264,3 +264,14 @@
 .home-monthly-sheet-entry p{margin:0 0 9px;line-height:1.7;color:#4b5d52}
 .home-monthly-sheet-entry a:focus-visible{outline:3px solid #1a695b;outline-offset:3px;border-radius:4px}
 @media(max-width:600px){.home-monthly-sheet-entry{padding:14px 15px}}
+
+
+/* Shortcuts represent actual usage entered by the visitor, not a care recommendation. */
+.sheet-usage-presets{border:1px solid #dce6dd;border-radius:14px;padding:12px;margin:10px 0 16px;min-width:0}
+.sheet-usage-presets legend{font-size:14px;font-weight:700;padding:0 6px}
+.sheet-usage-presets-options{display:flex;flex-wrap:wrap;gap:8px}
+.sheet-usage-preset{min-height:44px;padding:8px 15px;border:1px solid #a8bbb0;border-radius:999px;background:#fff;color:#223d2e;font-size:14px;cursor:pointer}
+.sheet-usage-preset[aria-pressed="true"]{background:#e5f4e8;border-color:#38684f;font-weight:700}
+.sheet-usage-preset:focus-visible{outline:3px solid #bb6b28;outline-offset:3px}
+.sheet-usage-presets p{margin:8px 0 0;font-size:12px;line-height:1.7;color:#52665a}
+@media(max-width:390px){.sheet-usage-presets{padding:10px}.sheet-usage-preset{flex:1 1 40%;min-width:0}}
