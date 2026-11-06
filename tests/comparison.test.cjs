@@ -764,3 +764,38 @@ test('sheet stock produces a no-buy verdict, adjusts checkout and resets when sh
     assert.deepEqual(p.errors,[]);
   }finally{p.close();}
 });
+
+test('pet sheets: one-tap daily usage choices feed existing checkout without inventing frequency', async () => {
+  const category=categories[0],base=payloads[0].items[0];
+  const regular={...base,product_id:'preset-regular',group:'regular',
+    quantity:100,price:1000,unit_price:10,postage_flag:0};
+  const p=await open(render(category,[regular]),category.id);
+  try{
+    const preset=n=>get(p,'[data-usage-preset="'+n+'"]');
+    assert.equal(get(p,'[data-usage-panel]').hidden,true);
+    assert.equal(all(p,'[data-usage-preset]').length,4);
+    get(p,'[data-group-button][data-group="regular"]').click();
+    assert.equal(get(p,'[data-usage-panel]').hidden,false);
+    assert.equal(preset(5).getAttribute('aria-pressed'),'false');
+    preset(5).click();
+    assert.equal(get(p,'[data-usage-input]').value,'5');
+    assert.equal(preset(5).getAttribute('aria-pressed'),'true');
+    assert.equal(preset(3).getAttribute('aria-pressed'),'false');
+    assert.ok(text(p,'[data-featured-usage] [data-sheet-purchase-plan]').includes('2セット'));
+    assert.ok(text(p,'[data-featured-usage] [data-sheet-purchase-plan]').includes('150枚'));
+    assert.equal(events(p,'pet_usage_change').at(-1).usage_enabled,true);
+    preset(3).click();
+    assert.equal(get(p,'[data-usage-input]').value,'3');
+    assert.equal(preset(3).getAttribute('aria-pressed'),'true');
+    assert.ok(text(p,'[data-featured-usage] [data-sheet-purchase-plan]').includes('90枚'));
+    const input=get(p,'[data-usage-input]');
+    input.value='2';
+    input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.ok(all(p,'[data-usage-preset]').every(b=>b.getAttribute('aria-pressed')==='false'));
+    const stock=get(p,'[data-sheet-stock-input]');
+    stock.value='60';
+    stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.ok(text(p,'[data-featured-usage] [data-sheet-purchase-plan]').includes('今は買い足し不要'));
+    assert.deepEqual(p.errors,[]);
+  }finally{p.close();}
+});
