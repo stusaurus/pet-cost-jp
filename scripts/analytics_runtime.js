@@ -165,6 +165,12 @@
       appendSheetPurchasePlan(mount, row);
     }
     function updateUsage() {
+      if (category === 'pet-sheets') {
+        $('[data-usage-preset]').forEach(button => {
+          const selected = Number(button.dataset.usagePreset) === usage;
+          button.setAttribute('aria-pressed', String(selected));
+        });
+      }
       const note = $('[data-usage-scale-note]'); if (note) note.hidden = !usage;
       text('[data-open-usage]', usage ? '使用量を変える' : '使用量を入れる');
       text('[data-usage-teaser]', usage ? periodLabel + usage.toLocaleString('ja-JP') + (metric === 'per_liter' ? 'L' : '枚') + 'で比較中' : '任意 · どのくらい持つ？');
@@ -532,6 +538,16 @@
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
     if (category && filter) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {
+      const usagePreset = event.target.closest('[data-usage-preset]');
+      if (usagePreset && category === 'pet-sheets') {
+        const count = Number(usagePreset.dataset.usagePreset);
+        const input = $('[data-usage-input]');
+        if ([1, 3, 5, 10].includes(count) && input && activeGroup) {
+          input.value = String(count);
+          setUsage(true);
+        }
+        return;
+      }
       const sizeOverview = event.target.closest('[data-size-overview]');
       if (sizeOverview) {
         const group = sizeOverview.dataset.sizeOverview;
