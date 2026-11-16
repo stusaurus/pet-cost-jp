@@ -1,0 +1,285 @@
+{
+  "source": "Google Search Console Search Analytics API (read-only)",
+  "source_run": "https://github.com/stusaurus/daily-cost-jp/actions/runs/43813366424",
+  "source_artifact": 14201795480,
+  "data_timezone": "America/Los_Angeles",
+  "as_of": "2026-11-15",
+  "date_windows": {
+    "last_7": [
+      "2026-11-06",
+      "2026-11-12"
+    ],
+    "prior_7": [
+      "2026-10-30",
+      "2026-11-05"
+    ],
+    "last_28": [
+      "2026-10-16",
+      "2026-11-12"
+    ],
+    "prior_28": [
+      "2026-09-18",
+      "2026-10-15"
+    ]
+  },
+  "sites": [
+    {
+      "name": "日用品",
+      "property": "https://stusaurus.github.io/daily-cost-jp/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 16,
+            "ctr": 0.0,
+            "position": 6.62
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 8,
+            "ctr": 0.0,
+            "position": 5.12
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 1,
+            "impressions": 116,
+            "ctr": 0.008621,
+            "position": 9.54
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 4,
+            "impressions": 193,
+            "ctr": 0.020725,
+            "position": 11.4
+          }
+        }
+      }
+    },
+    {
+      "name": "ベビー用品",
+      "property": "https://stusaurus.github.io/baby-cost-jp/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 1.5
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 16.0
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 4,
+            "ctr": 0.0,
+            "position": 8.0
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 4,
+            "ctr": 0.0,
+            "position": 25.0
+          }
+        }
+      }
+    },
+    {
+      "name": "ペット用品",
+      "property": "https://stusaurus.github.io/pet-cost-jp/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 4.0
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 0,
+            "ctr": 0.0,
+            "position": null
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 4.0
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 31.0
+          }
+        }
+      }
+    },
+    {
+      "name": "食品",
+      "property": "https://stusaurus.github.io/food-cost-jp/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 4,
+            "ctr": 0.0,
+            "position": 44.0
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 3,
+            "ctr": 0.0,
+            "position": 35.67
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 7,
+            "ctr": 0.0,
+            "position": 40.43
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 6.0
+          }
+        }
+      }
+    },
+    {
+      "name": "ボードゲーム",
+      "property": "https://stusaurus.github.io/kyo-bodo-jp/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 3,
+            "ctr": 0.0,
+            "position": 28.33
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 0,
+            "ctr": 0.0,
+            "position": null
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 24,
+            "ctr": 0.0,
+            "position": 66.08
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 15,
+            "ctr": 0.0,
+            "position": 62.07
+          }
+        }
+      }
+    },
+    {
+      "name": "SOTOJITAKU",
+      "property": "https://stusaurus.github.io/sotojitaku/",
+      "status": "OBSERVED",
+      "windows": {
+        "last_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 1.0
+          }
+        },
+        "prior_7": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 0,
+            "ctr": 0.0,
+            "position": null
+          }
+        },
+        "last_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 20.0
+          }
+        },
+        "prior_28": {
+          "status": "OBSERVED",
+          "metrics": {
+            "clicks": 0,
+            "impressions": 3,
+            "ctr": 0.0,
+            "position": 6.67
+          }
+        }
+      }
+    }
+  ]
+}
