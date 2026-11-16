@@ -1,7 +1,9 @@
 // Offline product catalog, real Chromium; never navigate to an affiliate.
-const {chromium}=require('playwright');
+const {chromium,webkit}=require('playwright');
+const browserName=process.env.SHEET_QA_BROWSER||'chromium';
+if(!['chromium','webkit'].includes(browserName))throw new Error('Unsupported sheet QA browser');
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),out=path.join(root,'audit-results/sheet-presentation');
+const root=path.resolve(__dirname,'..'),out=path.join(root,'audit-results/sheet-presentation',browserName);
 fs.mkdirSync(out,{recursive:true});
 const server=http.createServer((req,res)=>{
  const rel=new URL(req.url,'http://localhost').pathname.replace(/^\/pet-cost-jp\//,'');
@@ -11,7 +13,7 @@ const server=http.createServer((req,res)=>{
 });
 (async()=>{
  await new Promise(resolve=>server.listen(8776,'127.0.0.1',resolve));
- const browser=await chromium.launch(),records=[];
+ const browser=await ({chromium,webkit}[browserName]).launch(),records=[];
  try{
   for(const width of [320,390,1440]){
    const context=await browser.newContext({viewport:{width,height:900},isMobile:width<500,hasTouch:width<500});
@@ -24,6 +26,17 @@ const server=http.createServer((req,res)=>{
    assert(await monthlyGuide.isVisible());
    assert.equal(await monthlyGuide.locator('.monthly-sheet-examples li').count(),4);
    assert((await monthlyGuide.innerText()).includes('30日で150枚'));
+   assert(await page.locator('#sheet-thickness-cost').isVisible());
+   const reference=monthlyGuide.locator('a[href="https://www.aeonpet.com/topics/pet-column_175.html"]');
+   assert.equal(await reference.count(),1);
+   assert.equal(await reference.getAttribute('data-affiliate-link'),null);
+   assert((await monthlyGuide.innerText()).includes('吸収性能の順位ではありません'));
+   assert.equal(await page.locator('h1').count(),1);
+   assert(await page.locator('meta[name=description]').getAttribute('content'));
+   assert(await page.evaluate(()=>[...document.querySelectorAll('script[type="application/ld+json"]')].every(el=>{try{JSON.parse(el.textContent);return true}catch{return false}})));
+   await monthlyGuide.screenshot({path:path.join(out,'thickness-guide-'+width+'.png'),animations:'disabled'});
+   await monthlyGuide.locator('a[href="#comparison-conditions"]').last().click();
+   assert.equal(await page.locator('#comparison-conditions').count(),1);
    assert(await page.locator('[data-size-summary]').first().isVisible());
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
    const canonical=await page.locator('link[rel=canonical]').getAttribute('href');
@@ -111,10 +124,11 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,`comparison-${width}.png`),fullPage:true,animations:'disabled'});
    await page.locator('[data-size-summary]').first().scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,`overview-${width}.png`),animations:'disabled'});
-   records.push({width,status:response.status(),canonical,errors,overflow:false,
+   records.push({browser:browserName,width,status:response.status(),canonical,errors,overflow:false,
      purchasePlanVerified:true,stockNoBuyVerified:true,stockFitResetVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
   }
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({status:'PASS',records},null,2));
+  if(browserName!=='chromium')return;
   const {default:lighthouse}=await import(require.resolve('lighthouse'));
   const launcher=await import(require.resolve('chrome-launcher'));
   const chrome=await launcher.launch({chromePath:chromium.executablePath(),chromeFlags:['--headless','--no-sandbox']});
