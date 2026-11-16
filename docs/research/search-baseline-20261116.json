@@ -281,5 +281,549 @@
         }
       }
     }
-  ]
+  ],
+  "discovery_refresh": {
+    "source_run": "https://github.com/stusaurus/daily-cost-jp/actions/runs/43019858859",
+    "source_job": 133144915185,
+    "source_artifact": 14204537431,
+    "as_of_pacific": "2026-11-15",
+    "sites": [
+      {
+        "name": "日用品",
+        "query_pages_status": "OBSERVED_ROWS",
+        "normal_query_pages": [
+          {
+            "key": "洗濯洗剤 安い 店 ランキング",
+            "clicks": 0,
+            "impressions": 25,
+            "ctr": 0.0,
+            "position": 7.64,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "洗濯洗剤 安い",
+            "clicks": 0,
+            "impressions": 5,
+            "ctr": 0.0,
+            "position": 27.8,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "洗濯洗剤安い店",
+            "clicks": 0,
+            "impressions": 4,
+            "ctr": 0.0,
+            "position": 13.5,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "洗濯洗剤 安い店",
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 11.5,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "トイレットペーパー いくら なら 安い",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 10.0,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/toilet-paper/",
+            "path": "/categories/toilet-paper/"
+          },
+          {
+            "key": "洗剤 どこが安い",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 7.0,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "洗濯洗剤 最安値",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 24.0,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          },
+          {
+            "key": "洗濯洗剤どこが安い",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 10.0,
+            "page": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "path": "/categories/laundry/"
+          }
+        ],
+        "inspection": [
+          {
+            "path": "/categories/laundry/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T10:36:19Z",
+            "google_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/",
+            "user_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/laundry/"
+          },
+          {
+            "path": "/categories/tissue/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T10:37:42Z",
+            "google_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/tissue/",
+            "user_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/tissue/"
+          },
+          {
+            "path": "/categories/toilet-paper/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T10:41:24Z",
+            "google_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/toilet-paper/",
+            "user_canonical": "https://stusaurus.github.io/daily-cost-jp/categories/toilet-paper/"
+          },
+          {
+            "path": "/tools/laundry-cost-per-wash/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:29:14Z",
+            "google_canonical": "https://stusaurus.github.io/daily-cost-jp/tools/laundry-cost-per-wash/",
+            "user_canonical": "https://stusaurus.github.io/daily-cost-jp/tools/laundry-cost-per-wash/"
+          }
+        ]
+      },
+      {
+        "name": "ベビー用品",
+        "query_pages_status": "NO_ROWS",
+        "normal_query_pages": [],
+        "inspection": [
+          {
+            "path": "/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-09-29T12:26:12Z",
+            "google_canonical": "https://stusaurus.github.io/baby-cost-jp/",
+            "user_canonical": "https://stusaurus.github.io/baby-cost-jp/"
+          },
+          {
+            "path": "/diapers/pants/m/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-08T21:41:31Z",
+            "google_canonical": "https://stusaurus.github.io/baby-cost-jp/diapers/pants/m/",
+            "user_canonical": "https://stusaurus.github.io/baby-cost-jp/diapers/pants/m/"
+          },
+          {
+            "path": "/guides/toddler-meals/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:30:56Z",
+            "google_canonical": "https://stusaurus.github.io/baby-cost-jp/guides/toddler-meals/",
+            "user_canonical": "https://stusaurus.github.io/baby-cost-jp/guides/toddler-meals/"
+          }
+        ]
+      },
+      {
+        "name": "ペット用品",
+        "query_pages_status": "NO_ROWS",
+        "normal_query_pages": [],
+        "inspection": [
+          {
+            "path": "/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-09-29T12:25:34Z",
+            "google_canonical": "https://stusaurus.github.io/pet-cost-jp/",
+            "user_canonical": "https://stusaurus.github.io/pet-cost-jp/"
+          },
+          {
+            "path": "/categories/pet-sheets/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-08T21:42:29Z",
+            "google_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/",
+            "user_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/"
+          },
+          {
+            "path": "/categories/cat-litter/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T11:27:04Z",
+            "google_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/",
+            "user_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/"
+          },
+          {
+            "path": "/categories/dog-food/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:29:14Z",
+            "google_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/dog-food/",
+            "user_canonical": "https://stusaurus.github.io/pet-cost-jp/categories/dog-food/"
+          }
+        ]
+      },
+      {
+        "name": "食品",
+        "query_pages_status": "OBSERVED_ROWS",
+        "normal_query_pages": [
+          {
+            "key": "パックご飯 コスパ",
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 46.5,
+            "page": "https://stusaurus.github.io/food-cost-jp/guides/pack-rice-24-servings-cost/",
+            "path": "/guides/pack-rice-24-servings-cost/"
+          },
+          {
+            "key": "ウォーターサーバー ペットボトル 比較",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 100.0,
+            "page": "https://stusaurus.github.io/food-cost-jp/guides/water-server-vs-bottled-water/",
+            "path": "/guides/water-server-vs-bottled-water/"
+          }
+        ],
+        "inspection": [
+          {
+            "path": "/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-09-29T12:40:29Z",
+            "google_canonical": "https://stusaurus.github.io/food-cost-jp/",
+            "user_canonical": "https://stusaurus.github.io/food-cost-jp/"
+          },
+          {
+            "path": "/categories/rice/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T11:25:52Z",
+            "google_canonical": "https://stusaurus.github.io/food-cost-jp/categories/rice/",
+            "user_canonical": "https://stusaurus.github.io/food-cost-jp/categories/rice/"
+          },
+          {
+            "path": "/categories/pack-rice/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-27T06:06:15Z",
+            "google_canonical": "https://stusaurus.github.io/food-cost-jp/categories/pack-rice/",
+            "user_canonical": "https://stusaurus.github.io/food-cost-jp/categories/pack-rice/"
+          },
+          {
+            "path": "/guides/pack-rice-24-servings-cost/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-27T06:07:21Z",
+            "google_canonical": "https://stusaurus.github.io/food-cost-jp/guides/pack-rice-24-servings-cost/",
+            "user_canonical": "https://stusaurus.github.io/food-cost-jp/guides/pack-rice-24-servings-cost/"
+          },
+          {
+            "path": "/guides/family-meal-delivery-budget/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "NEUTRAL",
+            "coverage_state": "URL is unknown to Google",
+            "last_crawl_time": null,
+            "google_canonical": null,
+            "user_canonical": null
+          },
+          {
+            "path": "/guides/water-server-vs-bottled-water/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:41:08Z",
+            "google_canonical": "https://stusaurus.github.io/food-cost-jp/guides/water-server-vs-bottled-water/",
+            "user_canonical": "https://stusaurus.github.io/food-cost-jp/guides/water-server-vs-bottled-water/"
+          }
+        ]
+      },
+      {
+        "name": "ボードゲーム",
+        "query_pages_status": "OBSERVED_ROWS",
+        "normal_query_pages": [
+          {
+            "key": "2 人 ボード ゲーム カップル",
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 82.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボード ゲーム 二 人 用",
+            "clicks": 0,
+            "impressions": 2,
+            "ctr": 0.0,
+            "position": 70.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "2 人 で できる ボード ゲーム",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 75.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "2 人 ボード ゲーム",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 74.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "2 人 用 ボード ゲーム",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 75.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボドゲ 2 人",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 74.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボード ゲーム 2 人 おすすめ",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 74.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボード ゲーム 2 人 でも 楽しい",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 99.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボード ゲーム おすすめ 2 人",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 78.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "ボード ゲーム おすすめ 小学生",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 73.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/children/",
+            "path": "/scenes/children/"
+          },
+          {
+            "key": "ボード ゲーム ふたり",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 72.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "二 人 で できる ボード ゲーム",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 76.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          },
+          {
+            "key": "二 人 用 ボード ゲーム",
+            "clicks": 0,
+            "impressions": 1,
+            "ctr": 0.0,
+            "position": 77.0,
+            "page": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "path": "/scenes/two-player/"
+          }
+        ],
+        "inspection": [
+          {
+            "path": "/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-09-29T12:45:41Z",
+            "google_canonical": "https://stusaurus.github.io/kyo-bodo-jp/",
+            "user_canonical": "https://stusaurus.github.io/kyo-bodo-jp/"
+          },
+          {
+            "path": "/scenes/two-player/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-08T21:46:55Z",
+            "google_canonical": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/",
+            "user_canonical": "https://stusaurus.github.io/kyo-bodo-jp/scenes/two-player/"
+          },
+          {
+            "path": "/scenes/children/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:29:43Z",
+            "google_canonical": "https://stusaurus.github.io/kyo-bodo-jp/scenes/children/",
+            "user_canonical": "https://stusaurus.github.io/kyo-bodo-jp/scenes/children/"
+          },
+          {
+            "path": "/games/ito/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:39:40Z",
+            "google_canonical": "https://stusaurus.github.io/kyo-bodo-jp/games/ito/",
+            "user_canonical": "https://stusaurus.github.io/kyo-bodo-jp/games/ito/"
+          },
+          {
+            "path": "/games/codenames-duet/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-11-09T10:39:40Z",
+            "google_canonical": "https://stusaurus.github.io/kyo-bodo-jp/games/codenames-duet/",
+            "user_canonical": "https://stusaurus.github.io/kyo-bodo-jp/games/codenames-duet/"
+          }
+        ]
+      },
+      {
+        "name": "SOTOJITAKU",
+        "query_pages_status": "NO_ROWS",
+        "normal_query_pages": [],
+        "inspection": [
+          {
+            "path": "/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-04T11:13:12Z",
+            "google_canonical": "https://stusaurus.github.io/sotojitaku/",
+            "user_canonical": "https://stusaurus.github.io/sotojitaku/"
+          },
+          {
+            "path": "/camp/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T11:26:56Z",
+            "google_canonical": "https://stusaurus.github.io/sotojitaku/camp/",
+            "user_canonical": "https://stusaurus.github.io/sotojitaku/camp/"
+          },
+          {
+            "path": "/car-stay/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T11:27:04Z",
+            "google_canonical": "https://stusaurus.github.io/sotojitaku/car-stay/",
+            "user_canonical": "https://stusaurus.github.io/sotojitaku/car-stay/"
+          },
+          {
+            "path": "/fishing/",
+            "status": "OBSERVED_SNAPSHOT",
+            "verdict": "PASS",
+            "coverage_state": "Submitted and indexed",
+            "last_crawl_time": "2026-10-12T11:26:56Z",
+            "google_canonical": "https://stusaurus.github.io/sotojitaku/fishing/",
+            "user_canonical": "https://stusaurus.github.io/sotojitaku/fishing/"
+          }
+        ]
+      }
+    ]
+  },
+  "five_site_ga4": {
+    "periods": {
+      "7": [
+        "2026-11-08",
+        "2026-11-14"
+      ],
+      "28": [
+        "2026-10-18",
+        "2026-11-14"
+      ]
+    },
+    "scope": "all_scopes; operator and unclassified tests may be included; not Google-only",
+    "sites": [
+      {
+        "site": "baby-cost-jp",
+        "organic_search_sessions": {
+          "7": 5,
+          "28": 12
+        }
+      },
+      {
+        "site": "pet-cost-jp",
+        "organic_search_sessions": {
+          "7": 1,
+          "28": 6
+        }
+      },
+      {
+        "site": "food-cost-jp",
+        "organic_search_sessions": {
+          "7": 3,
+          "28": 8
+        }
+      },
+      {
+        "site": "kyo-bodo-jp",
+        "organic_search_sessions": {
+          "7": 4,
+          "28": 12
+        }
+      },
+      {
+        "site": "sotojitaku",
+        "organic_search_sessions": {
+          "7": null,
+          "28": 7
+        }
+      }
+    ]
+  }
 }

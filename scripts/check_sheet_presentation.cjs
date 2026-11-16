@@ -2,6 +2,8 @@
 const {chromium,webkit}=require('playwright');
 const browserName=process.env.SHEET_QA_BROWSER||'chromium';
 if(!['chromium','webkit'].includes(browserName))throw new Error('Unsupported sheet QA browser');
+const publicSite=process.env.SHEET_QA_PUBLIC==='1';
+const qaUrl=(publicSite?'https://stusaurus.github.io/pet-cost-jp/':'http://127.0.0.1:8776/pet-cost-jp/')+'categories/pet-sheets/?test=1';
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),out=path.join(root,'audit-results/sheet-presentation',browserName);
 fs.mkdirSync(out,{recursive:true});
@@ -19,7 +21,7 @@ const server=http.createServer((req,res)=>{
    const context=await browser.newContext({viewport:{width,height:900},isMobile:width<500,hasTouch:width<500});
    await context.route(/google-analytics\.com|googletagmanager\.com|analytics\.google\.com/,r=>r.abort());
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-   const response=await page.goto('http://127.0.0.1:8776/pet-cost-jp/categories/pet-sheets/?test=1',{waitUntil:'networkidle'});
+   const response=await page.goto(qaUrl,{waitUntil:'networkidle'});
    assert.equal(response.status(),200);
    assert.equal(await page.locator('[data-size-summary]').count(),3);
    const monthlyGuide=page.locator('.monthly-sheet-guide');
@@ -133,7 +135,7 @@ const server=http.createServer((req,res)=>{
      purchasePlanVerified:true,stockNoBuyVerified:true,stockFitResetVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
   }
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({status:'PASS',records},null,2));
-  if(browserName!=='chromium')return;
+  if(browserName!=='chromium'||publicSite)return; // Lighthouse already runs in the unpublished preflight.
   const {default:lighthouse}=await import(require.resolve('lighthouse'));
   const launcher=await import(require.resolve('chrome-launcher'));
   const chrome=await launcher.launch({chromePath:chromium.executablePath(),chromeFlags:['--headless','--no-sandbox']});
