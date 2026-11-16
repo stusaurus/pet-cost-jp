@@ -265,7 +265,8 @@ def monthly_pet_sheet_guide():
 <p class="monthly-sheet-next"><a href="#comparison-conditions" class="text-link">使っているサイズを選び、30日分の必要セット数と購入額を計算する →</a></p>
 <p class="condition-note">購入するときは商品ごとの総枚数で切り上げます。30日で150枚必要でも、
 100枚入りなら2セット購入して50枚残る計算です。吸収力・厚さ・トレーのサイズは別途確認してください。</p>
-<h3 id="sheet-thickness-cost">薄型・厚型は、1枚の安さと使う枚数を分けて比較</h3>
+<details class="sheet-thickness-guide"><summary>薄型・厚型はどちらが安い？ 比較の手順を見る</summary>
+<h3 id="sheet-thickness-cost">1枚の安さと使う枚数を分けて比較</h3>
 <p>薄型・厚型を選ぶときは、トレーに合うサイズ、商品の吸収仕様、実際の交換枚数の順に確認します。
 同じサイズでも厚さや吸収力は商品ごとに異なるため、このページの単価順は吸収性能の順位ではありません。</p>
 <ol>
@@ -278,6 +279,7 @@ def monthly_pet_sheet_guide():
 <p><a class="text-link" href="#comparison-conditions">サイズを選んで、いつもの使用枚数で計算する →</a></p>
 <p class="condition-note">選び方の参考：<a href="https://www.aeonpet.com/topics/pet-column_175.html" rel="noopener" target="_blank">イオンペット：ペットシーツの厚さ・サイズの確認ポイント</a>。
 掲載商品の厚さ・吸収回数をこの資料から推定するものではありません。</p>
+</details>
 </section>'''
 
 

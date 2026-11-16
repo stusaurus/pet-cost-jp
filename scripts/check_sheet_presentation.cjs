@@ -26,6 +26,9 @@ const server=http.createServer((req,res)=>{
    assert(await monthlyGuide.isVisible());
    assert.equal(await monthlyGuide.locator('.monthly-sheet-examples li').count(),4);
    assert((await monthlyGuide.innerText()).includes('30日で150枚'));
+   const thickness=page.locator('.sheet-thickness-guide');
+   assert.equal(await thickness.evaluate(el=>el.open),false);
+   await thickness.locator('summary').click();
    assert(await page.locator('#sheet-thickness-cost').isVisible());
    const reference=monthlyGuide.locator('a[href="https://www.aeonpet.com/topics/pet-column_175.html"]');
    assert.equal(await reference.count(),1);
@@ -37,6 +40,8 @@ const server=http.createServer((req,res)=>{
    await monthlyGuide.screenshot({path:path.join(out,'thickness-guide-'+width+'.png'),animations:'disabled'});
    await monthlyGuide.locator('a[href="#comparison-conditions"]').last().click();
    assert.equal(await page.locator('#comparison-conditions').count(),1);
+   await thickness.locator('summary').click();
+   assert.equal(await thickness.evaluate(el=>el.open),false);
    assert(await page.locator('[data-size-summary]').first().isVisible());
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
    const canonical=await page.locator('link[rel=canonical]').getAttribute('href');
