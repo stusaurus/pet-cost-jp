@@ -13,13 +13,16 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - name: Install real Chromium test environment
         run: |
           npm install --prefix /tmp/seo-audit --no-audit --no-fund playwright@1.56.1
-          /tmp/seo-audit/node_modules/.bin/playwright install --with-deps chromium
+          /tmp/seo-audit/node_modules/.bin/playwright install --with-deps chromium webkit
       - name: Audit public desktop and mobile pages
         env:
           SEO_BASE: https://stusaurus.github.io/pet-cost-jp/
@@ -66,10 +69,19 @@ jobs:
             })().catch(e=>{console.error(e);process.exitCode=1});
             
           AUDIT_NODE
+      - name: Verify published sheet guidance and purchase operations in both engines
+        env:
+          NODE_PATH: /tmp/seo-audit/node_modules
+          SHEET_QA_PUBLIC: '1'
+        run: |
+          node scripts/check_sheet_presentation.cjs
+          SHEET_QA_BROWSER=webkit node scripts/check_sheet_presentation.cjs
       - name: Preserve screenshot and audit report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: seo-mobile-evidence
-          path: seo-mobile-evidence/
+          path: |
+            seo-mobile-evidence/
+            audit-results/sheet-presentation/
           retention-days: 14

@@ -275,3 +275,9 @@
 .sheet-usage-preset:focus-visible{outline:3px solid #bb6b28;outline-offset:3px}
 .sheet-usage-presets p{margin:8px 0 0;font-size:12px;line-height:1.7;color:#52665a}
 @media(max-width:390px){.sheet-usage-presets{padding:10px}.sheet-usage-preset{flex:1 1 40%;min-width:0}}
+
+/* Keep optional thickness guidance compact before the comparison controls. */
+.sheet-thickness-guide{margin-top:16px;border-top:1px solid var(--line,#d7e1d4);padding-top:8px}
+.sheet-thickness-guide>summary{min-height:44px;padding:10px 0;cursor:pointer;font-weight:700}
+.sheet-thickness-guide>summary:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.sheet-thickness-guide[open]>summary{margin-bottom:8px}
