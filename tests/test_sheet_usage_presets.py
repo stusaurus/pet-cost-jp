@@ -37,7 +37,9 @@ class SheetUsagePresetTests(unittest.TestCase):
         self.assertIn("input.value = String(count);", code)
         self.assertIn("setUsage(true);", code)
         self.assertIn("Number(button.dataset.usagePreset) === usage", code)
-        self.assertIn("setSheetStock()", code)
+        self.assertIn("setSheetStock(false)", code)
+        self.assertIn("setSheetStock(true)", code)
+        self.assertIn("reportStockCalculation()", code)
         self.assertIn("appendSheetPurchasePlan", code)
         self.assertIn("if (category === 'pet-sheets') usagePanel.open = true;", code)
 
