@@ -73,9 +73,9 @@ def schema_script(data):
     return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False).replace('<', '\\u003c') + '</script>'
 
 
-def shell(title, description, body, category_id='', schema=None):
-    url = f"{BASE_URL}{'categories/'+category_id+'/' if category_id else ''}"
-    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#426553"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(url)}"><link rel="icon" href="{BASE_URL}assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="{BASE_URL}assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(url)}"><meta property="og:image" content="{BASE_URL}assets/living/home.webp"><meta property="og:image:alt" content="朝の光の中でくつろぐ犬と猫、いつもの用品がある暮らし"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{BASE_URL}assets/living/home.webp">{schema_script(schema) if schema else ''}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" data-ui-version="pet-living-1" class="page-{esc(category_id or 'home')}"><a class="skip-link" href="#main">比較へ進む</a>{body}</body></html>'''
+def shell(title, description, body, category_id='', schema=None, page_path=None, page_class=None):
+    url = f"{BASE_URL}{page_path if page_path is not None else ('categories/'+category_id+'/' if category_id else '')}"
+    return f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#426553"><title>{esc(title)}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{esc(url)}"><link rel="icon" href="{BASE_URL}assets/favicon.svg" type="image/svg+xml"><link rel="manifest" href="{BASE_URL}assets/site.webmanifest"><meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{esc(url)}"><meta property="og:image" content="{BASE_URL}assets/living/home.webp"><meta property="og:image:alt" content="朝の光の中でくつろぐ犬と猫、いつもの用品がある暮らし"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{BASE_URL}assets/living/home.webp">{schema_script(schema) if schema else ''}{analytics_head()}<style>{CSS}</style></head><body data-category-id="{esc(category_id)}" data-ui-version="pet-living-1" class="page-{esc(page_class or category_id or 'home')}"><a class="skip-link" href="#main">比較へ進む</a>{body}</body></html>'''
 
 
 def icon(kind):
@@ -419,7 +419,40 @@ def faq_html(category):
 
 def footer():
     discovery_links = ''.join(f'<a href="{BASE_URL}categories/{key}/">{name}</a> ' for key,name in [('dog-food','犬のごはん'),('cat-food','猫のごはん'),('dog-toys','犬のおもちゃ'),('cat-toys','猫のおもちゃ')])
-    return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。</div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
+    return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。<p><a href="{BASE_URL}privacy/">プライバシーポリシー・アクセス解析について</a></p></div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
+
+
+def privacy_page(categories):
+    """Explain actual third-party analytics, local storage and affiliate links."""
+    body = f'''{nav(categories)}
+<main id="main" class="main wrap">
+  <header class="page-intro"><div class="category-intro-copy">
+    <p class="home-kicker">サイトの運営とデータについて</p>
+    <h1>プライバシーポリシー</h1>
+    <p class="intro-copy">当サイトのアクセス解析、端末内への設定保存、アフィリエイト広告について説明します。</p>
+  </div></header>
+  <section class="section method-section" aria-label="プライバシーの取り扱い">
+    <h2>1. アクセス解析について</h2>
+    <p>当サイトはGoogle アナリティクス 4（GA4）を利用しています。ページの閲覧、カテゴリーの選択、比較機能の利用、広告リンクのクリックなどの利用状況を把握し、サイトの改善に役立てます。Google アナリティクスはCookieなどの技術を使用し、閲覧状況やブラウザ・端末に関する情報を収集する場合があります。</p>
+    <p>当サイト独自のイベントでは、比較カテゴリー・商品識別子・単価・操作の種類などを送信する場合があります。一方、ペットシーツの1日の使用枚数や手持ち在庫の具体的な数値は、サイト独自のGA4イベントには含めません。</p>
+    <p>Googleによるデータの取り扱いは<a href="https://policies.google.com/technologies/partner-sites?hl=ja" rel="noopener" target="_blank">Googleのサービスを使用するサイトから収集した情報の使用</a>をご確認ください。</p>
+    <h2>2. Cookie・解析を制限する方法</h2>
+    <p>ブラウザの設定でCookieを制限・削除できます。対応ブラウザでは<a href="https://tools.google.com/dlpage/gaoptout?hl=ja" rel="noopener" target="_blank">Google アナリティクス オプトアウト アドオン</a>も利用できます。これらの設定によってアクセス解析の一部が行われなくなる場合があります。</p>
+    <h2>3. 端末内に保存する情報</h2>
+    <p>比較に使用するカテゴリーやサイズ、使用量、手持ち在庫、保存した商品の識別子などは、お使いのブラウザのローカルストレージに保存される場合があります。次回の比較を便利にするためのもので、ブラウザのサイトデータを削除すれば消去できます。会員登録や氏名・住所の入力は必要ありません。</p>
+    <h2>4. 広告と外部サイトについて</h2>
+    <p>当サイトは楽天市場などへのアフィリエイト広告リンクを利用し、リンク先で購入された場合などに紹介料を受け取ることがあります。商品の販売、決済、配送、Cookieの取り扱いはリンク先の事業者が行います。表示価格・在庫・送料・商品仕様は取得後に変更される場合があり、購入前に販売ページでご確認ください。</p>
+    <h2>5. お問い合わせ・改定</h2>
+    <p>サイトの表示や比較方法については<a href="https://github.com/stusaurus/pet-cost-jp/issues" rel="noopener" target="_blank">公開GitHub Issue</a>をご利用いただけます。投稿内容は公開され、GitHubのアカウントが必要になる場合があります。氏名・連絡先などの個人情報は公開投稿しないでください。</p>
+    <p>計測方法や利用サービスの変更に伴い、この内容を更新する場合があります。最終更新：2026年11月21日。</p>
+    <p><a class="text-link" href="{BASE_URL}">比較サイトのトップに戻る →</a></p>
+  </section>
+</main>{footer()}{mobile_dock(categories, 'privacy')}'''
+    schema = {'@context': 'https://schema.org', '@type': 'WebPage',
+              'name': 'プライバシーポリシー', 'url': BASE_URL + 'privacy/'}
+    return shell(f'プライバシーポリシー | {SITE_NAME}',
+                 'アクセス解析、Cookie、比較条件の端末保存、アフィリエイト広告の取り扱いを説明します。',
+                 body, schema=schema, page_path='privacy/', page_class='privacy')
 
 
 def category_choice_guide(category):
@@ -679,8 +712,9 @@ def main():
         raise RuntimeError('Discovery quality audit failed: '+ '; '.join(errors))
     write_text(SITE / 'data' / 'discovery.json', json.dumps(discovery_data, ensure_ascii=False, indent=2))
     write_text(SITE / 'index.html', homepage(categories, summaries, updated))
+    write_text(SITE / 'privacy' / 'index.html', privacy_page(categories))
     write_text(SITE / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {BASE_URL}sitemap.xml\n')
-    urls = [BASE_URL] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
+    urls = [BASE_URL, BASE_URL + 'privacy/'] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     enrich(SITE, ROOT / 'data', display_name)
