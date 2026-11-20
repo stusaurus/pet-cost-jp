@@ -8,9 +8,12 @@ permissions:
   contents: read
 jobs:
   preflight:
-    # Playwright 1.56.1 cannot install Chromium dependencies on Ubuntu 26.04.
+    # Browser binaries and Ubuntu dependencies are included in the pinned image.
+    # Avoid slow apt downloads on every PR: this previously hit workflow timeouts.
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -33,7 +36,7 @@ jobs:
       - name: Verify sheet selection at 320, 390 and 1440 pixels
         run: |
           npm install --prefix /tmp/sheet-qa --no-audit --no-fund playwright@1.56.1 lighthouse@12.8.2
-          /tmp/sheet-qa/node_modules/.bin/playwright install --with-deps chromium webkit
+          node -e "const {chromium,webkit}=require('/tmp/sheet-qa/node_modules/playwright'); const fs=require('fs'); for(const b of [chromium,webkit]) { if (!fs.existsSync(b.executablePath())) throw Error('Missing browser: '+b.executablePath()); }"
           NODE_PATH=/tmp/sheet-qa/node_modules node scripts/check_sheet_presentation.cjs
           SHEET_QA_BROWSER=webkit NODE_PATH=/tmp/sheet-qa/node_modules node scripts/check_sheet_presentation.cjs
       - name: Save unpublished sheet comparison evidence
