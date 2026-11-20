@@ -49,6 +49,29 @@ class RenderTests(unittest.TestCase):
         sheets = build_site.category_page(self.categories[0], [self.item], self.categories, '2026-11-21 00:00 JST')
         self.assertIn('id="comparison-conditions"', sheets)
 
+    def test_privacy_page_discloses_analytics_storage_and_affiliate_relationships(self):
+        privacy = build_site.privacy_page(self.categories)
+        page = Page(privacy)
+        self.assertEqual(len([a for tag, a in page.tags if tag == 'h1']), 1)
+        self.assertIn('プライバシーポリシー', privacy)
+        self.assertIn('Google アナリティクス 4', privacy)
+        self.assertIn('Cookie', privacy)
+        self.assertIn('ローカルストレージ', privacy)
+        self.assertIn('アフィリエイト広告', privacy)
+        self.assertIn('氏名・住所の入力は必要ありません', privacy)
+        self.assertIn('手持ち在庫の具体的な数値は、サイト独自のGA4イベントには含めません', privacy)
+        self.assertIn('https://policies.google.com/technologies/partner-sites?hl=ja', privacy)
+        self.assertIn('https://tools.google.com/dlpage/gaoptout?hl=ja', privacy)
+        self.assertIn('公開され', privacy)
+        self.assertIn('WebPage', privacy)
+        canonicals = [a['href'] for tag, a in page.tags if tag == 'link' and a.get('rel') == 'canonical']
+        self.assertEqual(canonicals, [build_site.BASE_URL + 'privacy/'])
+        self.assertEqual(page.with_attr('data-category-id')[0]['data-category-id'], '')
+        home = build_site.homepage(self.categories, {}, '2026-11-21 07:00 JST')
+        sheets = self.render([self.item])
+        for source in (home, sheets):
+            self.assertIn('href="' + build_site.BASE_URL + 'privacy/"', source)
+
     def test_food_play_index_links_are_visible_but_do_not_precede_priority_comparisons(self):
         page=build_site.homepage(self.categories, {}, '2026-11-04 08:00 JST')
         links=Page(page).with_attr('href')
