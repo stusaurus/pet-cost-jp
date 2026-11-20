@@ -320,6 +320,15 @@ test('homepage merged entry preserves both existing analytics events', async () 
     assert.equal(events(p, 'daily_spotlight_click').length, 3);
     assert.equal(events(p, 'affiliate_click').length, 0);
     assert.equal(events(p, 'comparison_view').length, 0);
+    const entry=get(p, '[data-monthly-sheet-entry]');
+    assert.ok(entry.href.endsWith('/categories/pet-sheets/#comparison-conditions'));
+    entry.click();
+    const entryEvents=events(p, 'pet_sheet_entry_click');
+    assert.equal(entryEvents.length, 1);
+    assert.equal(entryEvents[0].category_id, 'pet-sheets');
+    assert.equal(entryEvents[0].conversion_source, 'homepage_stock_entry');
+    assert.equal(entryEvents[0].operator_test, '1');
+    assert.equal(events(p, 'affiliate_click').length, 0);
     assert.deepEqual(p.errors, []);
   } finally { p.close(); }
 });
@@ -735,10 +744,22 @@ test('sheet stock produces a no-buy verdict, adjusts checkout and resets when sh
     usage.value='5';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
     assert.ok(text(p,'[data-featured-usage]').includes('2セット'));
     stock.value='40';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,0,'typing alone must not count a committed calculation');
+    stock.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    const stockEvents=events(p,'pet_sheet_stock_calculated');
+    assert.equal(stockEvents.length,1);
+    assert.equal(stockEvents[0].stock_entered,true);
+    assert.equal(stockEvents[0].category_id,'pet-sheets');
+    assert.equal(stockEvents[0].conversion_source,'stock_input');
+    assert.equal(stockEvents[0].operator_test,'1');
+    for(const forbidden of ['stock_sheets','stockSheets','sheets_per_day','usage','quantity','stock_value','purchase_total'])
+      assert.equal(Object.hasOwn(stockEvents[0],forbidden),false,`Private value key ${forbidden} must not be sent`);
     let result=text(p,'[data-featured-usage] [data-sheet-purchase-plan]');
     for(const value of ['必要枚数','150枚','手持ち在庫','40枚','不足枚数','110枚','2セット','¥2,000','90枚'])
       assert.ok(result.includes(value),value+' missing');
     stock.value='150';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    stock.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,1,'Stock edits must not inflate one page visit');
     result=text(p,'[data-featured-usage] [data-sheet-purchase-plan]');
     assert.ok(result.includes('今は買い足し不要'));
     assert.ok(result.includes('0セット'));
@@ -761,6 +782,27 @@ test('sheet stock produces a no-buy verdict, adjusts checkout and resets when sh
     assert.ok(result.includes('2セット'));
     assert.ok(result.includes('送料未加算'));
     assert.equal(get(p,'[data-angle-link]').hidden,false);
+    assert.deepEqual(p.errors,[]);
+  }finally{p.close();}
+});
+
+test('explicit stock entered before usage tracks completion only once after valid usage', async () => {
+  const category=categories[0],base=payloads[0].items[0];
+  const regular={...base,product_id:'stock-before-usage',group:'regular',quantity:100,price:1000,unit_price:10,postage_flag:0};
+  const p=await open(render(category,[regular]),category.id);
+  try{
+    get(p,'[data-group-button][data-group="regular"]').click();
+    const stock=get(p,'[data-sheet-stock-input]'),usage=get(p,'[data-usage-input]');
+    stock.value='40';stock.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    stock.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,0,'Usage must be valid before counting');
+    usage.value='5';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,0,'Typing usage is not a completed step');
+    usage.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,1);
+    assert.ok(text(p,'[data-featured-usage] [data-sheet-purchase-plan]').includes('110枚'));
+    usage.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,1);
     assert.deepEqual(p.errors,[]);
   }finally{p.close();}
 });
