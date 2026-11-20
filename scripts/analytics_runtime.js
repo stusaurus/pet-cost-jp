@@ -96,6 +96,8 @@
     let usage = null;
     let stockSheets = 0; // Non-persistent, current size only.
     let stockValid = true;
+    let stockCommitted = false; // Explicit inventory input, never restored or sent as a value.
+    let stockCalculationReported = false; // At most one successful use per page view.
     let lastUsageEvent = 'null';
     const decimal = value => value.toLocaleString('ja-JP', { maximumFractionDigits: 1 });
     const daysText = value => value < 1 ? '1日未満' : decimal(value) + '日';
@@ -199,7 +201,14 @@
         }
       });
     }
-    function setSheetStock() {
+    function reportStockCalculation() {
+      if (category !== 'pet-sheets' || stockCalculationReported || !stockCommitted ||
+          !stockValid || !(stockSheets > 0) || !(usage > 0) || !visibleRows.length ||
+          !$('[data-featured-usage] [data-sheet-purchase-plan]')) return;
+      stockCalculationReported = true;
+      send('pet_sheet_stock_calculated', { category_id: 'pet-sheets', conversion_source: 'stock_input', stock_entered: true });
+    }
+    function setSheetStock(commit = false) {
       if (category !== 'pet-sheets') return;
       const input = $('[data-sheet-stock-input]'), error = $('[data-sheet-stock-error]');
       if (!input) return;
@@ -207,6 +216,7 @@
       const valid = /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) && Number(raw) <= 100000;
       stockValid = valid;
       if (valid) stockSheets = Number(raw);
+      if (commit && valid && stockSheets > 0) stockCommitted = true;
       input.setAttribute('aria-invalid', String(!valid));
       if (error) {
         error.hidden = valid;
@@ -214,6 +224,7 @@
       }
       updateAngles();
       updateUsage();
+      if (commit) reportStockCalculation();
     }
     function setUsage(emit = false, clear = false) {
       const input = $('[data-usage-input]'), error = $('[data-usage-error]');
@@ -227,6 +238,7 @@
       saveHome();
       if (category === 'pet-sheets') updateAngles();
       updateUsage();
+      if (emit) reportStockCalculation();
       if (emit && (empty || value !== null) && lastUsageEvent !== String(value)) {
         lastUsageEvent = String(value);
         send('pet_usage_change', { category_id: category, filter_value: activeGroup, usage_period: usagePeriod, usage_enabled: value !== null });
@@ -412,6 +424,7 @@
         // Inventory for regular-size sheets must never carry over to wide-size offers.
         stockSheets = 0;
         stockValid = true;
+        stockCommitted = false;
         const stockInput = $('[data-sheet-stock-input]');
         if (stockInput) { stockInput.value = '0'; stockInput.setAttribute('aria-invalid', 'false'); }
         const stockError = $('[data-sheet-stock-error]');
@@ -533,8 +546,8 @@
     $('[data-usage-form]')?.addEventListener('submit', event => { event.preventDefault(); setUsage(true); });
     $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
     $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
-    $('[data-sheet-stock-input]')?.addEventListener('input', setSheetStock);
-    $('[data-sheet-stock-input]')?.addEventListener('change', setSheetStock);
+    $('[data-sheet-stock-input]')?.addEventListener('input', () => setSheetStock(false));
+    $('[data-sheet-stock-input]')?.addEventListener('change', () => setSheetStock(true));
     $$('[data-calc-price], [data-calc-qty]').forEach(input => input.addEventListener('input', () => { if (calcActive) calculate(false); }));
     if (category && filter) { send('comparison_view', { category_id: category }); send('view_item_list', { item_list_id: category, item_list_name: category }); }
     document.addEventListener('click', event => {
@@ -567,6 +580,8 @@
       if (event.target.closest('[data-usage-clear]')) setUsage(true, true);
       if (event.target.closest('[data-open-usage]')) { const usagePanel = $('[data-usage-panel]'); if (usagePanel) usagePanel.open = true; }
       if (event.target.closest('[data-open-standards]')) { const standards = $('#comparison-standards'); if (standards) standards.open = true; }
+      const monthlySheet = event.target.closest('a[data-monthly-sheet-entry]');
+      if (monthlySheet) send('pet_sheet_entry_click', { category_id: 'pet-sheets', conversion_source: 'homepage_stock_entry' });
       const care = event.target.closest('[data-pet-category]');
       if (care) send('pet_category_select', { category_id: care.dataset.petCategory, conversion_source: 'household_start' });
       const editorial = event.target.closest('a[data-editorial-category]');
