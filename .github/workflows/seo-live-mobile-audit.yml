@@ -1,6 +1,9 @@
 name: SEO live mobile audit
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/seo-live-mobile-audit.yml'
   workflow_run:
     workflows: ["Build and deploy pet-cost-jp"]
     types: [completed]
@@ -8,10 +11,13 @@ permissions:
   contents: read
 jobs:
   audit:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
-    # Playwright 1.56.1 does not support Chromium dependency install on Ubuntu 26.04.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    # The official image includes Chromium, WebKit and their OS dependencies.
+    # Avoid slow apt mirror downloads and 15-minute timeout during --with-deps.
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,10 +25,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install real Chromium test environment
+      - name: Install Playwright package and verify bundled browsers
         run: |
           npm install --prefix /tmp/seo-audit --no-audit --no-fund playwright@1.56.1
-          /tmp/seo-audit/node_modules/.bin/playwright install --with-deps chromium webkit
+          node -e "const {chromium,webkit}=require('/tmp/seo-audit/node_modules/playwright'); const fs=require('fs'); for(const b of [chromium,webkit]) { if (!fs.existsSync(b.executablePath())) throw Error('Missing browser: '+b.executablePath()); }"
       - name: Audit public desktop and mobile pages
         env:
           SEO_BASE: https://stusaurus.github.io/pet-cost-jp/
