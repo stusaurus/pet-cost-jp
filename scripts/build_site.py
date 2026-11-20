@@ -265,6 +265,11 @@ def monthly_pet_sheet_guide():
 <p class="monthly-sheet-next"><a href="#comparison-conditions" class="text-link">使っているサイズを選び、30日分の必要セット数と購入額を計算する →</a></p>
 <p class="condition-note">購入するときは商品ごとの総枚数で切り上げます。30日で150枚必要でも、
 100枚入りなら2セット購入して50枚残る計算です。吸収力・厚さ・トレーのサイズは別途確認してください。</p>
+<h3 id="sheet-stock-example">手持ちの在庫がある場合は、買い足す枚数から計算</h3>
+<p>例えば1日5枚使い、手元に同じサイズのシーツが40枚ある場合、30日で必要な150枚から40枚を引くと、
+買い足しが必要なのは110枚です。仮に100枚入りの商品なら2セット購入し、30日後は90枚残る計算です。
+これは数量だけの計算例で、商品代金や送料・適合性を保証するものではありません。</p>
+<p class="monthly-sheet-next"><a href="#comparison-conditions" class="text-link">いつものサイズ・1日の使用枚数・手持ち在庫で、実際の必要セット数を計算する →</a></p>
 <details class="sheet-thickness-guide"><summary>薄型・厚型はどちらが安い？ 比較の手順を見る</summary>
 <h3 id="sheet-thickness-cost">1枚の安さと使う枚数を分けて比較</h3>
 <p>薄型・厚型を選ぶときは、トレーに合うサイズ、商品の吸収仕様、実際の交換枚数の順に確認します。
@@ -517,8 +522,13 @@ def category_page(category, items, categories, updated):
       </section></div>
       {category_choice_guide(category)}
     </main>{footer()}{mobile_dock(categories, category['id'])}'''
-    title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
-    desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
+    if category['id'] == 'pet-sheets':
+        title = f"ペットシーツの30日必要枚数・買い足し計算｜サイズ別1枚単価を比較 | {SITE_NAME}"
+        desc = ("ペットシーツの30日分を1日の使用枚数と手持ち在庫から計算。"
+                "レギュラー・ワイド・スーパーワイド別に必要セット数、商品代金、余る枚数、1枚単価と送料条件を比較できます。")
+    else:
+        title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
+        desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
     return shell(title, desc, body, category['id'], schema)
 
 
