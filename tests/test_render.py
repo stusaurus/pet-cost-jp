@@ -35,6 +35,20 @@ class RenderTests(unittest.TestCase):
         self.assertIn('使用量を入れれば', home)
 
 
+    def test_home_stock_entry_links_directly_to_the_existing_calculator(self):
+        home = build_site.homepage(self.categories, {}, '2026-11-21 00:00 JST')
+        destination = build_site.BASE_URL + 'categories/pet-sheets/#comparison-conditions'
+        links = [a for a in Page(home).with_attr('href') if a.get('href') == destination]
+        self.assertEqual(len(links), 1)
+        self.assertIn('data-monthly-sheet-entry', links[0])
+        self.assertIn('手持ち在庫を引いて、30日分の購入セット数を計算する', home)
+        self.assertIn('1日5枚なら30日で150枚', home)
+        self.assertIn('買い足しは110枚', home)
+        self.assertIn('送料別商品の送料は未加算', home)
+        self.assertNotIn('href="' + build_site.BASE_URL + 'categories/pet-sheets/#monthly-sheet-guide-heading"', home)
+        sheets = build_site.category_page(self.categories[0], [self.item], self.categories, '2026-11-21 00:00 JST')
+        self.assertIn('id="comparison-conditions"', sheets)
+
     def test_food_play_index_links_are_visible_but_do_not_precede_priority_comparisons(self):
         page=build_site.homepage(self.categories, {}, '2026-11-04 08:00 JST')
         links=Page(page).with_attr('href')

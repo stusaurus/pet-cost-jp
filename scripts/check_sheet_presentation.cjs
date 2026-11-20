@@ -138,14 +138,20 @@ const server=http.createServer((req,res)=>{
   if(browserName!=='chromium'||publicSite)return; // Lighthouse already runs in the unpublished preflight.
   const {default:lighthouse}=await import(require.resolve('lighthouse'));
   const launcher=await import(require.resolve('chrome-launcher'));
-  const chrome=await launcher.launch({chromePath:chromium.executablePath(),chromeFlags:['--headless','--no-sandbox']});
-  try{for(const desktop of [false,true]){
-   const result=await lighthouse('http://127.0.0.1:8776/pet-cost-jp/categories/pet-sheets/?test=1',
-    {port:chrome.port,output:'json',onlyCategories:['performance','accessibility','best-practices','seo'],
-     blockedUrlPatterns:['*googletagmanager.com*','*google-analytics.com*','*analytics.google.com*'],
-     ...(desktop?{formFactor:'desktop',screenEmulation:{mobile:false,width:1440,height:900,deviceScaleFactor:1,disabled:false},throttlingMethod:'provided'}:{})});
-   assert(!result.lhr.runtimeError);fs.writeFileSync(path.join(out,`lighthouse-${desktop?'desktop':'mobile'}.json`),result.report);
-   console.log('LIGHTHOUSE',desktop?'desktop':'mobile',JSON.stringify(Object.fromEntries(Object.entries(result.lhr.categories).map(([k,v])=>[k,v.score]))));
-  }}finally{await chrome.kill();}
+  // Give each Lighthouse run its own Chrome process so mobile and desktop
+  // audits cannot share a broken CDP session or exhausted shared memory.
+  for(const desktop of [false,true]){
+   const chrome=await launcher.launch({chromePath:chromium.executablePath(),
+    chromeFlags:['--headless','--no-sandbox','--disable-dev-shm-usage']});
+   try{
+    const result=await lighthouse('http://127.0.0.1:8776/pet-cost-jp/categories/pet-sheets/?test=1',
+     {port:chrome.port,output:'json',onlyCategories:['performance','accessibility','best-practices','seo'],
+      blockedUrlPatterns:['*googletagmanager.com*','*google-analytics.com*','*analytics.google.com*'],
+      ...(desktop?{formFactor:'desktop',screenEmulation:{mobile:false,width:1440,height:900,deviceScaleFactor:1,disabled:false},throttlingMethod:'provided'}:{})});
+    assert(!result.lhr.runtimeError);
+    fs.writeFileSync(path.join(out,`lighthouse-${desktop?'desktop':'mobile'}.json`),result.report);
+    console.log('LIGHTHOUSE',desktop?'desktop':'mobile',JSON.stringify(Object.fromEntries(Object.entries(result.lhr.categories).map(([k,v])=>[k,v.score]))));
+   }finally{await chrome.kill();}
+  }
  }finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1;});

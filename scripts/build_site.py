@@ -559,8 +559,8 @@ def homepage(categories, summaries, updated):
       <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">条件が決まっている方へ</p><h2 id="categories-heading">いつもの用品をすぐ比べる</h2></div><span class="section-count">サイズ・素材・本体から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
       <section class="home-monthly-sheet-entry" aria-label="ペットシーツの必要枚数から探す">
         <h2>ペットシーツ、1か月で何枚使う？</h2>
-        <p>いつもの1日の使用枚数から、30日分の必要枚数を計算できます。使っているサイズを選ぶと、掲載商品の購入セット数と商品代金も比べられます。交換頻度をおすすめするものではありません。</p>
-        <a class="hero-secondary" data-monthly-sheet-entry href="{BASE_URL}categories/pet-sheets/#monthly-sheet-guide-heading">30日分の枚数から比較する →</a>
+        <p>1日5枚なら30日で150枚。手持ちの同じサイズのシーツが40枚あれば、買い足しは110枚です。使っているサイズを選び、実際の使用枚数と在庫から、商品ごとの必要セット数・購入額・余る枚数を計算できます。送料別商品の送料は未加算で、交換回数をおすすめするものではありません。</p>
+        <a class="hero-secondary" data-monthly-sheet-entry href="{BASE_URL}categories/pet-sheets/#comparison-conditions">手持ち在庫を引いて、30日分の購入セット数を計算する →</a>
       </section>
       <nav class="home-extra-categories" aria-label="犬猫のごはん・遊びの用品">
         <strong>ごはん・遊びの用品も比較</strong>
