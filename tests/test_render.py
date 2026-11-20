@@ -59,6 +59,22 @@ class RenderTests(unittest.TestCase):
             self.assertNotIn('<section class="section monthly-sheet-guide"', page)
             self.assertNotIn('購入するときは商品ごとの総枚数で切り上げます', page)
 
+    def test_sheet_stock_example_is_crawlable_and_seo_specific(self):
+        guide = build_site.monthly_pet_sheet_guide()
+        self.assertIn('id="sheet-stock-example"', guide)
+        self.assertIn('買い足しが必要なのは110枚', guide)
+        self.assertIn('100枚入りの商品なら2セット購入', guide)
+        self.assertIn('30日後は90枚残る', guide)
+        page = self.render([self.item])
+        self.assertIn('ペットシーツの30日必要枚数・買い足し計算', page)
+        self.assertIn('手持ち在庫から計算', page)
+        self.assertIn('rel="canonical" href="' + build_site.BASE_URL + 'categories/pet-sheets/"', page)
+        self.assertIn('href="#comparison-conditions"', guide)
+        for category in self.categories[1:]:
+            other_page = build_site.category_page(category, [], self.categories, '2026-11-20 JST')
+            self.assertNotIn('id="sheet-stock-example"', other_page)
+            self.assertNotIn('ペットシーツの30日必要枚数・買い足し計算', other_page)
+
     def test_sheet_overview_separates_all_sizes_and_keeps_shipping_unknown(self):
         category = build_site.load_categories()[0]
         regular = dict(name='レギュラー 100枚', price=1000, quantity=100.0,
