@@ -207,6 +207,32 @@
       appendSheetPurchasePlan(mount, row);
       appendLitterPurchasePlan(mount, row);
     }
+    function updateLitterSwitch() {
+      if (category !== 'cat-litter') return;
+      const input = $('[data-litter-current-unit-price]');
+      const output = $('[data-litter-switch-result]');
+      if (!input || !output) return;
+      const raw = input.value.trim();
+      const current = Number(raw);
+      if (raw && (!Number.isFinite(current) || current <= 0 || current > 1000000)) {
+        output.textContent = '今の1L単価は0より大きい100万円以下の数値で入力してください。';
+        return;
+      }
+      if (!raw || !(usage > 0) || !activeGroup || activeGroup === 'all' || !visibleRows.length) {
+        output.textContent = '素材を選び、月間使用量と今の1L単価を入力すると差額を表示します。';
+        return;
+      }
+      const candidate = visibleRows[0];
+      const candidateUnit = unit(candidate);
+      if (!(candidateUnit > 0)) { output.textContent = '比較可能な価格がありません。'; return; }
+      const difference = (current - candidateUnit) * usage;
+      const amount = Math.round(Math.abs(difference));
+      output.textContent = '現在の消費額目安：約' + monthlyYen(current * usage) +
+        '／比較先の消費額目安：約' + monthlyYen(candidateUnit * usage) +
+        '。差額は月約' + monthlyYen(amount) +
+        (difference > 0 ? '安い計算' : difference < 0 ? '高い計算' : 'でほぼ同額') +
+        'です（掲載単価最小の商品との試算）。送料・購入セット単位・適合性を反映した支払総額ではありません。';
+    }
     function updateUsage() {
       if (category === 'pet-sheets') {
         document.querySelectorAll('[data-usage-preset]').forEach(button => {
@@ -217,6 +243,7 @@
       const note = $('[data-usage-scale-note]'); if (note) note.hidden = !usage;
       text('[data-open-usage]', usage ? '使用量を変える' : '使用量を入れる');
       text('[data-usage-teaser]', usage ? periodLabel + usage.toLocaleString('ja-JP') + (metric === 'per_liter' ? 'L' : '枚') + 'で比較中' : '任意 · どのくらい持つ？');
+      updateLitterSwitch();
       renderUsage($('[data-featured-usage]'), visibleRows[0]);
       const picks = anglePicks();
       renderUsage($('[data-angle-usage]'), picks[angleRole]);
@@ -484,6 +511,7 @@
         if (category === 'pet-sheets' || category === 'cat-litter') usagePanel.open = true;
       }
       visibleRows = allRows.filter(row => group === 'all' || row.dataset.group === group);
+      updateLitterSwitch();
       const prices = visibleRows.map(unit).filter(x => x > 0).sort((a, b) => a - b);
       const length = prices.length, middle = Math.floor(length / 2);
       stats = { min: prices[0] || 0, median: length ? length % 2 ? prices[middle] : (prices[middle - 1] + prices[middle]) / 2 : 0, minTotal: length ? Math.min(...visibleRows.map(total)) : 0, maxQuantity: length ? Math.max(...visibleRows.map(quantity)) : 0 };
@@ -586,6 +614,7 @@
     $('[data-calculator]')?.addEventListener('submit', event => { event.preventDefault(); calculate(true); });
     $('[data-usage-form]')?.addEventListener('submit', event => { event.preventDefault(); setUsage(true); });
     $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
+    $('[data-litter-current-unit-price]')?.addEventListener('input', updateLitterSwitch);
     $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
     $('[data-sheet-stock-input]')?.addEventListener('input', () => setSheetStock(false));
     $('[data-sheet-stock-input]')?.addEventListener('change', () => setSheetStock(true));

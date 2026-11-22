@@ -539,6 +539,7 @@ def category_page(category, items, categories, updated):
         <p class="condition-note">{fit_note}</p>
         {'<p class="condition-note" role="note" data-litter-fit-warning><strong>先にトイレ方式・素材を確認：</strong>固まる猫砂とシステムトイレ用チップは用途が異なります。木製でも両方式があるため、素材名だけで適合を判断せず、商品説明で「固まるタイプ／システムトイレ用」と使用中の本体への対応を確認してください。素材を問わない価格比較は購入推奨ではありません。</p>' if category['id'] == 'cat-litter' else ''}
         <div class="filter-wrap"><div data-group-filter data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
+        {'<div class="condition-note" data-litter-switch-panel><label for="litter-current-unit-price"><strong>今使っている猫砂の1L単価（税込・円）</strong></label> <input id="litter-current-unit-price" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" data-litter-current-unit-price placeholder="例：150" aria-describedby="litter-switch-help"> <p id="litter-switch-help">任意入力。購入総額ではなく、入力した月間L数に基づく消費額の差を比較します。送料・トイレ本体代・交換負担は含みません。同じ用途・対応方式の商品だけで比較してください。</p><p data-litter-switch-result role="status" aria-live="polite">素材を選び、月間使用量と今の1L単価を入力すると差額を表示します。</p></div>' if category['id'] == 'cat-litter' else ''}
         <div class="condition-foot"><p class="result-status" data-result-status role="status" aria-live="polite" aria-atomic="true">選ぶと、うちの条件の比較に切り替わります。</p><span class="condition-save">次回もこの端末で引き継げます</span></div>
         {usage_panel(category)}
       </section>
