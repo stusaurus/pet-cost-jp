@@ -589,6 +589,10 @@ def category_page(category, items, categories, updated):
         title = f"ペットシーツの30日必要枚数・買い足し計算｜サイズ別1枚単価を比較 | {SITE_NAME}"
         desc = ("ペットシーツの30日分を1日の使用枚数と手持ち在庫から計算。"
                 "レギュラー・ワイド・スーパーワイド別に必要セット数、商品代金、余る枚数、1枚単価と送料条件を比較できます。")
+    elif category['id'] == 'cat-litter':
+        title = f"猫砂は1か月に何袋必要？購入セット数・商品代金と1L単価を比較 | {SITE_NAME}"
+        desc = ("猫砂を月に何L使うか入力すると、紙・おから・木・鉱物など素材別の商品について、"
+                "30日分の購入セット数・商品代金・余るL数を計算できます。販売単位と送料条件も明示。")
     else:
         title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
         desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
