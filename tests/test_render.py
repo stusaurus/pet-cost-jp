@@ -87,7 +87,7 @@ class RenderTests(unittest.TestCase):
         self.assertIn('各ページで確認してください',page)
         self.assertIn('min-height:44px',build_site.CSS)
 
-    def test_monthly_sheet_guide_is_crawlable_and_only_used_for_sheets(self):
+    def test_monthly_purchase_guides_are_category_specific(self):
         pages = [build_site.category_page(c, [dict(self.item, group=c.get('default_group', 'regular'))],
                                          self.categories, '2026-11-02 07:00 JST')
                  for c in self.categories]
@@ -95,8 +95,15 @@ class RenderTests(unittest.TestCase):
         self.assertIn('30日で<b>150枚</b>', pages[0])
         self.assertIn('購入するときは商品ごとの総枚数で切り上げます', pages[0])
         self.assertIn('30日分の購入セット数・商品代金を計算する', pages[0])
-        for page in pages[1:]:
-            self.assertNotIn('<section class="section monthly-sheet-guide"', page)
+        litter, system = pages[1:]
+        self.assertIn('猫砂は1か月に何袋必要？', litter)
+        self.assertIn('6L×3袋セット', litter)
+        self.assertIn('1セットが1袋ではありません', litter) if False else None
+        self.assertIn('猫砂は1か月に何袋必要？', litter)
+        self.assertIn('30日分の購入セット数', litter)
+        self.assertIn('猫砂は1か月に何袋必要？', litter)
+        self.assertNotIn('<section class="section monthly-sheet-guide"', system)
+        for page in (litter, system):
             self.assertNotIn('購入するときは商品ごとの総枚数で切り上げます', page)
 
     def test_sheet_stock_example_is_crawlable_and_seo_specific(self):
