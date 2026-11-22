@@ -131,8 +131,42 @@ const server=http.createServer((req,res)=>{
    await page.screenshot({path:path.join(out,`comparison-${width}.png`),fullPage:true,animations:'disabled'});
    await page.locator('[data-size-summary]').first().scrollIntoViewIfNeeded();
    await page.screenshot({path:path.join(out,`overview-${width}.png`),animations:'disabled'});
+   // Verify the new cat-litter checkout in both real engines, including narrow screens.
+   const litter=await context.newPage();
+   litter.on('pageerror',e=>errors.push('cat-litter: '+e.message));
+   const litterResponse=await litter.goto(qaUrl.replace('pet-sheets/','cat-litter/'),{waitUntil:'networkidle'});
+   assert.equal(litterResponse.status(),200);
+   assert(await litter.locator('.monthly-sheet-guide').isVisible());
+   assert((await litter.locator('.monthly-sheet-guide').innerText()).includes('猫砂は1か月に何袋必要？'));
+   await litter.locator('[data-group-button][data-group="paper"]').click();
+   assert(await litter.locator('[data-usage-panel]').evaluate(el=>el.open===true));
+   await litter.locator('[data-usage-input]').fill('10');
+   const litterRow=litter.locator('[data-product-row]:visible').first();
+   const litterQuantity=Number(await litterRow.getAttribute('data-quantity'));
+   const litterPrice=Number(await litterRow.getAttribute('data-total-price'));
+   const litterShipping=await litterRow.getAttribute('data-shipping');
+   assert(litterQuantity>0&&litterPrice>0);
+   const litterSets=Math.ceil(10/litterQuantity);
+   const liter=value=>value.toLocaleString('ja-JP',{maximumFractionDigits:6})+'L';
+   const litterPlan=litter.locator('[data-featured-usage] [data-litter-purchase-plan]');
+   assert(await litterPlan.isVisible());
+   const litterText=await litterPlan.innerText();
+   for(const value of ['10L',liter(litterQuantity),litterSets+'セット',
+                        liter(Math.max(0,litterSets*litterQuantity-10)),
+                        '¥'+(litterSets*litterPrice).toLocaleString('ja-JP'),
+                        litterShipping==='送料込み'?'送料込み表示':'送料未加算'])
+     assert(litterText.includes(value),'Cat litter purchase plan missing: '+value);
+   const litterLink=litter.locator('[data-product-row]:visible [data-affiliate-link]').first();
+   assert((await litterLink.getAttribute('href')).startsWith('https://'));
+   assert((await litterLink.getAttribute('rel')).includes('sponsored'));
+   assert(await litter.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2));
+   await litter.screenshot({path:path.join(out,'cat-litter-checkout-'+width+'.png'),
+                            fullPage:true,animations:'disabled'});
+   await litter.close();
+   assert.equal(errors.length,0,errors.join(','));
    records.push({browser:browserName,width,status:response.status(),canonical,errors,overflow:false,
-     purchasePlanVerified:true,stockNoBuyVerified:true,stockFitResetVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
+     purchasePlanVerified:true,stockNoBuyVerified:true,stockFitResetVerified:true,
+     catLitterCheckoutVerified:true,requiredSheets:150,setsToBuy:sets});await context.close();
   }
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({status:'PASS',records},null,2));
   if(browserName!=='chromium'||publicSite)return; // Lighthouse already runs in the unpublished preflight.

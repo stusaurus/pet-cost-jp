@@ -152,6 +152,46 @@
       mount.appendChild(container);
     }
 
+    function appendLitterPurchasePlan(mount, row) {
+      // The entered L/month is a household observation, never a recommended usage rate.
+      // An offer can contain multiple bags; one purchased set is not necessarily one bag.
+      if (category !== 'cat-litter' || !row || !(usage > 0) ||
+          !(quantity(row) > 0) || !(total(row) > 0)) return;
+      const sets = Math.ceil(usage / quantity(row));
+      const payable = sets * total(row);
+      if (!Number.isSafeInteger(sets) || sets < 1 || sets > 1000000 ||
+          !Number.isSafeInteger(payable)) return;
+      const remaining = Math.max(0, sets * quantity(row) - usage);
+      const liters = value => value.toLocaleString('ja-JP', { maximumFractionDigits: 6 }) + 'L';
+      const container = element('section', 'sheet-purchase-plan');
+      container.dataset.litterPurchasePlan = '1';
+      container.setAttribute('aria-label', '猫砂30日分の購入セット数と商品代金');
+      container.appendChild(element('strong', 'sheet-purchase-title', '30日分を買うなら'));
+      const metrics = element('div', 'sheet-purchase-metrics');
+      for (const [label, value] of [
+        ['30日で使う量', liters(usage)],
+        ['この商品の販売総容量', liters(quantity(row))],
+        ['購入する商品セット数', sets.toLocaleString('ja-JP') + 'セット'],
+        ['購入後に残る量', liters(remaining)]
+      ]) {
+        const cell = element('div', 'sheet-purchase-metric');
+        cell.append(element('span', '', label), element('b', '', value));
+        metrics.appendChild(cell);
+      }
+      const cash = element('div', 'sheet-purchase-metric sheet-purchase-cash');
+      const shipping = row.dataset.shipping === '送料込み'
+        ? '商品代金の合計（送料込み表示）'
+        : '商品代金の合計（送料未加算）';
+      cash.append(element('span', '', shipping), element('b', '', monthlyYen(payable)));
+      metrics.appendChild(cash);
+      container.appendChild(metrics);
+      container.appendChild(element('p', 'sheet-purchase-note',
+        'これは販売単位ごとの購入計算です。1セットに複数袋が入る商品もあります。' +
+        '30日分の消費額の目安とは異なります。素材・用途を確かめ、地域別追加送料・在庫・' +
+        '実際の注文総額は販売店で確認してください。'));
+      mount.appendChild(container);
+    }
+
     function renderUsage(mount, row) {
       if (!mount) return;
       const values = usageValues(row);
@@ -165,6 +205,7 @@
       mount.appendChild(metrics);
       mount.appendChild(element('p', 'usage-footnote', '新品を使い始めてから' + (values.days < 1 ? '1日未満' : '約' + daysText(values.days)) + 'で使い切る計算。送料別の送料は未加算。'));
       appendSheetPurchasePlan(mount, row);
+      appendLitterPurchasePlan(mount, row);
     }
     function updateUsage() {
       if (category === 'pet-sheets') {
@@ -440,7 +481,7 @@
       if (start) start.hidden = true;
       if (usagePanel) {
         usagePanel.hidden = false;
-        if (category === 'pet-sheets') usagePanel.open = true;
+        if (category === 'pet-sheets' || category === 'cat-litter') usagePanel.open = true;
       }
       visibleRows = allRows.filter(row => group === 'all' || row.dataset.group === group);
       const prices = visibleRows.map(unit).filter(x => x > 0).sort((a, b) => a - b);
