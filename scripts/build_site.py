@@ -288,14 +288,38 @@ def monthly_pet_sheet_guide():
 </section>'''
 
 
+def cat_litter_monthly_guide():
+    """Explain the genuine monthly-purchase use case without an assumed consumption rate."""
+    return '''<section class="section monthly-sheet-guide" aria-labelledby="monthly-litter-heading">
+<div class="monthly-sheet-head"><div><p class="step-label">いつもの消費量から、買うセット数を決める</p>
+<h2 id="monthly-litter-heading">猫砂は1か月に何袋必要？</h2>
+<p>使う量は猫の数、猫砂の種類、トイレの使い方で異なります。交換量を決めつけず、
+ご家庭で実際に1か月で使うL数を入力し、商品の販売総容量から必要な購入セット数と代金を計算します。</p></div></div>
+<ul class="monthly-sheet-examples" aria-label="1か月に10L使う場合の仮の購入例">
+<li><strong>6L単袋の商品</strong><span>10Lなら<b>2袋</b>購入後2L残る</span></li>
+<li><strong>6L×3袋セット</strong><span>10Lなら<b>1セット</b>購入後8L残る</span></li>
+<li><strong>8L単袋の商品</strong><span>10Lなら<b>2袋</b>購入後6L残る</span></li>
+<li><strong>5L×2袋セット</strong><span>10Lなら<b>1セット</b>購入後0L残る</span></li>
+</ul>
+<p class="monthly-sheet-next"><a href="#comparison-conditions" class="text-link">普段使う猫砂の素材と月間使用L数から、購入セット数・商品代金を計算する →</a></p>
+<p class="condition-note">上記は実在商品の価格や推奨交換量ではなく数量計算例です。
+販売単位が複数袋のとき、計算する「1セット」は1袋ではありません。送料別・送料不明の場合は送料未加算、
+配送先ごとの追加送料・適合性・購入時の価格は販売店で確認してください。kg表記をLへ推測換算しません。</p>
+</section>'''
+
+
 def usage_panel(category):
     period, label, suffix, example = {
         'pet-sheets': ('day', '1日に何枚使いますか？', '枚 / 日', '5'),
         'cat-litter': ('month', '1か月に何L使いますか？', 'L / 月', '10'),
         'system-toilet-sheets': ('week', '1週間に何枚交換しますか？', '枚 / 週', '1'),
     }[category['id']]
-    heading = '30日分の購入セット数・商品代金を計算する' if category['id'] == 'pet-sheets' else 'うちの使用量で見る'
-    teaser = '必要な枚数から購入個数まで' if category['id'] == 'pet-sheets' else '任意 · どのくらい持つ？'
+    heading = ('30日分の購入セット数・商品代金を計算する' if category['id'] == 'pet-sheets'
+               else '猫砂30日分の購入セット数・商品代金を計算する' if category['id'] == 'cat-litter'
+               else 'うちの使用量で見る')
+    teaser = ('必要な枚数から購入個数まで' if category['id'] == 'pet-sheets'
+              else '月間L数から買うセット数まで' if category['id'] == 'cat-litter'
+              else '任意 · どのくらい持つ？')
     sheet_stock_field = "<div class=\"sheet-stock-field\" data-sheet-stock-field><label class=\"input-label\" for=\"pet-sheet-stock\">いつものサイズの手持ちシーツ（0〜100000枚）</label><span class=\"usage-input-wrap\"><input id=\"pet-sheet-stock\" class=\"input\" type=\"text\" inputmode=\"numeric\" autocomplete=\"off\" data-sheet-stock-input value=\"0\" aria-describedby=\"sheet-stock-help sheet-stock-error\"><span>枚</span></span><p id=\"sheet-stock-help\" class=\"condition-note\">選んだサイズで使えるシーツだけ入力してください。在庫枚数はこのページだけで使い、保存しません。</p><p id=\"sheet-stock-error\" data-sheet-stock-error class=\"calc-message\" role=\"status\" hidden></p></div>" if category['id'] == 'pet-sheets' else ''
     sheet_usage_presets = (
         '<fieldset class="sheet-usage-presets" data-sheet-usage-presets>'
@@ -310,7 +334,13 @@ def usage_panel(category):
         '実際に使っている枚数を選ぶか、下の入力欄から正確に入力してください。</p>'
         '</fieldset>'
     ) if category['id'] == 'pet-sheets' else ''
-    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>{heading}</span><span class="usage-teaser" data-usage-teaser>{teaser}</span></summary><form data-usage-form data-usage-period="{period}" novalidate>{sheet_usage_presets}<div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p>{sheet_stock_field}<p class="condition-note" id="usage-help">いつもの使用量を入れると、各商品の持つ期間と30日分の消費額の目安が分かります。ペットシーツは手持ち在庫を差し引き、必要購入セット数・商品代金を計算します。1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。</p></form></details>'''
+    help_text = ('猫砂は実際に1か月で使うL数から、商品ごとの販売総容量に応じた購入セット数・代金・余剰量を計算します。'
+                 '1セットが複数袋の場合もあります。送料別の送料は未加算です。交換量のおすすめではありません。'
+                 if category['id'] == 'cat-litter' else
+                 'いつもの使用量を入れると、各商品の持つ期間と30日分の消費額の目安が分かります。'
+                 'ペットシーツは手持ち在庫を差し引き、必要購入セット数・商品代金を計算します。'
+                 '1か月＝30日、1週間＝7日で換算。交換頻度のおすすめではありません。')
+    return f'''<details class="usage-panel" data-usage-panel hidden><summary><span>{heading}</span><span class="usage-teaser" data-usage-teaser>{teaser}</span></summary><form data-usage-form data-usage-period="{period}" novalidate>{sheet_usage_presets}<div class="usage-form-row"><label class="input-label">{label}<span class="usage-input-wrap"><input class="input" type="text" inputmode="decimal" autocomplete="off" data-usage-input aria-label="{label}" aria-describedby="usage-help usage-error" placeholder="例：{example}"><span>{suffix}</span></span></label><button type="submit" class="btn secondary">使用量を反映</button><button type="button" class="text-button" data-usage-clear>入力を消す</button></div><p class="calc-message" data-usage-error id="usage-error" role="status" hidden></p>{sheet_stock_field}<p class="condition-note" id="usage-help">{help_text}</p></form></details>'''
 
 
 def reason_badges(item, items, middle):
@@ -502,7 +532,7 @@ def category_page(category, items, categories, updated):
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
       {sheet_size_overview(category, items)}
-      {monthly_pet_sheet_guide() if category['id'] == 'pet-sheets' else ''}
+      {monthly_pet_sheet_guide() if category['id'] == 'pet-sheets' else cat_litter_monthly_guide() if category['id'] == 'cat-litter' else ''}
       {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>
