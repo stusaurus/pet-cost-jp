@@ -623,7 +623,7 @@ test('purchase planner is absent from cat litter and system toilet sheets', asyn
   for(const category of categories.slice(1)){
     const p=await open(fs.readFileSync(path.join(root,'site/categories',category.id,'index.html'),'utf8'),category.id);
     try {
-      assert.equal(get(p,'.monthly-sheet-guide'),null);
+      assert.equal(!!get(p,'.monthly-sheet-guide'),category.id==='cat-litter');
       const group=get(p,'[data-group-button]');
       if(!group)continue;
       group.click();
