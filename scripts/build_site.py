@@ -537,6 +537,7 @@ def category_page(category, items, categories, updated):
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>
         <p class="condition-note">{fit_note}</p>
+        {'<p class="condition-note" role="note" data-litter-fit-warning><strong>先にトイレ方式・素材を確認：</strong>固まる猫砂とシステムトイレ用チップは用途が異なります。木製でも両方式があるため、素材名だけで適合を判断せず、商品説明で「固まるタイプ／システムトイレ用」と使用中の本体への対応を確認してください。素材を問わない価格比較は購入推奨ではありません。</p>' if category['id'] == 'cat-litter' else ''}
         <div class="filter-wrap"><div data-group-filter data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
         <div class="condition-foot"><p class="result-status" data-result-status role="status" aria-live="polite" aria-atomic="true">選ぶと、うちの条件の比較に切り替わります。</p><span class="condition-save">次回もこの端末で引き継げます</span></div>
         {usage_panel(category)}
