@@ -150,6 +150,19 @@ class RenderTests(unittest.TestCase):
     def render(self, items):
         return build_site.category_page(self.category, items, self.categories, '2026-09-30 07:00 JST')
 
+    def test_cat_litter_switch_cost_input_only_appears_for_cat_litter(self):
+        litter = next(c for c in self.categories if c['id'] == 'cat-litter')
+        page = build_site.category_page(litter, [], self.categories, '2026-11-22 00:00 JST')
+        parsed = Page(page)
+        inputs = parsed.with_attr('data-litter-current-unit-price')
+        self.assertEqual(len(inputs), 1)
+        self.assertEqual(inputs[0]['min'], '1')
+        self.assertEqual(inputs[0]['max'], '1000000')
+        self.assertEqual(len(parsed.with_attr('data-litter-switch-result')), 1)
+        self.assertIn('購入総額ではなく', page)
+        self.assertIn('同じ用途・対応方式', page)
+        self.assertFalse(Page(self.render([])).with_attr('data-litter-current-unit-price'))
+
     def test_first_visit_requires_own_condition_with_honest_noscript_example(self):
         wide = dict(self.item, product_id='wide', group='wide', unit_price=5.0, price=1000)
         page = Page(self.render([wide, self.item]))
