@@ -98,10 +98,8 @@ class RenderTests(unittest.TestCase):
         litter, system = pages[1:]
         self.assertIn('猫砂は1か月に何袋必要？', litter)
         self.assertIn('6L×3袋セット', litter)
-        self.assertIn('1セットが1袋ではありません', litter) if False else None
-        self.assertIn('猫砂は1か月に何袋必要？', litter)
         self.assertIn('30日分の購入セット数', litter)
-        self.assertIn('猫砂は1か月に何袋必要？', litter)
+        self.assertIn('1セットに複数袋', litter)
         self.assertNotIn('<section class="section monthly-sheet-guide"', system)
         for page in (litter, system):
             self.assertNotIn('購入するときは商品ごとの総枚数で切り上げます', page)
