@@ -41,7 +41,7 @@ class SheetUsagePresetTests(unittest.TestCase):
         self.assertIn("setSheetStock(true)", code)
         self.assertIn("reportStockCalculation()", code)
         self.assertIn("appendSheetPurchasePlan", code)
-        self.assertIn("if (category === 'pet-sheets') usagePanel.open = true;", code)
+        self.assertIn("if (category === 'pet-sheets' || category === 'cat-litter') usagePanel.open = true;", code)
 
     def test_mobile_44_pixel_keyboard_focus_and_selection_state(self):
         css = (ROOT / "assets" / "living.css").read_text(encoding="utf-8")
