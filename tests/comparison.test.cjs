@@ -97,7 +97,16 @@ test('pet-first journey, voluntary profile storage and telemetry privacy', async
     assert.equal(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'),null);
     const save=get(p,'[data-profile-save]');save.checked=true;save.dispatchEvent(new p.dom.window.Event('change',{bubbles:true}));
     const data=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_profiles_v1'));assert.equal(data.dog.weight,'5.25');assert.equal(data.dog.age,'adult');
-    assert.ok(!JSON.stringify(p.events).includes('5.25'));assert.ok(!JSON.stringify(p.events).includes('秘密の犬種'));
+    // A product's public unit_price can coincidentally equal the entered weight.
+    // Test exact input leakage, not an arbitrary numeric substring in all events.
+    for (const event of p.events) {
+      const params = event[2] || {};
+      for (const [key, value] of Object.entries(params)) {
+        assert.ok(!/weight|breed/i.test(key), 'private profile field must not be tracked');
+        if (key !== 'unit_price') assert.notEqual(String(value), '5.25');
+      }
+      assert.ok(!JSON.stringify(params).includes('秘密の犬種'));
+    }
     get(p,'[data-pet-select="cat"]').click();assert.equal(all(p,'[data-pet-routes]:not([hidden]) [data-living-route]').length,4);
     const resumeSource=get(p,'[data-pet-routes="cat"] [data-living-route="cat-litter"]');resumeSource.addEventListener('click',e=>e.preventDefault(),{once:true});resumeSource.click();
     const recent=JSON.parse(p.dom.window.localStorage.getItem('pet_cost_last_route_v1'));assert.equal(recent.species,'cat');assert.equal(recent.supply,'cat-litter');
@@ -576,6 +585,40 @@ test('pet sheet 30-day checkout choice uses only postage-included offers and res
   }finally{p.close();}
 });
 
+test('cat litter: actual monthly liters yield purchased product sets, checkout, surplus and shipping scope', async () => {
+  const category=categories[1], base=payloads[1].items[0];
+  const bulk={...base,product_id:'litter-bulk-42l',group:'paper',quantity:42,price:2499,unit_price:2499/42,postage_flag:0};
+  const small={...base,product_id:'litter-single-6l',group:'paper',quantity:6,price:1000,unit_price:1000/6,postage_flag:1};
+  const wood={...base,product_id:'litter-wood-12l',group:'wood',quantity:12,price:900,unit_price:75,postage_flag:0};
+  const html=render(category,[bulk,small,wood]);
+  assert.ok(html.includes('猫砂は1か月に何袋必要？'));
+  assert.ok(html.includes('kg表記をLへ推測換算しません'));
+  const p=await open(html,category.id);
+  try {
+    get(p,'[data-group-button][data-group="paper"]').click();
+    assert.equal(get(p,'[data-usage-panel]').open,true);
+    const usage=get(p,'[data-usage-input]');
+    usage.value='10';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    const plan=get(p,'[data-featured-usage] [data-litter-purchase-plan]');
+    assert.ok(plan,'first ranked item must show purchase plan');
+    for(const expected of ['30日で使う量','10L','42L','1セット','32L','¥2,499','送料込み表示'])
+      assert.ok(plan.textContent.includes(expected), expected+' missing');
+    assert.ok(text(p,'[data-angle-usage]').includes('30日分を買うなら'));
+    get(p,'[data-angle-role="total"]').click();
+    const smallPlan=get(p,'[data-angle-usage] [data-litter-purchase-plan]');
+    for(const expected of ['2セット','2L','¥2,000','送料未加算'])
+      assert.ok(smallPlan.textContent.includes(expected),expected+' missing');
+    assert.equal(events(p,'pet_sheet_stock_calculated').length,0);
+    assert.equal(events(p,'pet_usage_change').length,0);
+    usage.value='0';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    assert.equal(get(p,'[data-featured-usage] [data-litter-purchase-plan]'),null);
+    usage.value='10';usage.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+    get(p,'[data-group-button][data-group="wood"]').click();
+    assert.ok(text(p,'[data-featured-usage] [data-litter-purchase-plan]').includes('2L'));
+    assert.deepEqual(p.errors,[]);
+  } finally {p.close();}
+});
+
 test('purchase planner is absent from cat litter and system toilet sheets', async () => {
   for(const category of categories.slice(1)){
     const p=await open(fs.readFileSync(path.join(root,'site/categories',category.id,'index.html'),'utf8'),category.id);
@@ -585,7 +628,7 @@ test('purchase planner is absent from cat litter and system toilet sheets', asyn
       if(!group)continue;
       group.click();
       assert.ok(!get(p,'[data-usage-panel]').hidden);
-      assert.equal(get(p,'[data-usage-panel]').open,false);
+      assert.equal(get(p,'[data-usage-panel]').open,category.id==='cat-litter');
       const input=get(p,'[data-usage-input]');
       input.value='5';input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
       assert.equal(get(p,'[data-sheet-purchase-plan]'),null);
