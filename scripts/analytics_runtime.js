@@ -218,7 +218,7 @@
         output.textContent = '今の1L単価は0より大きい100万円以下の数値で入力してください。';
         return;
       }
-      if (!raw || !(usage > 0) || !activeGroup || activeGroup === 'all' || !visibleRows.length) {
+      if (!(usage > 0) || !activeGroup || activeGroup === 'all' || !visibleRows.length) {
         output.textContent = '素材を選び、月間使用量と今の1L単価を入力すると差額を表示します。';
         return;
       }
@@ -230,7 +230,7 @@
         const packLiters = Number(litersRaw), packPrice = Number(priceRaw);
         if (!litersRaw || !priceRaw || !Number.isFinite(packLiters) ||
             !Number.isFinite(packPrice) || packLiters < 0.01 ||
-            packLiters > 1000000 || packPrice <= 0 || packPrice > 100000000) {
+            packLiters > 1000000 || packPrice <= 0 || packPrice > 100000000 || !Number.isSafeInteger(packPrice)) {
           output.textContent = '現在の商品の1セット総容量（L）と税込価格（円）を両方、正しい数値で入力してください。';
           return;
         }
@@ -259,6 +259,7 @@
           '。送料別商品の送料・追加送料・適合性は未反映。購入前に販売店で確認してください。';
         return;
       }
+      if (!raw) { output.textContent = '今の1L単価、または現在のセット容量と価格を入力してください。'; return; }
       const difference = (current - candidateUnit) * usage;
       const amount = Math.round(Math.abs(difference));
       output.textContent = '現在の消費額目安：約' + monthlyYen(current * usage) +
