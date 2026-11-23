@@ -528,6 +528,19 @@ def category_page(category, items, categories, updated):
         'cat-litter': '紙・おから・木・鉱物など普段使う素材に絞り、猫砂の1L単価・商品価格・送料条件を比較。1か月の使用L数から必要セット数と余る量を計算できます。トイレ方式への適合は別途確認してください。',
         'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。対応機種・寸法は購入前に確認してください。',
     }[category['id']]
+    entry_links = {
+        'pet-sheets': [('#monthly-sheet-guide-heading', '30日分の必要枚数を知る'),
+                       ('#comparison-conditions', 'サイズ別に価格を比べる'),
+                       ('#comparison-method', '比較方法を確認する')],
+        'cat-litter': [('#monthly-litter-heading', '1か月の必要量を知る'),
+                       ('#comparison-conditions', '素材別に価格を比べる'),
+                       ('#comparison-method', '比較方法を確認する')],
+        'system-toilet-sheets': [('#comparison-conditions', '対応シリーズを選ぶ'),
+                                ('#comparison-method', '比較方法を確認する')],
+    }[category['id']]
+    entry_navigation = ('<nav aria-label="このページでできること" class="results-bridge">'
+                        + ''.join(f'<a class="text-link" href="{href}">{esc(label)} →</a>'
+                                  for href, label in entry_links) + '</nav>')
     schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
@@ -535,6 +548,7 @@ def category_page(category, items, categories, updated):
     body = f'''{nav(categories, category['id'])}
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(search_heading)}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
+      {entry_navigation}
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
       {sheet_size_overview(category, items)}
       {monthly_pet_sheet_guide() if category['id'] == 'pet-sheets' else cat_litter_monthly_guide() if category['id'] == 'cat-litter' else ''}
