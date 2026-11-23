@@ -518,17 +518,22 @@ def category_page(category, items, categories, updated):
     prompt = {'pet-sheets': '使っているサイズは？', 'cat-litter': '普段使っている素材は？', 'system-toilet-sheets': '使っているトイレは？'}[category['id']]
     fit_note = {'pet-sheets': 'いつものサイズだけで比較します。厚さ・吸収力は商品ごとに確かめてください。', 'cat-litter': 'いつもの素材・用途だけで比較します。kgからLへの推測換算はしません。', 'system-toilet-sheets': '本体に合うシリーズだけで比較します。寸法・対応機種は購入前に商品ページで確認してください。'}[category['id']]
     suffix = 'L' if category['metric'] == 'per_liter' else '枚'
+    search_heading = {
+        'pet-sheets': 'ペットシーツのサイズ別価格比較と30日分の購入枚数計算',
+        'cat-litter': '猫砂の素材別1L単価比較と1か月の購入量計算',
+        'system-toilet-sheets': 'システムトイレ用シートの対応商品と1枚単価比較',
+    }[category['id']]
     search_intro = {
-        'pet-sheets': 'レギュラー・ワイド・スーパーワイドのサイズ別に、ペットシーツの1枚単価・商品価格・送料条件を比較します。',
-        'cat-litter': '紙・おから・木・鉱物など素材別に、猫砂の1L単価・商品価格・送料条件を比較します。',
-        'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。',
+        'pet-sheets': 'レギュラー・ワイド・スーパーワイドから普段使うサイズを選び、1枚単価・商品価格・送料条件を比較。1日の使用枚数と手持ち在庫から30日分の必要セット数も計算できます。',
+        'cat-litter': '紙・おから・木・鉱物など普段使う素材に絞り、猫砂の1L単価・商品価格・送料条件を比較。1か月の使用L数から必要セット数と余る量を計算できます。トイレ方式への適合は別途確認してください。',
+        'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。対応機種・寸法は購入前に確認してください。',
     }[category['id']]
     schema = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     body = f'''{nav(categories, category['id'])}
-    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(short_name(category))}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
+    <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(search_heading)}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
       {sheet_size_overview(category, items)}
