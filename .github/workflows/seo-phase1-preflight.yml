@@ -31,7 +31,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           text=(Path("site")/"categories/pet-sheets/index.html").read_text()
-          assert "レギュラー・ワイド・スーパーワイドのサイズ別に" in text
+          assert "レギュラー・ワイド・スーパーワイドから普段使うサイズを選び" in text
           PY
       - name: Verify sheet selection at 320, 390 and 1440 pixels
         run: |
