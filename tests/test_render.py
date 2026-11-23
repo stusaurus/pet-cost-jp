@@ -159,7 +159,7 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(inputs[0]['min'], '1')
         self.assertEqual(inputs[0]['max'], '1000000')
         self.assertEqual(len(parsed.with_attr('data-litter-switch-result')), 1)
-        self.assertIn('購入総額ではなく', page)
+        self.assertIn('30日分の購入セット数・支払商品代金・余剰量', page)
         self.assertIn('同じ用途・対応方式', page)
         self.assertFalse(Page(self.render([])).with_attr('data-litter-current-unit-price'))
 
