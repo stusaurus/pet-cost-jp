@@ -159,9 +159,19 @@ class RenderTests(unittest.TestCase):
         self.assertEqual(inputs[0]['min'], '1')
         self.assertEqual(inputs[0]['max'], '1000000')
         self.assertEqual(len(parsed.with_attr('data-litter-switch-result')), 1)
-        self.assertIn('購入総額ではなく', page)
+        self.assertIn('30日分の購入セット数・支払商品代金・余剰量', page)
         self.assertIn('同じ用途・対応方式', page)
         self.assertFalse(Page(self.render([])).with_attr('data-litter-current-unit-price'))
+
+    def test_cat_litter_current_pack_purchase_fields_are_optional_and_isolated(self):
+        litter = next(c for c in self.categories if c['id'] == 'cat-litter')
+        html = build_site.category_page(litter, [], self.categories, '2026-11-23 00:00 JST')
+        parsed = Page(html)
+        self.assertEqual(len(parsed.with_attr('data-litter-current-pack-liters')), 1)
+        self.assertEqual(len(parsed.with_attr('data-litter-current-pack-price')), 1)
+        self.assertIn('30日分の購入セット数・支払商品代金・余剰量', html)
+        self.assertIn('同じ用途・対応方式', html)
+        self.assertFalse(Page(self.render([])).with_attr('data-litter-current-pack-price'))
 
     def test_first_visit_requires_own_condition_with_honest_noscript_example(self):
         wide = dict(self.item, product_id='wide', group='wide', unit_price=5.0, price=1000)

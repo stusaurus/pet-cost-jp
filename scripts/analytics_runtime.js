@@ -218,13 +218,48 @@
         output.textContent = '今の1L単価は0より大きい100万円以下の数値で入力してください。';
         return;
       }
-      if (!raw || !(usage > 0) || !activeGroup || activeGroup === 'all' || !visibleRows.length) {
+      if (!(usage > 0) || !activeGroup || activeGroup === 'all' || !visibleRows.length) {
         output.textContent = '素材を選び、月間使用量と今の1L単価を入力すると差額を表示します。';
         return;
+      }
+      const packLitersInput = $('[data-litter-current-pack-liters]');
+      const packPriceInput = $('[data-litter-current-pack-price]');
+      const litersRaw = packLitersInput?.value.trim() || '';
+      const priceRaw = packPriceInput?.value.trim() || '';
+      if (litersRaw || priceRaw) {
+        const packLiters = Number(litersRaw), packPrice = Number(priceRaw);
+        if (!litersRaw || !priceRaw || !Number.isFinite(packLiters) ||
+            !Number.isFinite(packPrice) || packLiters < 0.01 ||
+            packLiters > 1000000 || packPrice <= 0 || packPrice > 100000000 || !Number.isSafeInteger(packPrice)) {
+          output.textContent = '現在の商品の1セット総容量（L）と税込価格（円）を両方、正しい数値で入力してください。';
+          return;
+        }
       }
       const candidate = visibleRows[0];
       const candidateUnit = unit(candidate);
       if (!(candidateUnit > 0)) { output.textContent = '比較可能な価格がありません。'; return; }
+      if (litersRaw && priceRaw) {
+        const packLiters = Number(litersRaw), packPrice = Number(priceRaw);
+        const candidateLiters = quantity(candidate), candidatePrice = total(candidate);
+        const oldSets = Math.ceil(usage / packLiters);
+        const newSets = Math.ceil(usage / candidateLiters);
+        const oldTotal = oldSets * packPrice, newTotal = newSets * candidatePrice;
+        if (!(candidateLiters > 0) || !(candidatePrice > 0) ||
+            !Number.isSafeInteger(oldSets) || !Number.isSafeInteger(newSets) ||
+            !Number.isSafeInteger(oldTotal) || !Number.isSafeInteger(newTotal)) {
+          output.textContent = '購入セット数を安全に計算できません。入力値を確認してください。';
+          return;
+        }
+        output.textContent = '30日分の購入計画：現在の商品 ' + oldSets + 'セット・' +
+          monthlyYen(oldTotal) + '・余剰' + (oldSets * packLiters - usage).toLocaleString('ja-JP', {maximumFractionDigits: 6}) +
+          'L／比較先 ' + newSets + 'セット・' + monthlyYen(newTotal) +
+          '・余剰' + (newSets * candidateLiters - usage).toLocaleString('ja-JP', {maximumFractionDigits: 6}) +
+          'L。差額 ' + monthlyYen(Math.abs(oldTotal - newTotal)) +
+          (oldTotal > newTotal ? '（比較先が安い）' : oldTotal < newTotal ? '（比較先が高い）' : '（同額）') +
+          '。送料別商品の送料・追加送料・適合性は未反映。購入前に販売店で確認してください。';
+        return;
+      }
+      if (!raw) { output.textContent = '今の1L単価、または現在のセット容量と価格を入力してください。'; return; }
       const difference = (current - candidateUnit) * usage;
       const amount = Math.round(Math.abs(difference));
       output.textContent = '現在の消費額目安：約' + monthlyYen(current * usage) +
@@ -615,6 +650,8 @@
     $('[data-usage-form]')?.addEventListener('submit', event => { event.preventDefault(); setUsage(true); });
     $('[data-usage-input]')?.addEventListener('input', () => setUsage(false));
     $('[data-litter-current-unit-price]')?.addEventListener('input', updateLitterSwitch);
+    $('[data-litter-current-pack-liters]')?.addEventListener('input', updateLitterSwitch);
+    $('[data-litter-current-pack-price]')?.addEventListener('input', updateLitterSwitch);
     $('[data-usage-input]')?.addEventListener('change', () => setUsage(true));
     $('[data-sheet-stock-input]')?.addEventListener('input', () => setSheetStock(false));
     $('[data-sheet-stock-input]')?.addEventListener('change', () => setSheetStock(true));
