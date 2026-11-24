@@ -511,9 +511,12 @@ def category_choice_guide(category):
 </section>'''
 
 
+SHEET_SIZE_PATHS = {'regular': 'regular', 'wide': 'wide', 'super_wide': 'super-wide'}
+
+
 def category_page(category, items, categories, updated, fixed_group=None):
     if fixed_group:
-        if category['id'] != 'pet-sheets' or fixed_group != 'regular':
+        if category['id'] != 'pet-sheets' or fixed_group not in SHEET_SIZE_PATHS:
             raise ValueError('Unsupported dedicated size')
         items = [item for item in items if item.get('group') == fixed_group]
         category = {**category, 'default_group': fixed_group, 'groups': {fixed_group: category['groups'][fixed_group]}}
@@ -534,8 +537,9 @@ def category_page(category, items, categories, updated, fixed_group=None):
         'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。対応機種・寸法は購入前に確認してください。',
     }[category['id']]
     if fixed_group:
-        search_heading = 'レギュラーサイズのペットシーツ価格比較・30日分の購入計算'
-        search_intro = 'レギュラーだけを比較し、1枚単価と商品価格、送料条件を確認。普段使う枚数と在庫から必要な購入セット数を計算できます。レギュラー表記でも寸法は商品ごとに異なるため、トレーに合うか確認してください。'
+        search_heading = f'{label}サイズのペットシーツ価格比較・30日分の購入計算'
+        size_note = {'regular': 'レギュラー表記でも寸法は商品ごとに異なるため、トレーに合うか確認してください。', 'wide': 'ワイド表記でも実寸や吸収部分の広さは商品ごとに異なります。使用中のトレーを測って確認してください。', 'super_wide': 'スーパーワイド表記でも実寸は商品ごとに異なります。敷く場所とトレーへの適合、収納場所を確認してください。'}[fixed_group]
+        search_intro = f'{label}だけを比較し、1枚単価と商品価格、送料条件を確認。普段使う枚数と在庫から必要な購入セット数を計算できます。{size_note}'
     entry_links = {
         'pet-sheets': [('#monthly-sheet-guide-heading', '30日分の必要枚数を知る'),
                        ('#comparison-conditions', 'サイズ別に価格を比べる'),
@@ -554,8 +558,14 @@ def category_page(category, items, categories, updated, fixed_group=None):
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     if fixed_group:
-        schema['itemListElement'].append({'@type': 'ListItem', 'position': 3, 'name': 'レギュラー', 'item': BASE_URL + 'categories/pet-sheets/regular/'})
-    size_navigation = (f'<p><a class="text-link" href="{BASE_URL}categories/pet-sheets/">全サイズの比較へ →</a></p>' if fixed_group else f'<p><a class="text-link" href="{BASE_URL}categories/pet-sheets/regular/">レギュラー専用の価格・購入量比較へ →</a></p>' if category['id'] == 'pet-sheets' else '')
+        schema['itemListElement'].append({'@type': 'ListItem', 'position': 3, 'name': label, 'item': BASE_URL + 'categories/pet-sheets/' + SHEET_SIZE_PATHS[fixed_group] + '/'})
+    size_navigation = ''
+    if category['id'] == 'pet-sheets':
+        names = {'regular': 'レギュラー', 'wide': 'ワイド', 'super_wide': 'スーパーワイド'}
+        size_links = [f'<a class="text-link" href="{BASE_URL}categories/pet-sheets/{slug}/">{names[group]}専用の価格・購入量比較へ →</a>' for group, slug in SHEET_SIZE_PATHS.items() if group != fixed_group]
+        if fixed_group:
+            size_links.insert(0, f'<a class="text-link" href="{BASE_URL}categories/pet-sheets/">全サイズの比較へ →</a>')
+        size_navigation = '<nav class="results-bridge" aria-label="ペットシーツのサイズ別比較">' + ''.join(size_links) + '</nav>'
     body = f'''{nav(categories, category['id'])}
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(search_heading)}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
@@ -630,9 +640,9 @@ def category_page(category, items, categories, updated, fixed_group=None):
         title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
         desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
     if fixed_group:
-        title = f'ペットシーツ レギュラーの価格比較｜1枚単価・30日分の購入額 | {SITE_NAME}'
+        title = f'ペットシーツ {label}の価格比較｜1枚単価・30日分の購入額 | {SITE_NAME}'
         desc = search_intro
-    return shell(title, desc, body, category['id'], schema, page_path='categories/pet-sheets/regular/' if fixed_group else None)
+    return shell(title, desc, body, category['id'], schema, page_path=f'categories/pet-sheets/{SHEET_SIZE_PATHS[fixed_group]}/' if fixed_group else None)
 
 
 def homepage(categories, summaries, updated):
@@ -720,7 +730,8 @@ def main():
             ranked = choose_ranked(raw, category)
         write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
         if category['id'] == 'pet-sheets':
-            write_text(SITE / 'categories' / 'pet-sheets' / 'regular' / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group='regular'))
+            for group, slug in SHEET_SIZE_PATHS.items():
+                write_text(SITE / 'categories' / 'pet-sheets' / slug / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group=group))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
         spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
         initial = [x for x in ranked if x['group'] == spotlight_group]
@@ -787,7 +798,7 @@ def main():
     write_text(SITE / 'privacy' / 'index.html', privacy_page(categories))
     write_text(SITE / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {BASE_URL}sitemap.xml\n')
     urls = [BASE_URL, BASE_URL + 'privacy/'] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
-    urls.append(BASE_URL + 'categories/pet-sheets/regular/')
+    urls.extend(BASE_URL + 'categories/pet-sheets/' + slug + '/' for slug in SHEET_SIZE_PATHS.values())
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     enrich(SITE, ROOT / 'data', display_name)
