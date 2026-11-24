@@ -910,3 +910,30 @@ test('dedicated size landings open their own products despite a different saved 
     }
   }
 });
+
+test('dedicated litter pages keep the selected material and exclude a different saved condition', async () => {
+  for(const group of ['paper','okara','wood','mineral']){
+    const html=fs.readFileSync(path.join(root,'site/categories/cat-litter',group,'index.html'),'utf8');
+    for(const household of [undefined, {'cat-litter':{group:group==='paper'?'wood':'paper',usage:10}}]){
+      const p=await open(html,'cat-litter/'+group,{household});
+      try {
+        assert.equal(get(p,'link[rel="canonical"]').href,'https://stusaurus.github.io/pet-cost-jp/categories/cat-litter/'+group+'/');
+        assert.equal(all(p,'[data-group-button]').length,1);
+        assert.equal(get(p,'[data-group-button][aria-pressed="true"]').dataset.group,group);
+        assert.equal(get(p,'[data-comparison-results]').hidden,false);
+        assert.equal(get(p,'[data-usage-panel]').hidden,false);
+        const rows=all(p,'[data-product-row]');
+        const expected=payloads.find(x=>x.category.id==='cat-litter').items.filter(x=>x.group===group);
+        assert.equal(rows.length,expected.length);
+        assert.ok(rows.every(r=>r.dataset.group===group&&!r.hidden));
+        assert.equal(get(p,'[data-usage-input]').value,'');
+        const input=get(p,'[data-usage-input]');
+        input.value='10';
+        input.dispatchEvent(new p.dom.window.Event('input',{bubbles:true}));
+        assert.ok(get(p,'[data-litter-fit-warning]'));
+        assert.ok(get(p,'#decision-data'));
+        assert.deepEqual(p.errors,[]);
+      }finally{p.close();}
+    }
+  }
+});
