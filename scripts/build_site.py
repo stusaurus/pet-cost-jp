@@ -212,7 +212,7 @@ def filter_buttons(category, items):
     hints = {'pet-sheets': '同じサイズ', 'cat-litter': '同じ素材・用途', 'system-toilet-sheets': '同じ対応シリーズ'}
     def buttons(keys):
         return ''.join(f'''<button type="button" class="filter-chip" data-group-button data-group="{esc(key)}" data-group-label="{esc(label)}" aria-pressed="false"><span class="filter-art">{care_art(category['id'], key)}</span><span class="filter-label">{filter_label(label) if key != 'all' else '素材を問わず'}</span><span class="filter-meta">{hints[category['id']] if key != 'all' else '価格の目安・適合は未指定'}</span><span class="filter-count">{counts.get(key, 0)}件</span><span class="filter-check" aria-hidden="true">✓</span></button>''' for key, label in category.get('groups', {}).items() if key in keys and (counts.get(key, 0) > 0 or key == default))
-    if category['id'] == 'cat-litter':
+    if category['id'] == 'cat-litter' and len(category.get('groups', {})) > 1:
         primary = ['paper', 'okara', 'wood', 'mineral']
         return '<div class="filters">' + buttons(primary) + '</div><details class="other-conditions" data-other-conditions><summary>その他の素材・用途 / 素材を問わず</summary><div class="filters">' + buttons([k for k in category['groups'] if k not in primary]) + '</div><p class="condition-note">素材を問わず見る場合は、用途・相性が違う商品も含む価格の目安です。</p></details>'
     return '<div class="filters">' + buttons(category.get('groups', {})) + '</div>'
@@ -512,14 +512,17 @@ def category_choice_guide(category):
 
 
 SHEET_SIZE_PATHS = {'regular': 'regular', 'wide': 'wide', 'super_wide': 'super-wide'}
+LITTER_MATERIAL_PATHS = {'paper': 'paper', 'okara': 'okara', 'wood': 'wood', 'mineral': 'mineral'}
+DEDICATED_PATHS = {'pet-sheets': SHEET_SIZE_PATHS, 'cat-litter': LITTER_MATERIAL_PATHS}
 
 
 def category_page(category, items, categories, updated, fixed_group=None):
+    dedicated_paths = DEDICATED_PATHS.get(category['id'], {})
     if fixed_group:
-        if category['id'] != 'pet-sheets' or fixed_group not in SHEET_SIZE_PATHS:
+        if fixed_group not in dedicated_paths:
             raise ValueError('Unsupported dedicated size')
         items = [item for item in items if item.get('group') == fixed_group]
-        category = {**category, 'default_group': fixed_group, 'groups': {fixed_group: category['groups'][fixed_group]}}
+        category = {**category, 'default_group': fixed_group, 'groups': {fixed_group: category['groups'][fixed_group]}, 'rank_all': False}
     initial = visible_default_items(category, items)
     stats = comparison_stats(initial)
     label = group_label(category, category.get('default_group', 'all'))
@@ -536,10 +539,15 @@ def category_page(category, items, categories, updated, fixed_group=None):
         'cat-litter': '紙・おから・木・鉱物など普段使う素材に絞り、猫砂の1L単価・商品価格・送料条件を比較。1か月の使用L数から必要セット数と余る量を計算できます。トイレ方式への適合は別途確認してください。',
         'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。対応機種・寸法は購入前に確認してください。',
     }[category['id']]
-    if fixed_group:
+    if fixed_group and category['id'] == 'pet-sheets':
         search_heading = f'{label}サイズのペットシーツ価格比較・30日分の購入計算'
         size_note = {'regular': 'レギュラー表記でも寸法は商品ごとに異なるため、トレーに合うか確認してください。', 'wide': 'ワイド表記でも実寸や吸収部分の広さは商品ごとに異なります。使用中のトレーを測って確認してください。', 'super_wide': 'スーパーワイド表記でも実寸は商品ごとに異なります。敷く場所とトレーへの適合、収納場所を確認してください。'}[fixed_group]
         search_intro = f'{label}だけを比較し、1枚単価と商品価格、送料条件を確認。普段使う枚数と在庫から必要な購入セット数を計算できます。{size_note}'
+    if fixed_group and category['id'] == 'cat-litter':
+        material_name = {'paper': '紙製', 'okara': 'おから', 'wood': '木製', 'mineral': '鉱物系'}[fixed_group]
+        material_note = {'paper': '紙製でも固まり方や処理方法は商品により異なります。', 'okara': 'おから製でも原材料・処理方法は商品により異なります。', 'wood': '木製でも固まる砂とシステムトイレ用チップは用途が異なります。', 'mineral': '鉱物系でも粒の大きさ・粉立ち・処理方法は商品により異なります。'}[fixed_group]
+        search_heading = f'{material_name}の猫砂の価格比較・30日分の購入量計算'
+        search_intro = f'{material_name}の猫砂を1L単価・商品価格・送料条件で比較し、月間使用量から購入セット数と余る量を計算できます。{material_note}使用中のトイレへの適合を購入前に確認してください。kgのみの商品は推測換算しません。'
     entry_links = {
         'pet-sheets': [('#monthly-sheet-guide-heading', '30日分の必要枚数を知る'),
                        ('#comparison-conditions', 'サイズ別に価格を比べる'),
@@ -558,7 +566,7 @@ def category_page(category, items, categories, updated, fixed_group=None):
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
     if fixed_group:
-        schema['itemListElement'].append({'@type': 'ListItem', 'position': 3, 'name': label, 'item': BASE_URL + 'categories/pet-sheets/' + SHEET_SIZE_PATHS[fixed_group] + '/'})
+        schema['itemListElement'].append({'@type': 'ListItem', 'position': 3, 'name': label, 'item': BASE_URL + 'categories/' + category['id'] + '/' + dedicated_paths[fixed_group] + '/'})
     size_navigation = ''
     if category['id'] == 'pet-sheets':
         names = {'regular': 'レギュラー', 'wide': 'ワイド', 'super_wide': 'スーパーワイド'}
@@ -566,6 +574,12 @@ def category_page(category, items, categories, updated, fixed_group=None):
         if fixed_group:
             size_links.insert(0, f'<a class="text-link" href="{BASE_URL}categories/pet-sheets/">全サイズの比較へ →</a>')
         size_navigation = '<nav class="results-bridge" aria-label="ペットシーツのサイズ別比較">' + ''.join(size_links) + '</nav>'
+    if category['id'] == 'cat-litter':
+        names = {'paper': '紙製', 'okara': 'おから', 'wood': '木製', 'mineral': '鉱物系'}
+        links = [f'<a class="text-link" href="{BASE_URL}categories/cat-litter/{slug}/">{names[group]}の猫砂の比較へ →</a>' for group, slug in dedicated_paths.items() if group != fixed_group]
+        if fixed_group:
+            links.insert(0, f'<a class="text-link" href="{BASE_URL}categories/cat-litter/">全素材の比較へ →</a>')
+        size_navigation = '<nav class="results-bridge" aria-label="猫砂の素材別比較">' + ''.join(links) + '</nav>'
     body = f'''{nav(categories, category['id'])}
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(search_heading)}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
@@ -640,9 +654,9 @@ def category_page(category, items, categories, updated, fixed_group=None):
         title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
         desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
     if fixed_group:
-        title = f'ペットシーツ {label}の価格比較｜1枚単価・30日分の購入額 | {SITE_NAME}'
+        title = (f'ペットシーツ {label}の価格比較｜1枚単価・30日分の購入額 | {SITE_NAME}' if category['id'] == 'pet-sheets' else f'{material_name}の猫砂の価格比較｜1L単価・30日分の購入額 | {SITE_NAME}')
         desc = search_intro
-    return shell(title, desc, body, category['id'], schema, page_path=f'categories/pet-sheets/{SHEET_SIZE_PATHS[fixed_group]}/' if fixed_group else None)
+    return shell(title, desc, body, category['id'], schema, page_path=f"categories/{category['id']}/{dedicated_paths[fixed_group]}/" if fixed_group else None)
 
 
 def homepage(categories, summaries, updated):
@@ -729,9 +743,9 @@ def main():
                         raw.extend(fetch_items(keyword, pages=int(category.get('pages_per_keyword', 1))))
             ranked = choose_ranked(raw, category)
         write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
-        if category['id'] == 'pet-sheets':
-            for group, slug in SHEET_SIZE_PATHS.items():
-                write_text(SITE / 'categories' / 'pet-sheets' / slug / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group=group))
+        if category['id'] in DEDICATED_PATHS:
+            for group, slug in DEDICATED_PATHS[category['id']].items():
+                write_text(SITE / 'categories' / category['id'] / slug / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group=group))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
         spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
         initial = [x for x in ranked if x['group'] == spotlight_group]
@@ -798,7 +812,7 @@ def main():
     write_text(SITE / 'privacy' / 'index.html', privacy_page(categories))
     write_text(SITE / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {BASE_URL}sitemap.xml\n')
     urls = [BASE_URL, BASE_URL + 'privacy/'] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
-    urls.extend(BASE_URL + 'categories/pet-sheets/' + slug + '/' for slug in SHEET_SIZE_PATHS.values())
+    urls.extend(BASE_URL + 'categories/' + category_id + '/' + slug + '/' for category_id, paths in DEDICATED_PATHS.items() for slug in paths.values())
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     enrich(SITE, ROOT / 'data', display_name)
