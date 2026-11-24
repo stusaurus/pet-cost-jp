@@ -511,7 +511,12 @@ def category_choice_guide(category):
 </section>'''
 
 
-def category_page(category, items, categories, updated):
+def category_page(category, items, categories, updated, fixed_group=None):
+    if fixed_group:
+        if category['id'] != 'pet-sheets' or fixed_group != 'regular':
+            raise ValueError('Unsupported dedicated size')
+        items = [item for item in items if item.get('group') == fixed_group]
+        category = {**category, 'default_group': fixed_group, 'groups': {fixed_group: category['groups'][fixed_group]}}
     initial = visible_default_items(category, items)
     stats = comparison_stats(initial)
     label = group_label(category, category.get('default_group', 'all'))
@@ -528,6 +533,9 @@ def category_page(category, items, categories, updated):
         'cat-litter': '紙・おから・木・鉱物など普段使う素材に絞り、猫砂の1L単価・商品価格・送料条件を比較。1か月の使用L数から必要セット数と余る量を計算できます。トイレ方式への適合は別途確認してください。',
         'system-toilet-sheets': '使っているトイレ本体に合うシートを選び、1枚あたりの単価・商品価格・送料条件を比較します。対応機種・寸法は購入前に確認してください。',
     }[category['id']]
+    if fixed_group:
+        search_heading = 'レギュラーサイズのペットシーツ価格比較・30日分の購入計算'
+        search_intro = 'レギュラーだけを比較し、1枚単価と商品価格、送料条件を確認。普段使う枚数と在庫から必要な購入セット数を計算できます。レギュラー表記でも寸法は商品ごとに異なるため、トレーに合うか確認してください。'
     entry_links = {
         'pet-sheets': [('#monthly-sheet-guide-heading', '30日分の必要枚数を知る'),
                        ('#comparison-conditions', 'サイズ別に価格を比べる'),
@@ -545,19 +553,23 @@ def category_page(category, items, categories, updated):
         {'@type': 'ListItem', 'position': 1, 'name': 'トップ', 'item': BASE_URL},
         {'@type': 'ListItem', 'position': 2, 'name': category['name'], 'item': f"{BASE_URL}categories/{category['id']}/"},
     ]}
+    if fixed_group:
+        schema['itemListElement'].append({'@type': 'ListItem', 'position': 3, 'name': 'レギュラー', 'item': BASE_URL + 'categories/pet-sheets/regular/'})
+    size_navigation = (f'<p><a class="text-link" href="{BASE_URL}categories/pet-sheets/">全サイズの比較へ →</a></p>' if fixed_group else f'<p><a class="text-link" href="{BASE_URL}categories/pet-sheets/regular/">レギュラー専用の価格・購入量比較へ →</a></p>' if category['id'] == 'pet-sheets' else '')
     body = f'''{nav(categories, category['id'])}
     <header class="page-intro wrap"><div class="category-intro-copy"><p class="home-kicker">うちの子の、いつもの用品</p><h1>{esc(search_heading)}</h1><p class="intro-copy">{esc(search_intro)}</p><span class="updated">最終更新 {esc(updated)}</span></div><div class="category-art">{care_art(category['id'], role='category')}</div></header>
     <main id="main" class="main wrap" data-metric="{category['metric']}" data-metric-label="{category['metric_label']}">
       {entry_navigation}
       <a class="text-link" href="{BASE_URL}#pet-journey">うちの子と用品を選び直す →</a>
-      {sheet_size_overview(category, items)}
+      {size_navigation}
+      {sheet_size_overview(category, items) if not fixed_group else ''}
       {monthly_pet_sheet_guide() if category['id'] == 'pet-sheets' else cat_litter_monthly_guide() if category['id'] == 'cat-litter' else ''}
       {profile('dog' if category['id'] == 'pet-sheets' else 'cat')}
       <section class="condition-panel" id="comparison-conditions" aria-labelledby="condition-heading" data-condition-panel>
         <div class="condition-heading-row"><div><div class="step-label"><span class="step-number">01</span>まずは、いつも使うものから</div><h2 id="condition-heading">{prompt}</h2></div><span class="condition-progress" data-condition-progress>条件を選ぶ <span aria-hidden="true">→</span> 比較する</span></div>
         <p class="condition-note">{fit_note}</p>
         {'<p class="condition-note" role="note" data-litter-fit-warning><strong>先にトイレ方式・素材を確認：</strong>固まる猫砂とシステムトイレ用チップは用途が異なります。木製でも両方式があるため、素材名だけで適合を判断せず、商品説明で「固まるタイプ／システムトイレ用」と使用中の本体への対応を確認してください。素材を問わない価格比較は購入推奨ではありません。</p>' if category['id'] == 'cat-litter' else ''}
-        <div class="filter-wrap"><div data-group-filter data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
+        <div class="filter-wrap"><div data-group-filter data-fixed-group="{esc(fixed_group or '')}" data-default-group="{esc(category.get('default_group', 'all'))}" data-rank-all="{1 if category.get('rank_all') else 0}">{filter_buttons(category, items)}</div></div>
         {'<div class="condition-note" data-litter-switch-panel><label for="litter-current-unit-price"><strong>今使っている猫砂の1L単価（税込・円）</strong></label> <input id="litter-current-unit-price" type="number" min="1" max="1000000" step="0.01" inputmode="decimal" data-litter-current-unit-price placeholder="例：150" aria-describedby="litter-switch-help"> <label for="litter-current-pack-liters">現在の商品1セットの総容量（L）</label> <input id="litter-current-pack-liters" type="number" min="0.01" max="1000000" step="any" inputmode="decimal" data-litter-current-pack-liters placeholder="例：7"> <label for="litter-current-pack-price">現在の商品1セットの価格（税込・円）</label> <input id="litter-current-pack-price" type="number" min="1" max="100000000" step="any" inputmode="decimal" data-litter-current-pack-price placeholder="例：980"> <p id="litter-switch-help">単価のみなら月間消費額の差を試算します。現在のセット容量と価格も両方入力すると、30日分の購入セット数・支払商品代金・余剰量を候補商品と比較します。送料・トイレ本体代・交換負担は含みません。同じ用途・対応方式の商品だけで比較してください。</p><p data-litter-switch-result role="status" aria-live="polite">素材を選び、月間使用量と今の1L単価を入力すると差額を表示します。</p></div>' if category['id'] == 'cat-litter' else ''}
         <div class="condition-foot"><p class="result-status" data-result-status role="status" aria-live="polite" aria-atomic="true">選ぶと、うちの条件の比較に切り替わります。</p><span class="condition-save">次回もこの端末で引き継げます</span></div>
         {usage_panel(category)}
@@ -617,7 +629,10 @@ def category_page(category, items, categories, updated):
     else:
         title = f"{category['name']}はどれが安い？{category['metric_label']}あたりで比較 | {SITE_NAME}"
         desc = f"{category['name']}を{category['metric_label']}あたりに換算して安い順に比較。数量が曖昧な商品は除外し、条件別の最安値・総額・数量根拠まで確認できます。"
-    return shell(title, desc, body, category['id'], schema)
+    if fixed_group:
+        title = f'ペットシーツ レギュラーの価格比較｜1枚単価・30日分の購入額 | {SITE_NAME}'
+        desc = search_intro
+    return shell(title, desc, body, category['id'], schema, page_path='categories/pet-sheets/regular/' if fixed_group else None)
 
 
 def homepage(categories, summaries, updated):
@@ -704,6 +719,8 @@ def main():
                         raw.extend(fetch_items(keyword, pages=int(category.get('pages_per_keyword', 1))))
             ranked = choose_ranked(raw, category)
         write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
+        if category['id'] == 'pet-sheets':
+            write_text(SITE / 'categories' / 'pet-sheets' / 'regular' / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group='regular'))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
         spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
         initial = [x for x in ranked if x['group'] == spotlight_group]
@@ -770,6 +787,7 @@ def main():
     write_text(SITE / 'privacy' / 'index.html', privacy_page(categories))
     write_text(SITE / 'robots.txt', f'User-agent: *\nAllow: /\nSitemap: {BASE_URL}sitemap.xml\n')
     urls = [BASE_URL, BASE_URL + 'privacy/'] + [f"{BASE_URL}categories/{c['id']}/" for c in categories] + [f'{BASE_URL}categories/{key}/' for key in discovery_data]
+    urls.append(BASE_URL + 'categories/pet-sheets/regular/')
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join(f'<url><loc>{u}</loc></url>' for u in urls) + '</urlset>'
     write_text(SITE / 'sitemap.xml', sitemap)
     enrich(SITE, ROOT / 'data', display_name)
