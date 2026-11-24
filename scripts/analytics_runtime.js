@@ -636,7 +636,7 @@
     if (filter?.dataset.fixedGroup && activeGroup !== filter.dataset.fixedGroup) {
       applyGroup(filter.dataset.fixedGroup);
     }
-    $('[data-pet-category]').forEach(link => {
+    $$('[data-pet-category]').forEach(link => {
       const previous = household[link.dataset.petCategory];
       const labels = { regular: 'レギュラー', wide: 'ワイド', super_wide: 'スーパーワイド', paper: '紙', okara: 'おから', wood: '木', mineral: '鉱物', silica: 'シリカ', mixed: '混合素材', system: 'システムトイレ用', all: '素材指定なし', deotoilet: 'デオトイレ系', nyantomo: 'ニャンとも系', iris: 'アイリス系', universal: '各社共通・汎用', unknown: '素材不明' };
       if (previous && labels[previous.group]) text('[data-saved-condition]', '前回の条件：' + labels[previous.group], link);
