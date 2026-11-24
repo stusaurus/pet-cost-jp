@@ -884,3 +884,25 @@ test('pet sheets: one-tap daily usage choices feed existing checkout without inv
     assert.deepEqual(p.errors,[]);
   }finally{p.close();}
 });
+
+test('dedicated regular landing opens the correct size despite saved wide preference', async () => {
+  const html=fs.readFileSync(path.join(root,'site/categories/pet-sheets/regular/index.html'),'utf8');
+  for(const household of [undefined, {'pet-sheets':{group:'wide',usage:5}}]){
+    const p=await open(html,'pet-sheets/regular',{household});
+    try {
+      assert.equal(get(p,'link[rel="canonical"]').href,'https://stusaurus.github.io/pet-cost-jp/categories/pet-sheets/regular/');
+      assert.equal(all(p,'[data-group-button]').length,1);
+      assert.equal(get(p,'[data-group-button][aria-pressed="true"]').dataset.group,'regular');
+      assert.equal(get(p,'[data-comparison-results]').hidden,false);
+      assert.equal(get(p,'[data-usage-panel]').hidden,false);
+      const rows=all(p,'[data-product-row]');
+      assert.ok(rows.length>0);
+      assert.ok(rows.every(r=>r.dataset.group==='regular'&&!r.hidden));
+      assert.equal(get(p,'[data-usage-input]').value,'');
+      get(p,'[data-usage-preset="5"]').click();
+      assert.ok(get(p,'[data-featured-usage] [data-sheet-purchase-plan]').textContent.includes('150枚'));
+      assert.ok(get(p,'#decision-data'));
+      assert.deepEqual(p.errors,[]);
+    }finally{p.close();}
+  }
+});
