@@ -69,7 +69,7 @@ def enrich(site, previous, format_name=lambda value: value):
     (site / 'data' / 'decision-catalog.json').write_text(json.dumps(rows, ensure_ascii=False))
     encoded = json.dumps(rows, ensure_ascii=False).replace('<', '\\u003c')
     shelf = '<section class="decision-shelf" aria-labelledby="decision-heading"><h2 id="decision-heading">保存して、じっくり選ぶ</h2><p>気になる商品を保存。同じカテゴリ・条件の候補は3件まで並べて比較できます。</p><p data-decision-status role="status" aria-live="polite"></p><div data-saved-products></div><div data-product-comparison></div></section>'
-    for p in [site / 'index.html', *sorted((site / 'categories').glob('*/index.html'))]:
+    for p in [site / 'index.html', *sorted((site / 'categories').rglob('index.html'))]:
         text = p.read_text()
         text = text.replace('</main>', shelf + '</main>')
         text = text.replace('</body>', f'<script type="application/json" id="decision-data">{encoded}</script></body>')
