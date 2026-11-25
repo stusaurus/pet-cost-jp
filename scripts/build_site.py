@@ -684,6 +684,16 @@ def homepage(categories, summaries, updated):
       <header class="home-intro"><div class="home-intro-copy"><p class="home-kicker">ごはんも、遊びも、いつもの用品も。</p><h1>いつもの用品を、<br><em>うちの条件で比べよう。</em></h1><p class="home-note">いつもの用品を、使える条件から比較。<br>使用量を入れれば、何日もつか・30日分の費用も分かります。</p><nav class="hero-quick-actions" aria-label="商品選びの近道"><a class="hero-start" href="#categories">商品をすぐ比べる <span aria-hidden="true">↓</span></a><a class="hero-secondary" href="#pet-journey">犬・猫から選ぶ →</a></nav></div><figure class="home-scene"><img class="home-photo" src="{BASE_URL}assets/living/home.webp" alt="朝の光の中、犬と猫がラグでくつろぐ。ごはんと遊びの道具が自然にある暮らし" width="1200" height="800" fetchpriority="high"><figcaption>その子に使えるものを、その家の暮らしで。</figcaption></figure></header>
       {journey()}
       <section class="home-comparison" id="categories" aria-labelledby="categories-heading"><div class="section-head"><div><p class="section-eyebrow">条件が決まっている方へ</p><h2 id="categories-heading">いつもの用品をすぐ比べる</h2></div><span class="section-count">サイズ・素材・本体から</span></div><div class="care-entry-grid">{''.join(starts)}</div></section>
+      <nav class="home-extra-categories" aria-label="ペットシーツのサイズ別比較">
+        <strong>ペットシーツ｜使っているサイズで直接比較</strong>
+        {''.join(f'<a data-home-dedicated-entry href="{BASE_URL}categories/pet-sheets/{slug}/">ペットシーツ {label} →</a>' for label, slug in [('レギュラー', 'regular'), ('ワイド', 'wide'), ('スーパーワイド', 'super-wide')])}
+        <small>1枚単価と、使用枚数・在庫に応じた30日分の購入額を比較できます。</small>
+      </nav>
+      <nav class="home-extra-categories" aria-label="猫砂の素材別比較">
+        <strong>猫砂｜使っている素材で直接比較</strong>
+        {''.join(f'<a data-home-dedicated-entry href="{BASE_URL}categories/cat-litter/{slug}/">{label}の猫砂 →</a>' for label, slug in [('紙製', 'paper'), ('おから', 'okara'), ('木製', 'wood'), ('鉱物系', 'mineral')])}
+        <small>1L単価と月間購入量を比較できます。素材に加えてトイレ方式・商品仕様も確認してください。</small>
+      </nav>
       <section class="home-monthly-sheet-entry" aria-label="ペットシーツの必要枚数から探す">
         <h2>ペットシーツ、1か月で何枚使う？</h2>
         <p>1日5枚なら30日で150枚。手持ちの同じサイズのシーツが40枚あれば、買い足しは110枚です。使っているサイズを選び、実際の使用枚数と在庫から、商品ごとの必要セット数・購入額・余る枚数を計算できます。送料別商品の送料は未加算で、交換回数をおすすめするものではありません。</p>
