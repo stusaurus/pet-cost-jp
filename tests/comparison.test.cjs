@@ -937,3 +937,19 @@ test('dedicated litter pages keep the selected material and exclude a different 
     }
   }
 });
+
+test('homepage exposes all seven dedicated search entries as direct HTML links', async () => {
+  const html=fs.readFileSync(path.join(root,'site/index.html'),'utf8');
+  const doc=new JSDOM(html).window.document;
+  const links=[...doc.querySelectorAll('a[data-home-dedicated-entry]')];
+  const paths=['pet-sheets/regular','pet-sheets/wide','pet-sheets/super-wide','cat-litter/paper','cat-litter/okara','cat-litter/wood','cat-litter/mineral'];
+  assert.equal(links.length,paths.length);
+  assert.deepEqual(links.map(a=>a.getAttribute('href')).sort(),paths.map(p=>'https://stusaurus.github.io/pet-cost-jp/categories/'+p+'/').sort());
+  for(const a of links){
+    assert.ok(a.textContent.trim());
+    assert.equal(a.closest('[hidden],details'),null);
+    const rel=new URL(a.href).pathname.replace('/pet-cost-jp/','');
+    assert.ok(fs.existsSync(path.join(root,'site',rel,'index.html')));
+  }
+  assert.ok(doc.querySelector('[data-monthly-sheet-entry]'));
+});
