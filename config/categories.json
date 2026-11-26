@@ -22,6 +22,8 @@
       "ホルダー"
     ],
     "group_by": "sheet_size",
+    "limit_per_group": true,
+    "exclude_groups": ["unknown"],
     "default_group": "regular",
     "rank_all": false,
     "groups": {
@@ -48,7 +50,13 @@
     "keywords": [
       "ペットシーツ レギュラー",
       "ペットシーツ ワイド",
-      "ペットシーツ スーパーワイド"
+      "ペットシーツ スーパーワイド",
+      "ペットシーツ レギュラー 薄型",
+      "ペットシーツ レギュラー 厚型",
+      "ペットシーツ ワイド 薄型",
+      "ペットシーツ ワイド 厚型",
+      "ペットシーツ スーパーワイド 薄型",
+      "ペットシーツ スーパーワイド 厚型"
     ],
     "pages_per_keyword": 2
   },
