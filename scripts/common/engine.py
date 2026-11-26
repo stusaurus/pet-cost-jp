@@ -1,4 +1,5 @@
 import hashlib
+from collections import Counter
 import re
 import urllib.parse
 
@@ -190,7 +191,13 @@ def choose_ranked(raw_items, category, limit=30):
     seen_names = set()
     seen_targets = set()
     ranked = []
+    group_counts = Counter()
+    per_group = category.get('limit_per_group', False)
+    if limit <= 0:
+        return []
     for item in normalized:
+        if per_group and group_counts[item['group']] >= limit:
+            continue
         family = _family_key(item, category)
         if family and item["product_id"] not in family_keep:
             continue
@@ -202,6 +209,7 @@ def choose_ranked(raw_items, category, limit=30):
         seen_names.add(name_key)
         if direct: seen_targets.add(direct)
         ranked.append(item)
-        if len(ranked) >= limit:
+        group_counts[item['group']] += 1
+        if not per_group and len(ranked) >= limit:
             break
     return ranked
