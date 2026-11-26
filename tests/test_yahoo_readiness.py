@@ -1,0 +1,37 @@
+import json
+import sys
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from yahoo_readiness import summarize
+from common.yahoo_shopping import YahooShopping, YahooUnavailable
+
+
+class StubClient:
+    def affiliate_link(self, hit):
+        return "https://example.invalid/verified" if hit.get("verified") else None
+
+
+class ReadinessTests(unittest.TestCase):
+    def test_size_quantity_and_validated_link_are_required(self):
+        category = json.loads((ROOT / "config/categories.json").read_text())[0]
+        good = {"code": "shop_a", "name": "ペットシーツ レギュラー 100枚",
+                "price": 1000, "verified": True}
+        hits = [good, dict(good), {**good, "code": "shop_b", "name": "ペットシーツ ワイド 100枚"},
+                {**good, "code": "shop_c", "name": "ペットシーツ 100枚"},
+                {**good, "code": "shop_d", "name": "ペットシーツ レギュラー 100枚 200枚 選べる"},
+                {**good, "code": "shop_e", "verified": False},
+                {**good, "code": "shop_f", "price": 0}]
+        self.assertEqual(summarize(hits, StubClient(), category, "regular"),
+                         {"returned": 7, "eligible_distinct_listings": 1})
+
+    def test_missing_and_invalid_credentials_fail_without_values(self):
+        for app, affiliate, reason in [("", "", "missing_app_id"),
+                                       ("dummy", "", "missing_affiliate_id"),
+                                       ("dummy", "invalid-private-value", "affiliate_config_format")]:
+            with self.assertRaises(YahooUnavailable) as exc:
+                YahooShopping(app, affiliate)
+            self.assertEqual(str(exc.exception), reason)

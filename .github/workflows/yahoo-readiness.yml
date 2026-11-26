@@ -1,0 +1,47 @@
+name: Yahoo Shopping read-only readiness
+on:
+  pull_request:
+    paths:
+      - 'scripts/common/yahoo_shopping.py'
+      - 'scripts/yahoo_readiness.py'
+      - 'tests/test_yahoo_readiness.py'
+      - '.github/workflows/yahoo-readiness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/common/yahoo_shopping.py'
+      - 'scripts/yahoo_readiness.py'
+      - '.github/workflows/yahoo-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -p 'test_yahoo_readiness.py' -v
+  probe:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check authorized API availability and aggregate candidate counts
+        env:
+          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
+          YAHOO_AFFILIATE_ID: ${{ secrets.YAHOO_AFFILIATE_ID }}
+        run: python scripts/yahoo_readiness.py
