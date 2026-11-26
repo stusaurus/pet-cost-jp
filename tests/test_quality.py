@@ -146,6 +146,29 @@ class QualityTests(unittest.TestCase):
         ranked = choose_ranked(rows, category)
         self.assertEqual(len(ranked), 3)
 
+    def test_sheet_size_quotas_keep_each_size_without_ambiguous_products(self):
+        category = {
+            "id": "pet-sheets", "parser": "count", "metric": "per_sheet",
+            "metric_label": "1枚", "group_by": "sheet_size",
+            "include_any": ["ペットシーツ"], "exclude_any": [],
+            "exclude_groups": ["unknown"], "limit_per_group": True,
+        }
+        rows = []
+        for size, price in [("レギュラー", 500), ("ワイド", 1000), ("スーパーワイド", 2000)]:
+            for i in range(4):
+                rows.append(raw(f"ペットシーツ {size} 100枚 商品{i}", price+i*100, f"https://x/{size}/{i}"))
+        rows.extend([
+            raw("ペットシーツ レギュラー ワイド 100枚", 100, "https://x/ambiguous"),
+            raw("ペットシーツ 100枚", 100, "https://x/unknown"),
+            raw("ペットシーツ レギュラー 100枚 商品0", 500, "https://x/duplicate"),
+        ])
+        ranked = choose_ranked(rows, category, limit=2)
+        self.assertEqual(len(ranked), 6)
+        for group in ("regular", "wide", "super_wide"):
+            self.assertEqual(sum(x["group"] == group for x in ranked), 2)
+        self.assertEqual([x["unit_price"] for x in ranked], sorted(x["unit_price"] for x in ranked))
+        self.assertEqual(len(choose_ranked(rows, {**category, "limit_per_group": False}, limit=2)), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
