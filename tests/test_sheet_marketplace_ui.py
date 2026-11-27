@@ -29,8 +29,11 @@ class MarketplaceUITests(unittest.TestCase):
             self.assertIn(expected, section)
         self.assertNotIn("送料無料表示（地域条件は要確認）", section)
         self.assertEqual(render(pairs, "now", "wide"), "")
-        page = '<section class="section" id="product-ranking"></section>'
-        self.assertTrue(inject(page, section).endswith(page))
+        page = '<head></head><nav aria-label="このページでできること" class="results-bridge"></nav><div class="condition-start" data-condition-start></div><div data-comparison-results hidden><section id="product-ranking"></section></div>'
+        injected = inject(page, section)
+        self.assertLess(injected.index('id="sheet-marketplace"'), injected.index('data-comparison-results hidden'))
+        self.assertIn('href="#sheet-marketplace"', injected)
+        self.assertLess(injected.index('id="sheet-marketplace-style"'), injected.index('</head>'))
         self.assertEqual(inject(page, ""), page)
 
     def test_free_shipping_only_if_no_conditions(self):
