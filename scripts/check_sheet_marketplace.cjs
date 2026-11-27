@@ -74,7 +74,7 @@ function verifyLink(link,jan){
       assert.deepEqual(c.offers.map(o=>o.mall),['rakuten','yahoo']);
       for(const o of c.offers){verifyLink(o,c.jan);assert(o.price>0);assert(Math.abs(o.unit-o.price/count)<=0.000051);
        assert(o.text.includes((o.price/count).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+'円'));
-       assert(o.width>0&&o.height>=44);if(o.text.includes('送料・条件は販売店で確認'))assert(o.text.includes('購入総額：送料未確定'));}
+       assert(o.width>0&&o.height>=44, 'Purchase target size '+o.mall+' '+o.width+' x '+o.height);if(o.text.includes('送料・条件は販売店で確認'))assert(o.text.includes('購入総額：送料未確定'));}
       const [a,b]=c.offers;
       assert(c.note.includes('送料差は未反映'));
       if(a.price===b.price)assert(c.note.includes('同額'));
@@ -83,6 +83,10 @@ function verifyLink(link,jan){
       else assert.deepEqual(c.offers.map(o=>[o.mall,o.price,o.href]),expected.get(c.jan));
      }
      if(cards.length){
+      assert(await page.locator('#sheet-marketplace').isVisible(),'Comparison must be visible before choosing a size');
+      assert.equal(await page.locator('nav a[href="#sheet-marketplace"]').count(),1);
+      await page.locator('nav a[href="#sheet-marketplace"]').click();
+      assert.equal(new URL(page.url()).hash,'#sheet-marketplace');
       assert(await page.locator('#sheet-marketplace a[href="https://developer.yahoo.co.jp/sitemap/"]').count()===1);
       for(const mall of ['rakuten','yahoo']){
        await page.locator('#sheet-marketplace a[data-merchant="'+mall+'"]').first().click();
