@@ -69,3 +69,40 @@ class ManufacturerMatchTests(unittest.TestCase):
         self.assertFalse(verified_rakuten({**reviewed, "name": good["name"] + " 4520699676066"}, product, category))
         self.assertFalse(verified_rakuten({**reviewed, "name": good["name"] + " ×4袋"}, product, category))
         self.assertFalse(verified_rakuten({**reviewed, "url": "https://item.rakuten.co.jp/chanet/246764/"}, product, category))
+
+
+    def test_exact_evidence_allows_short_titles_not_other_variants(self):
+        from common.sheet_marketplace import PRODUCTS, identity, verified_rakuten
+        from urllib.parse import urlencode
+        category = json.loads((ROOT / "config/categories.json").read_text())[0]
+        product = PRODUCTS[0]
+        short = {"name": "デオシート 超吸収無香消臭レギュラー 112枚", "price": 1700,
+                 "url": "https://hb.afl.rakuten.co.jp/hgc/test/?" + urlencode({"pc": "https://item.rakuten.co.jp/r-kojima/4520699667989/"})}
+        self.assertFalse(identity(short, product, category))
+        self.assertTrue(verified_rakuten(short, product, category))
+        self.assertFalse(verified_rakuten({**short, "name": short["name"] + " 2個"}, product, category))
+        self.assertFalse(verified_rakuten({**short, "name": short["name"] + " ケース販売"}, product, category))
+        neo = PRODUCTS[4]
+        row = {"name": "ネオシーツ FX レギュラー 180枚", "price": 2000,
+               "url": "https://hb.afl.rakuten.co.jp/hgc/test/?" + urlencode({"pc": "https://item.rakuten.co.jp/nyanzaq/4972316207557/"})}
+        self.assertTrue(verified_rakuten(row, neo, category))
+        for suffix in (" ホワイト", " 中厚", "×4袋", " 4972316208264"):
+            self.assertFalse(verified_rakuten({**row, "name": row["name"] + suffix}, neo, category))
+        self.assertFalse(verified_rakuten({**row, "url": "https://hb.afl.rakuten.co.jp/hgc/test/?" + urlencode({"pc": "https://item.rakuten.co.jp/unknown/123/"})}, neo, category))
+
+    def test_product_specific_shop_queries(self):
+        from common.sheet_marketplace import PRODUCTS, collect_exact, REVIEWED_LOOKUPS
+        category = json.loads((ROOT / "config/categories.json").read_text())[0]
+        calls = []
+        def fetch(keyword, pages, shop_code=""):
+            calls.append((keyword, shop_code))
+            return []
+        class Client:
+            def search(self, **kwargs):
+                return []
+        self.assertEqual(len(collect_exact(Client(), category, fetch)), 6)
+        self.assertIn(("デオシート レギュラー 112枚", "rakuten24"), calls)
+        self.assertIn(("デオシート スーパーワイド 23枚", "gooddoglife"), calls)
+        self.assertIn(("ネオシーツ FX レギュラー 180枚", "nyanzaq"), calls)
+        self.assertIn(("ネオシーツ FX ワイド 50枚", "petforest"), calls)
+        self.assertEqual(len(calls), len(PRODUCTS) + sum(map(len, REVIEWED_LOOKUPS.values())))

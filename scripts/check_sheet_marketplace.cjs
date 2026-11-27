@@ -7,7 +7,8 @@ const base='https://stusaurus.github.io/pet-cost-jp/';
 const fixture=process.env.SHEET_MARKETPLACE_FIXTURE==='1';
 const groups={regular:'レギュラー',wide:'ワイド','super-wide':'スーパーワイド'};
 const specs={'4520699667989':['regular',112],'4520699672143':['wide',54],
- '4520699676066':['super-wide',23],'4972316207571':['super-wide',36]};
+ '4520699676066':['super-wide',23],'4972316207571':['super-wide',36],
+ '4972316207557':['regular',180],'4972316208264':['wide',50]};
 const pages=['','regular/','wide/','super-wide/'];
 const root=path.resolve(__dirname,'..');
 function verifyLink(link,jan){
