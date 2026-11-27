@@ -14,6 +14,7 @@ from common.rakuten import fetch_items
 from common.catalog import collect as collect_catalog, audit as audit_catalog
 from discovery import journey, catalog_body, profile
 from decisions import enrich
+from sheet_marketplace_ui import build_pairs, render as render_marketplace, inject as inject_marketplace
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'site'
@@ -449,7 +450,7 @@ def faq_html(category):
 
 def footer():
     discovery_links = ''.join(f'<a href="{BASE_URL}categories/{key}/">{name}</a> ' for key,name in [('dog-food','犬のごはん'),('cat-food','猫のごはん'),('dog-toys','犬のおもちゃ'),('cat-toys','猫のおもちゃ')])
-    return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に楽天市場の商品ページでご確認ください。<p><a href="{BASE_URL}privacy/">プライバシーポリシー・アクセス解析について</a></p></div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
+    return f'''<footer class="footer"><div class="wrap footer-box"><nav aria-label="ごはんと遊びの用品" class="discovery-links">{discovery_links}</nav><div class="footer-brand"><img class="footer-logo" src="{BASE_URL}assets/pet-cost-logo.svg" alt="ペット用品コスパ比較" width="184" height="36"></div><div>当サイトはアフィリエイト広告を利用しています。価格・在庫・送料・商品仕様は取得後に変更される場合があるため、購入前に各販売店の商品ページでご確認ください。<p><a href="{BASE_URL}privacy/">プライバシーポリシー・アクセス解析について</a></p></div><div class="rakuten-credit"><!-- Rakuten Web Services Attribution Snippet FROM HERE --><a href="https://developers.rakuten.com/" target="_blank" rel="noopener">Supported by Rakuten Developers</a><!-- Rakuten Web Services Attribution Snippet TO HERE --></div></div></footer>'''
 
 
 def privacy_page(categories):
@@ -471,7 +472,7 @@ def privacy_page(categories):
     <h2>3. 端末内に保存する情報</h2>
     <p>比較に使用するカテゴリーやサイズ、使用量、保存した商品の識別子などは、お使いのブラウザのローカルストレージに保存される場合があります。ペットシーツの手持ち在庫は計算中だけ保持し、端末には保存しません。ページを開き直すかサイズを切り替えると0枚に戻ります。保存した情報はブラウザのサイトデータを削除すれば消去できます。会員登録や氏名・住所の入力は必要ありません。</p>
     <h2>4. 広告と外部サイトについて</h2>
-    <p>当サイトは楽天市場などへのアフィリエイト広告リンクを利用し、リンク先で購入された場合などに紹介料を受け取ることがあります。商品の販売、決済、配送、Cookieの取り扱いはリンク先の事業者が行います。表示価格・在庫・送料・商品仕様は取得後に変更される場合があり、購入前に販売ページでご確認ください。</p>
+    <p>当サイトは楽天市場、Yahoo!ショッピング（バリューコマース）などへのアフィリエイト広告リンクを利用し、リンク先で購入された場合などに紹介料を受け取ることがあります。商品の販売、決済、配送、Cookieの取り扱いはリンク先の事業者が行います。表示価格・在庫・送料・商品仕様は取得後に変更される場合があり、購入前に販売ページでご確認ください。</p>
     <h2>5. お問い合わせ・改定</h2>
     <p>サイトの表示や比較方法については<a href="https://github.com/stusaurus/pet-cost-jp/issues" rel="noopener" target="_blank">公開GitHub Issue</a>をご利用いただけます。投稿内容は公開され、GitHubのアカウントが必要になる場合があります。氏名・連絡先などの個人情報は公開投稿しないでください。</p>
     <p>計測方法や利用サービスの変更に伴い、この内容を更新する場合があります。最終更新：2026年11月21日。</p>
@@ -752,10 +753,15 @@ def main():
                     if keyword:
                         raw.extend(fetch_items(keyword, pages=int(category.get('pages_per_keyword', 1))))
             ranked = choose_ranked(raw, category)
-        write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
+        pairs = []
+        if category['id'] == 'pet-sheets' and not args.reuse_data and not demo:
+            pairs = build_pairs(category)
+        page = category_page(category, ranked, categories, category_updated)
+        write_text(SITE / 'categories' / category['id'] / 'index.html', inject_marketplace(page, render_marketplace(pairs, category_updated)))
         if category['id'] in DEDICATED_PATHS:
             for group, slug in DEDICATED_PATHS[category['id']].items():
-                write_text(SITE / 'categories' / category['id'] / slug / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group=group))
+                page = category_page(category, ranked, categories, category_updated, fixed_group=group)
+                write_text(SITE / 'categories' / category['id'] / slug / 'index.html', inject_marketplace(page, render_marketplace(pairs, category_updated, group)))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
         spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
         initial = [x for x in ranked if x['group'] == spotlight_group]

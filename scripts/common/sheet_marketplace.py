@@ -1,4 +1,4 @@
-"""Manufacturer-backed single-pack sheet comparison pilot; no public rendering."""
+"""Manufacturer-backed single-pack sheet comparison."""
 import re
 from urllib.parse import urlsplit, parse_qs
 from common.engine import normalize_item
@@ -95,9 +95,9 @@ def verified_rakuten(row, product, category):
     return jan in codes or target.path.rstrip("/") in VERIFIED_TARGETS.get(jan, set())
 
 
-def inspect_exact(client, category, fetch_items):
+def collect_exact(client, category, fetch_items):
     """Fresh, targeted retrieval independent of the unit-price ranking."""
-    report = {}
+    pairs = []
     for product in PRODUCTS:
         jan = product[0]
         rows = fetch_items(jan, pages=1)
@@ -118,10 +118,16 @@ def inspect_exact(client, category, fetch_items):
             link = client.affiliate_link(hit)
             if link and identity({"name": name, "price": price, "url": link}, product, category):
                 y[code] = hit
-        # Report only aggregate counts and item prices; no identifiers or URLs from credentials.
-        report[jan] = {"size": product[1], "sheets": product[2],
+        pairs.append((product, r, list(y.values())))
+    return pairs
+
+
+def inspect_exact(client, category, fetch_items):
+    report = {}
+    for product, r, y in collect_exact(client, category, fetch_items):
+        report[product[0]] = {"size": product[1], "sheets": product[2],
                        "rakuten_verified": len(r), "yahoo_verified": len(y),
                        "rakuten_min_item_price": min((row["price"] for row in r), default=None),
-                       "yahoo_min_item_price": min((hit["price"] for hit in y.values()), default=None),
-                       "both_free_shipping_flags": any(totals_known(a,b) for a in r for b in y.values())}
+                       "yahoo_min_item_price": min((hit["price"] for hit in y), default=None),
+                       "both_free_shipping_flags": any(totals_known(a,b) for a in r for b in y)}
     return report
