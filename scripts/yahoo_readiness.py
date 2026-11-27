@@ -2,6 +2,8 @@
 import json
 import os
 from pathlib import Path
+from urllib.request import urlopen
+from common.sheet_marketplace import inspect
 
 from common.engine import normalize_item
 from common.yahoo_shopping import YahooShopping, YahooUnavailable
@@ -43,6 +45,17 @@ def main():
         return 1
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     print("Counts are candidate listings, not exact cross-mall matches or confirmed checkout totals.")
+    try:
+        with urlopen("https://stusaurus.github.io/pet-cost-jp/data/pet-sheets.json", timeout=20) as response:
+            catalog = json.loads(response.read(2_000_000))
+        if not isinstance(catalog, dict) or not isinstance(catalog.get("items"), list) or not all(isinstance(row, dict) for row in catalog["items"]):
+            raise ValueError("catalog schema")
+        pairs = inspect(catalog["items"], client, category)
+    except (OSError, ValueError, TypeError, YahooUnavailable):
+        print("Manufacturer-JAN comparison diagnostic unavailable.")
+        return 1
+    print("JAN_PILOT " + json.dumps(pairs, ensure_ascii=False, sort_keys=True))
+    print("Candidate pairs are manufacturer-spec matches; free-shipping flags are not checkout quotes.")
     return 0 if any(v["eligible_distinct_listings"] for v in report.values()) else 1
 
 
