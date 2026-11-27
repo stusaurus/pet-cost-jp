@@ -1,0 +1,49 @@
+name: Cat litter marketplace readiness
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/common/litter_marketplace.py'
+      - 'scripts/litter_marketplace_readiness.py'
+      - 'tests/test_litter_marketplace.py'
+      - '.github/workflows/litter-marketplace-readiness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/common/litter_marketplace.py'
+      - 'scripts/litter_marketplace_readiness.py'
+      - '.github/workflows/litter-marketplace-readiness.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -p 'test_litter_marketplace.py' -v
+  probe:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read-only verified litter offers
+        env:
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
+          YAHOO_AFFILIATE_ID: ${{ secrets.YAHOO_AFFILIATE_ID }}
+        run: python scripts/litter_marketplace_readiness.py
