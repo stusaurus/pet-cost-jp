@@ -14,6 +14,7 @@ from common.rakuten import fetch_items
 from common.catalog import collect as collect_catalog, audit as audit_catalog
 from discovery import journey, catalog_body, profile
 from decisions import enrich
+from sheet_marketplace_ui import build_pairs, render as render_marketplace, inject as inject_marketplace
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / 'site'
@@ -752,10 +753,15 @@ def main():
                     if keyword:
                         raw.extend(fetch_items(keyword, pages=int(category.get('pages_per_keyword', 1))))
             ranked = choose_ranked(raw, category)
-        write_text(SITE / 'categories' / category['id'] / 'index.html', category_page(category, ranked, categories, category_updated))
+        pairs = []
+        if category['id'] == 'pet-sheets' and not args.reuse_data and not demo:
+            pairs = build_pairs(category)
+        page = category_page(category, ranked, categories, category_updated)
+        write_text(SITE / 'categories' / category['id'] / 'index.html', inject_marketplace(page, render_marketplace(pairs, category_updated)))
         if category['id'] in DEDICATED_PATHS:
             for group, slug in DEDICATED_PATHS[category['id']].items():
-                write_text(SITE / 'categories' / category['id'] / slug / 'index.html', category_page(category, ranked, categories, category_updated, fixed_group=group))
+                page = category_page(category, ranked, categories, category_updated, fixed_group=group)
+                write_text(SITE / 'categories' / category['id'] / slug / 'index.html', inject_marketplace(page, render_marketplace(pairs, category_updated, group)))
         write_text(SITE / 'data' / f"{category['id']}.json", json.dumps({'updated': category_updated, 'category': category, 'items': ranked}, ensure_ascii=False, indent=2))
         spotlight_group = 'paper' if category['id'] == 'cat-litter' else category.get('default_group', 'all')
         initial = [x for x in ranked if x['group'] == spotlight_group]
