@@ -35,3 +35,19 @@ class ReadinessTests(unittest.TestCase):
             with self.assertRaises(YahooUnavailable) as exc:
                 YahooShopping(app, affiliate)
             self.assertEqual(str(exc.exception), reason)
+
+
+class ManufacturerMatchTests(unittest.TestCase):
+    def test_single_pack_and_variant(self):
+        from common.sheet_marketplace import PRODUCTS, identity, totals_known
+        category = json.loads((ROOT / "config/categories.json").read_text())[0]
+        product = PRODUCTS[1]
+        good = {"name": "デオシート しっかり超吸収 無香消臭タイプ ワイド 54枚 ペットシーツ", "price": 1800, "url": "https://example.invalid"}
+        self.assertTrue(identity(good, product, category))
+        for suffix in ("×4袋", " おまけ付き", " 選べる", " フローラル"):
+            self.assertFalse(identity({**good, "name": good["name"] + suffix}, product, category))
+        self.assertFalse(identity({**good, "name": good["name"].replace("ワイド", "スーパーワイド")}, product, category))
+        self.assertFalse(identity({**good, "name": good["name"].replace("無香消臭", "香り消臭")}, product, category))
+        self.assertTrue(totals_known({**good, "postage_flag": 1}, {"name": good["name"], "shipping": {"code": 2}}))
+        self.assertFalse(totals_known({**good, "postage_flag": 1}, {"name": good["name"], "shipping": {"code": 2}, "description": "沖縄別途送料"}))
+        self.assertFalse(totals_known({**good, "postage_flag": 0}, {"name": good["name"], "shipping": {"code": 2}}))

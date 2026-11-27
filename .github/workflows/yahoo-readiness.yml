@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/common/yahoo_shopping.py'
+      - 'scripts/common/sheet_marketplace.py'
       - 'scripts/yahoo_readiness.py'
       - 'tests/test_yahoo_readiness.py'
       - '.github/workflows/yahoo-readiness.yml'
@@ -10,6 +11,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/common/yahoo_shopping.py'
+      - 'scripts/common/sheet_marketplace.py'
       - 'scripts/yahoo_readiness.py'
       - '.github/workflows/yahoo-readiness.yml'
   workflow_dispatch:
@@ -32,7 +34,7 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: offline
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
