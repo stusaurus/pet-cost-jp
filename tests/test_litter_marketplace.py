@@ -19,7 +19,15 @@ class LitterMarketplaceTests(unittest.TestCase):
         self.assertEqual(len({p[0] for p in PRODUCTS}), len(PRODUCTS))
         for jan, label, liters, material, marker, model, source, paths in PRODUCTS:
             with self.subTest(jan=jan):
-                self.assertRegex(jan, r'^\d{13}
+                self.assertRegex(jan, r'^\d{13}$')
+                self.assertEqual((sum(int(d) * (1 if i % 2 == 0 else 3) for i, d in enumerate(jan[:-1])) + int(jan[-1])) % 10, 0)
+                self.assertIsInstance(paths, tuple)
+                self.assertTrue(paths)
+                self.assertGreater(liters, 0)
+                self.assertTrue(source.startswith('https://'))
+                for path in paths:
+                    self.assertRegex(path, r'^/[\w-]+/[\w.-]+$')
+
     def test_single_bag_and_exact_evidence(self):
         p = PRODUCTS[0]
         r = row("アイリスオーヤマ 紙の猫砂 KMN-70N 7L", p[7][0])
