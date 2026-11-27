@@ -17,7 +17,7 @@ CSS = """<style id="sheet-marketplace-style">
 .sheet-mall-offer h4{margin:0;font-size:14px}
 .sheet-mall-price{font-size:clamp(18px,4vw,25px);font-weight:750;margin:6px 0}
 .sheet-mall-offer p{font-size:13px;margin:5px 0}
-.sheet-mall-offer a{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #426553;border-radius:8px;text-align:center;padding:5px;font-size:13px;font-weight:700;color:#234b38}
+.sheet-mall-offer a{display:flex;align-items:center;justify-content:center;min-height:48px;box-sizing:border-box;border:1px solid #426553;border-radius:8px;text-align:center;padding:5px;font-size:13px;font-weight:700;color:#234b38}
 .sheet-mall-nav{display:inline-flex;min-height:44px;align-items:center;color:#234b38;font-weight:700}
 .sheet-mall-note{font-size:13px;line-height:1.65}
 </style>"""
@@ -102,10 +102,17 @@ def render(pairs, updated, group=None):
 def inject(page, section):
     if not section:
         return page
-    anchor = '<section class="section" id="product-ranking"'
+    anchor = '<div class="condition-start" data-condition-start>'
     if page.count(anchor) != 1 or 'id="sheet-marketplace"' in page:
         raise ValueError("marketplace section anchor")
-    return page.replace(anchor, section + anchor, 1)
+    # The ranking sits in a hidden-until-size-selection container. Keep this
+    # separate comparison visible on arrival and make its deep link usable.
+    nav = '<nav aria-label="このページでできること" class="results-bridge">'
+    if page.count(nav) != 1 or page.count("</head>") != 1:
+        raise ValueError("marketplace navigation anchor")
+    page = page.replace(nav, nav + '<a class="text-link" href="#sheet-marketplace">楽天・Yahoo!で同じ商品を比較 →</a>', 1)
+    page = page.replace("</head>", CSS + "</head>", 1)
+    return page.replace(anchor, section.removeprefix(CSS) + anchor, 1)
 
 
 def build_pairs(category):
