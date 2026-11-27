@@ -16,7 +16,7 @@ PRODUCTS = (
     ("4905009778515", "ひのきでつくった猫砂 HKT-70", 7, "wood", "ひのきでつくった猫砂", "hkt-70",
      IRIS+"okara-cypress-sand/cat-sand-made-with-cypress", ("/chanet/238113", "/chanet3980/238113")),
     ("4905009869466", "クリーン＆フレッシュ Ag+ KFAG-80", 8, "mineral", "クリーン", "kfag-80",
-     IRIS+"mineral-sand/clean-fresh", ("/nishimutapetslove/4905009869466")),
+     IRIS+"mineral-sand/clean-fresh", ("/nishimutapetslove/4905009869466",)),
     ("4990968215744", "クリーンミュウ 白い紙製の砂", 12.5, "paper", "クリーンミュウ", "",
      "https://www.cs-jp.net/pet/cat/product20.html", ("/dogworld01/csihtt5744", "/plantz/4990968215744", "/chanet3980/247589")),
 )
@@ -39,7 +39,6 @@ def identity(row, product, category):
     if codes and codes != {jan}:
         return False
     # Explicit single-bag quantity and separately worded per-customer limit are not a multipack.
-    # Multipack matching below still operates on all other title text.
     # Explicit "1袋" is compatible with a single bag. Strip only that exact count.
     qty = parse_liters(re.sub(r"(?<!\d)1\s*袋", "", title))
     if not qty or qty["quantity"] != liters or qty["confidence"] < .9:
