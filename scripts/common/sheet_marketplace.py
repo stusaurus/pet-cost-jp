@@ -49,7 +49,7 @@ def totals_known(row, hit):
     # Free-shipping flags are not proof of an actual address-specific checkout total.
     terms = " ".join(str(hit.get(k) or "") for k in ("name", "description", "headline"))
     shipping = hit.get("shipping")
-    return (row.get("postage_flag") == 1 and free_shipping(row["name"])
+    return (type(row.get("postage_flag")) is int and row.get("postage_flag") == 0 and free_shipping(row["name"])
             and isinstance(shipping, dict) and shipping.get("code") == 2 and free_shipping(terms))
 
 
@@ -71,5 +71,57 @@ def inspect(rows, client, category):
                 y[code] = hit
         report[jan] = {"size": product[1], "sheets": product[2], "rakuten_candidates": len(r),
                        "yahoo_candidates": len(y), "matched_candidate": bool(r and y),
+                       "both_free_shipping_flags": any(totals_known(a,b) for a in r for b in y.values())}
+    return report
+
+
+# Exact seller pages independently checked for their single-pack JAN and specification.
+VERIFIED_TARGETS = {
+    "4520699672143": {"/chanet/246764", "/petgo/4520699672143", "/cocoterrace/icn-rps-00000072"},
+    "4972316207571": {"/chanet/202320", "/mapet/4972316207571", "/edenki/ed2910549"},
+}
+
+
+def verified_rakuten(row, product, category):
+    if not rakuten_link(row) or not identity(row, product, category):
+        return False
+    target = urlsplit(parse_qs(urlsplit(row["url"]).query)["pc"][0])
+    jan = product[0]
+    # A keyword search by JAN is not itself evidence that a returned listing is exact.
+    title = normalize_text(row["name"])
+    codes = set(re.findall(r"(?<!\d)\d{13}(?!\d)", title))
+    if codes and codes != {jan}:
+        return False
+    return jan in codes or target.path.rstrip("/") in VERIFIED_TARGETS.get(jan, set())
+
+
+def inspect_exact(client, category, fetch_items):
+    """Fresh, targeted retrieval independent of the unit-price ranking."""
+    report = {}
+    for product in PRODUCTS:
+        jan = product[0]
+        rows = fetch_items(jan, pages=1)
+        # A separately verified shop listing may not surface on the JAN query.
+        if jan in VERIFIED_TARGETS:
+            query = "デオシート ワイド 54枚" if product[3] == "deo" else "ネオシーツ FX スーパーワイド 36枚"
+            rows += fetch_items(query, pages=1, shop_code="chanet")
+        rows = {parse_qs(urlsplit(row["url"]).query)["pc"][0]: row
+                for row in rows if verified_rakuten(row, product, category)}
+        r = list(rows.values())
+        y = {}
+        for hit in client.search(jan=jan, results=50):
+            code, price, name = hit.get("code"), hit.get("price"), hit.get("name")
+            if (hit.get("janCode") != jan or hit.get("inStock") is not True
+                    or hit.get("condition") != "new" or not isinstance(code, str)
+                    or type(price) is not int or price <= 0 or not isinstance(name, str)):
+                continue
+            link = client.affiliate_link(hit)
+            if link and identity({"name": name, "price": price, "url": link}, product, category):
+                y[code] = hit
+        # Report only aggregate counts and item prices; no identifiers or URLs from credentials.
+        report[jan] = {"size": product[1], "sheets": product[2],
+                       "rakuten_verified": len(r), "yahoo_verified": len(y),
+                       "rakuten_min_item_price": min((row["price"] for row in r), default=None),
+                       "yahoo_min_item_price": min((hit["price"] for hit in y.values()), default=None),
                        "both_free_shipping_flags": any(totals_known(a,b) for a in r for b in y.values())}
     return report

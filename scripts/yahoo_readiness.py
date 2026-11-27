@@ -3,7 +3,8 @@ import json
 import os
 from pathlib import Path
 from urllib.request import urlopen
-from common.sheet_marketplace import inspect
+from common.sheet_marketplace import inspect, inspect_exact
+from common.rakuten import fetch_items
 
 from common.engine import normalize_item
 from common.yahoo_shopping import YahooShopping, YahooUnavailable
@@ -56,6 +57,13 @@ def main():
         return 1
     print("JAN_PILOT " + json.dumps(pairs, ensure_ascii=False, sort_keys=True))
     print("Candidate pairs are manufacturer-spec matches; free-shipping flags are not checkout quotes.")
+    try:
+        exact = inspect_exact(client, category, fetch_items)
+    except Exception:
+        # Rakuten exceptions may contain the request URL. Never log them.
+        print("Verified marketplace lookup unavailable.")
+        return 1
+    print("VERIFIED_OFFERS " + json.dumps(exact, ensure_ascii=False, sort_keys=True))
     return 0 if any(v["eligible_distinct_listings"] for v in report.values()) else 1
 
 
