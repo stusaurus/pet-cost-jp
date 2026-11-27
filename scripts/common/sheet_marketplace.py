@@ -10,23 +10,34 @@ PRODUCTS = (
     ("4520699672143", "wide", 54, "deo", "https://www.d-unicharm.jp/item/200692.html"),
     ("4520699676066", "super_wide", 23, "deo", "https://www.d-unicharm.jp/item/200694.html"),
     ("4972316207571", "super_wide", 36, "neo", "https://www.kohcho.co.jp/products/neo-loo-life/neosheet/20.html"),
+    ("4972316207557", "regular", 180, "neo", "https://www.kohcho.co.jp/products/neo-loo-life/neosheet/16.html"),
+    ("4972316208264", "wide", 50, "neo", "https://www.kohcho.co.jp/products/neo-loo-life/neosheet/19.html"),
 )
 
 
-def identity(row, product, category):
+def identity(row, product, category, *, exact_evidence=False):
     jan, group, count, family, _ = product
+    title = normalize_text(row["name"])
+    # Only independently verified JAN/retailer evidence permits a series-name
+    # alias in place of the generic category noun. All other guards stay active.
+    if exact_evidence:
+        category = {**category, "include_any": [*category.get("include_any", []),
+                                                "デオシート" if family == "deo" else "ネオシーツ"]}
     item = normalize_item(row, category)
     if not item or item["group"] != group or item["quantity"] != count:
         return False
-    title = normalize_text(row["name"])
-    if re.search(r"おまけ|セット|選べ|選択|アソート|旧品|旧パッケージ|香り付き|フレグランス|プレミアム|フローラル|グリーンの香り", title):
+    if re.search(r"おまけ|セット|選べ|選択|アソート|旧品|旧パッケージ|香り付き|フレグランス|プレミアム|フローラル|グリーンの香り|まとめ買い|ケース販売|箱売り|ホワイト|テープ付き|クエン酸", title):
+        return False
+    codes = set(re.findall(r"(?<!\d)\d{13}(?!\d)", title))
+    if codes and codes != {jan}:
         return False
     # Require explicit single-pack sheet quantity; never infer pack count from JAN alone.
     if not re.search(r"(?<!\d)" + str(count) + r"\s*枚(?!\s*[×x*]\s*[2-9])", title):
         return False
     if family == "deo":
-        return all(x in title for x in ("デオシート", "しっかり超吸収", "無香消臭"))
-    return bool(re.search(r"ネオシーツ\s*fx", title)) and "薄型" in title and not re.search(r"dx|厚型|炭入り", title)
+        marker = ("しっかり超吸収" in title or (exact_evidence and ("超吸収" in title or "しっかり吸収" in title)))
+        return marker and all(x in title for x in ("デオシート", "無香消臭"))
+    return bool(re.search(r"ネオシーツ\s*fx", title)) and ("薄型" in title or exact_evidence) and not re.search(r"dx|厚型|中厚|炭入り", title)
 
 
 def rakuten_link(row):
@@ -67,7 +78,7 @@ def inspect(rows, client, category):
                     or type(price) is not int or price <= 0 or not isinstance(name, str)):
                 continue
             link = client.affiliate_link(hit)
-            if link and identity({"name": name, "price": price, "url": link}, product, category):
+            if link and identity({"name": name, "price": price, "url": link}, product, category, exact_evidence=True):
                 y[code] = hit
         report[jan] = {"size": product[1], "sheets": product[2], "rakuten_candidates": len(r),
                        "yahoo_candidates": len(y), "matched_candidate": bool(r and y),
@@ -77,13 +88,28 @@ def inspect(rows, client, category):
 
 # Exact seller pages independently checked for their single-pack JAN and specification.
 VERIFIED_TARGETS = {
+    "4520699667989": {"/petgo/4520699667989", "/r-kojima/4520699667989", "/rakuten24/e448566h"},
+    "4520699676066": {"/gooddoglife/4520699676066", "/petgo/4520699676066", "/rakuten24/e448570h"},
+    "4972316207557": {"/nyanzaq/4972316207557", "/kohnan-eshop/4972316207557", "/a-price/4972316207557"},
+    "4972316208264": {"/petforest/pf-4972316208264", "/marquee/50371"},
     "4520699672143": {"/chanet/246764", "/petgo/4520699672143", "/cocoterrace/icn-rps-00000072"},
     "4972316207571": {"/chanet/202320", "/mapet/4972316207571", "/edenki/ed2910549"},
 }
 
 
+# Shop-specific queries prevent low-price or bulk listings from crowding out singles.
+REVIEWED_LOOKUPS = {
+    "4520699667989": ("rakuten24", "r-kojima"),
+    "4520699672143": ("chanet",),
+    "4520699676066": ("rakuten24", "gooddoglife"),
+    "4972316207571": ("chanet",),
+    "4972316207557": ("nyanzaq", "a-price"),
+    "4972316208264": ("petforest", "marquee"),
+}
+
+
 def verified_rakuten(row, product, category):
-    if not rakuten_link(row) or not identity(row, product, category):
+    if not rakuten_link(row):
         return False
     target = urlsplit(parse_qs(urlsplit(row["url"]).query)["pc"][0])
     jan = product[0]
@@ -92,7 +118,8 @@ def verified_rakuten(row, product, category):
     codes = set(re.findall(r"(?<!\d)\d{13}(?!\d)", title))
     if codes and codes != {jan}:
         return False
-    return jan in codes or target.path.rstrip("/") in VERIFIED_TARGETS.get(jan, set())
+    evidence = jan in codes or target.path.rstrip("/") in VERIFIED_TARGETS.get(jan, set())
+    return evidence and identity(row, product, category, exact_evidence=True)
 
 
 def collect_exact(client, category, fetch_items):
@@ -102,9 +129,12 @@ def collect_exact(client, category, fetch_items):
         jan = product[0]
         rows = fetch_items(jan, pages=1)
         # A separately verified shop listing may not surface on the JAN query.
-        if jan in VERIFIED_TARGETS:
-            query = "デオシート ワイド 54枚" if product[3] == "deo" else "ネオシーツ FX スーパーワイド 36枚"
-            rows += fetch_items(query, pages=1, shop_code="chanet")
+        shops = REVIEWED_LOOKUPS.get(jan, ())
+        size = {"regular": "レギュラー", "wide": "ワイド", "super_wide": "スーパーワイド"}[product[1]]
+        series = "デオシート" if product[3] == "deo" else "ネオシーツ FX"
+        query = f"{series} {size} {product[2]}枚"
+        for shop in shops:
+            rows += fetch_items(query, pages=1, shop_code=shop)
         rows = {parse_qs(urlsplit(row["url"]).query)["pc"][0]: row
                 for row in rows if verified_rakuten(row, product, category)}
         r = list(rows.values())
@@ -116,7 +146,7 @@ def collect_exact(client, category, fetch_items):
                     or type(price) is not int or price <= 0 or not isinstance(name, str)):
                 continue
             link = client.affiliate_link(hit)
-            if link and identity({"name": name, "price": price, "url": link}, product, category):
+            if link and identity({"name": name, "price": price, "url": link}, product, category, exact_evidence=True):
                 y[code] = hit
         pairs.append((product, r, list(y.values())))
     return pairs
