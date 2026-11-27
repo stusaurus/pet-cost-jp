@@ -29,10 +29,13 @@ class LitterMarketplaceTests(unittest.TestCase):
         p = PRODUCTS[4]
         r = row("クリーンミュウ 固まる流せる白い紙製の砂 12.5L",p[7][0])
         self.assertTrue(verified_rakuten(r,p,CATEGORY))
+        self.assertTrue(verified_rakuten({**r,"name":r["name"]+" ※お一人様2個まで"},p,CATEGORY))
+        self.assertFalse(verified_rakuten({**r,"name":r["name"]+" 2個"},p,CATEGORY))
         self.assertFalse(verified_rakuten({**r,"name":r["name"].replace("12.5L","13.5L")},p,CATEGORY))
         self.assertFalse(verified_rakuten({**r,"name":r["name"]+" 4袋"},p,CATEGORY))
         p = PRODUCTS[1]
-        self.assertFalse(identity({"name":"お茶の猫砂 OCN-70 7L"},p,CATEGORY))
+        self.assertTrue(identity({"name":"お茶の猫砂 OCN-70 7L"},p,CATEGORY))
+        self.assertFalse(identity({"name":"お茶の猫砂 OCN-80 7L"},p,CATEGORY))
         self.assertTrue(identity({"name":"お茶の猫砂 OCN-70N 7L"},p,CATEGORY))
 
     def test_probe_requires_both_malls_and_exact_yahoo_jan(self):
