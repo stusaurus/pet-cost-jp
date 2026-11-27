@@ -1,0 +1,54 @@
+name: Sheet marketplace card audit
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/sheet_marketplace_ui.py'
+      - 'scripts/common/sheet_marketplace.py'
+      - 'scripts/check_sheet_marketplace.cjs'
+      - 'scripts/prepare_marketplace_qa_fixture.py'
+      - 'scripts/analytics_runtime.js'
+      - 'scripts/build_site.py'
+      - '.github/workflows/sheet-marketplace-audit.yml'
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and deploy pet-cost-jp"]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm install --prefix /tmp/marketplace-qa --no-audit --no-fund playwright@1.56.1
+      - name: Prepare offline fixture
+        if: github.event_name == 'pull_request'
+        run: |
+          python scripts/build_site.py --reuse-data
+          python scripts/prepare_marketplace_qa_fixture.py
+      - name: Verify cards, exact purchase targets and GA4 merchant labels
+        env:
+          NODE_PATH: /tmp/marketplace-qa/node_modules
+          SHEET_MARKETPLACE_FIXTURE: ${{ github.event_name == 'pull_request' && '1' || '0' }}
+        run: node scripts/check_sheet_marketplace.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: marketplace-card-screenshots
+          path: audit-results/marketplace/
+          retention-days: 14
