@@ -14,11 +14,11 @@ PRODUCTS = (
     ("4905009714346", "お茶の猫砂 OCN-70N", 7, "okara", "お茶の猫砂", "ocn-70n",
      IRIS+"okara-cypress-sand/cat-sand-of-tea", ("/nishimutapetslove/4905009714346",)),
     ("4905009778515", "ひのきでつくった猫砂 HKT-70", 7, "wood", "ひのきでつくった猫砂", "hkt-70",
-     IRIS+"okara-cypress-sand/cat-sand-made-with-cypress", ("/chanet/238113", "/chanet3980/238113", "/rcmdbe/i5-4905009778515")),
+     IRIS+"okara-cypress-sand/cat-sand-made-with-cypress", ("/chanet/238113", "/chanet3980/238113")),
     ("4905009869466", "クリーン＆フレッシュ Ag+ KFAG-80", 8, "mineral", "クリーン", "kfag-80",
-     IRIS+"mineral-sand/clean-fresh", ("/nishimutapetslove/4905009869466", "/nishimuta/4905009869466")),
+     IRIS+"mineral-sand/clean-fresh", ("/nishimutapetslove/4905009869466")),
     ("4990968215744", "クリーンミュウ 白い紙製の砂", 12.5, "paper", "クリーンミュウ", "",
-     "https://www.cs-jp.net/pet/cat/product20.html", ("/dogworld01/csihtt5744",)),
+     "https://www.cs-jp.net/pet/cat/product20.html", ("/dogworld01/csihtt5744", "/plantz/4990968215744", "/chanet3980/247589")),
 )
 
 
@@ -31,18 +31,22 @@ def identity(row, product, category):
         return False
     if re.search(r"セット|まとめ買い|まとめ売り|ケース|箱売り|選べ|選択|アソート|お試し|おまけ|旧品|旧パッケージ|システムトイレ|デオトイレ|ニャンとも|固まらない", title):
         return False
+    title = re.sub(r"(?:お一人様|おひとり様|お1人様)\s*\d+\s*(?:個|点|袋)\s*(?:まで|限り)", "", title)
     # Reject multipacks even when the title also repeats the single-bag volume.
     if re.search(r"\d+(?:\.\d+)?\s*l\s*(?:入り|入)?\s*x\s*\d+|(?<!\d)[2-9]\d*\s*(?:袋|個|パック|箱)|(?<!\d)1\d+\s*(?:袋|個|パック|箱)", title):
         return False
     codes = set(re.findall(r"(?<!\d)\d{13}(?!\d)", title))
     if codes and codes != {jan}:
         return False
+    # Explicit single-bag quantity and separately worded per-customer limit are not a multipack.
+    # Multipack matching below still operates on all other title text.
     # Explicit "1袋" is compatible with a single bag. Strip only that exact count.
     qty = parse_liters(re.sub(r"(?<!\d)1\s*袋", "", title))
     if not qty or qty["quantity"] != liters or qty["confidence"] < .9:
         return False
     models = set(re.findall(r"(?<![a-z0-9])(?:p?kmn|ocn|hkt|kfag)-\d+[a-z]*(?![a-z0-9])", title))
-    if models and models != {model}:
+    allowed_models = {model, "ocn-70"} if jan == "4905009714346" else {model}
+    if models and not models <= allowed_models:
         return False
     if marker not in title:
         return False
